@@ -1,0 +1,89 @@
+@import "../variables/colors";
+@import "../variables/base";
+
+.contact {
+  display: flex;
+  justify-content: space-between;
+}
+
+.contactForm {
+  width: 56%;
+}
+
+.contactInfo {
+  width: 35%;
+  justify-self: flex-end;
+}
+
+.contactText {
+  margin-bottom: $base-space-size-middle-plus;
+}
+
+.form {
+  width: 80%;
+  margin-top: $base-space-size-medium;
+}
+
+.infoItem {
+  display: flex;
+  column-gap: $base-space-size-medium;
+  margin-top: $base-space-size-medium;
+}
+
+.infoTitle {
+  font-size: 24px;
+  line-height: 24px;
+  margin-bottom: $base-space-size-small;
+}
+
+.infoIcon {
+  width: $base-avatar-size-large;
+  height: $base-avatar-size-large;
+  border-radius: 50%;
+  background-color: $color-primary;
+  color: $color-white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.formItem {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: $base-space-size-middle-plus;
+}
+
+.formLabel {
+  &::after {
+    content: '*';
+    color: red;
+    margin-left: $base-space-size-tiny;
+  }
+}
+
+.formInput {
+  background-color: #fff;
+  color: $color-text;
+  outline: none;
+  border: 1px solid #69727d;
+  padding: $base-space-size-middle-plus $base-space-size-small;
+  margin-top: $base-space-size-tiniest;
+  border-radius: $base-radius-medium;
+}
+
+.formBtn {
+  font-size: 15px;
+  width: 100%;
+  padding: $base-space-size-middle $base-space-size-medium;
+  transition: background-color .3s ease-out;
+  background-color: $color-accent;
+  color: $color-white;
+  border-radius: $base-radius-medium;
+  outline: none;
+  border: none;
+
+  &:hover {
+    cursor: pointer;
+    background-color: $color-primary;
+  }
+}

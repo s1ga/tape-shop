@@ -1,0 +1,19 @@
+@import "../variables/colors";
+@import "../variables/base";
+
+.advisesSection {
+  margin-top: $base-space-size-huge;
+
+  &:last-child {
+    padding-bottom: $base-space-size-large;
+  }
+}
+
+.advisesSectionTitle {
+  font-size: 24px;
+  line-height: 24px;
+}
+
+.advisesText {
+  margin-bottom: $base-space-size-middle-plus;
+}

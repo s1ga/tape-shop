@@ -1,3 +1,20 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next/core-web-vitals",
+    "airbnb-base"
+  ],
+  "rules": {
+    "object-curly-newline": "off",
+    "lines-between-class-members": "off",
+    "import/extensions": "off",
+    "max-len": [
+      "error",
+      {
+        "code": 110
+      }
+    ]
+  },
+  "ignorePatterns": [
+    ".env*.local"
+  ]
 }

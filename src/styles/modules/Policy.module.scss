@@ -1,0 +1,21 @@
+@import "../variables/base";
+
+.policyTitle {
+  font-size: 24px;
+  line-height: 24px;
+}
+
+.policyIndent {
+  margin-bottom: $base-space-size-middle-plus;
+}
+
+.policyBlock {
+  margin-bottom: $base-space-size-large;
+  line-height: 24px;
+}
+
+.policyBlockTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: $base-space-size-tiny;
+}

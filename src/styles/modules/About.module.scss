@@ -1,0 +1,20 @@
+@import "../variables/base";
+
+.aboutText {
+  margin-bottom: $base-space-size-medium;
+}
+
+.about {
+  display: flex;
+  column-gap: $base-space-size-huge;
+}
+
+.aboutItem {
+  width: 50%;
+  margin-bottom: $base-space-size-large;
+}
+
+.video {
+  max-width: 550px;
+  aspect-ratio: 2;
+}

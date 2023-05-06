@@ -1,0 +1,65 @@
+@import "../variables/colors";
+@import "../variables/base";
+
+$notes-bg-color: #319800;
+
+.notes {
+  width: 100%;
+  padding-top: $base-space-size-middle;
+  padding-bottom: $base-space-size-middle;
+  background-color: $notes-bg-color;
+  color: $color-white;
+}
+
+.notesList {
+  list-style-type: none;
+  display: flex;
+  column-gap: $base-space-size-large;
+}
+
+.notesItem {
+  height: 100%;
+  align-items: center;
+  display: flex;
+  column-gap: $base-space-size-small;
+}
+
+.notesIcon {
+  width: $base-avatar-size-tiny;
+  height: $base-avatar-size-tiny;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding-top: $base-space-size-medium;
+  padding-bottom: $base-space-size-medium;
+  background-color: $color-background-header;
+  color: $color-white;
+  display: flex;
+  justify-content: space-between;
+}
+
+.headerLogo {
+  width: 200px;
+  height: 70px;
+}
+
+.navList {
+  display: flex;
+  list-style-type: none;
+  height: 100%;
+  align-items: center;
+}
+
+.navItem {
+  padding: 0 $base-space-size-medium;
+  transition: color 0.2s ease-out;
+}
+
+.navList li:hover,
+.navItem:hover {
+  cursor: pointer;
+  color: $color-primary;
+}

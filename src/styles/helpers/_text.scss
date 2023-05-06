@@ -1,0 +1,21 @@
+@import "../variables/base.scss";
+@import "../variables/colors.scss";
+
+.bold {
+  font-weight: 700;
+}
+
+.centered {
+  text-align: center;
+}
+
+.container {
+  padding: $base-space-size-enormous $base-space-container;
+}
+
+.title {
+  font-size: 30px;
+  line-height: 38px;
+  color: $color-primary;
+  margin-bottom: $base-space-size-medium;
+}
