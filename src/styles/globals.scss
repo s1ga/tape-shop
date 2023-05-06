@@ -32,3 +32,18 @@ iframe {
   border: none;
   border-radius: $base-radius-medium;
 }
+
+@media screen and (max-width: 1024px) {
+  body {
+    font-size: 15px;
+    letter-spacing: 0.4px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  body {
+    font-size: 14px;
+    line-height: 22px;
+    letter-spacing: .35px;
+  }
+}

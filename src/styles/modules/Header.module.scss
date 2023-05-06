@@ -41,7 +41,7 @@ $notes-bg-color: #319800;
   justify-content: space-between;
 }
 
-.headerLogo {
+.headerImg {
   width: 200px;
   height: 70px;
 }
@@ -62,4 +62,20 @@ $notes-bg-color: #319800;
 .navItem:hover {
   cursor: pointer;
   color: $color-primary;
+}
+
+@media screen and (max-width: 800px) {
+  .notesList {
+    flex-direction: column;
+    row-gap: $base-space-size-tiniest;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .headerImg {
+    width: 120px;
+    height: 40px;
+  }
 }

@@ -5,7 +5,7 @@ export default function TapeInsctructions() {
   return (
     <div className={`${styles.steps} ${styles.instructionsBlock} container`}>
       <div className={styles.step}>
-        <iframe width="345" height="230"
+        <iframe width="340" height="230"
           className={styles.stepAsset}
           src="https://www.youtube.com/embed/-_L_OiKvEQQ"
           title="YouTube video player"
@@ -27,7 +27,7 @@ export default function TapeInsctructions() {
           src="/images/instructions/step1.jpg"
           alt="QuiPtaping logo"
           loading="lazy"
-          width={300}
+          width={320}
           height={200} />
         <div>
           <h3 className={`${styles.instructionsTitle} title`}>Step 1:</h3>
@@ -44,7 +44,7 @@ export default function TapeInsctructions() {
           src="/images/instructions/step2.jpg"
           alt="QuiPtaping logo"
           loading="lazy"
-          width={300}
+          width={320}
           height={200} />
         <div>
           <h3 className={`${styles.instructionsTitle} title`}>Step 2:</h3>
@@ -58,7 +58,7 @@ export default function TapeInsctructions() {
           src="/images/instructions/step3.jpg"
           alt="QuiPtaping logo"
           loading="lazy"
-          width={300}
+          width={320}
           height={200} />
         <div>
           <h3 className={`${styles.instructionsTitle} title`}>Step 3:</h3>
@@ -72,7 +72,7 @@ export default function TapeInsctructions() {
           src="/images/instructions/step4.jpg"
           alt="QuiPtaping logo"
           loading="lazy"
-          width={300}
+          width={320}
           height={200} />
         <div>
           <h3 className={`${styles.instructionsTitle} title`}>Step 4:</h3>
@@ -89,7 +89,7 @@ export default function TapeInsctructions() {
           src="/images/instructions/step5.jpg"
           alt="QuiPtaping logo"
           loading="lazy"
-          width={300}
+          width={320}
           height={200} />
         <div>
           <h3 className={`${styles.instructionsTitle} title`}>Step 5:</h3>
@@ -107,7 +107,7 @@ export default function TapeInsctructions() {
           src="/images/instructions/step6.jpg"
           alt="QuiPtaping logo"
           loading="lazy"
-          width={300}
+          width={320}
           height={200} />
         <div>
           <h3 className={`${styles.instructionsTitle} title`}>Step 6:</h3>
@@ -124,7 +124,7 @@ export default function TapeInsctructions() {
           src="/images/instructions/step7.jpg"
           alt="QuiPtaping logo"
           loading="lazy"
-          width={300}
+          width={320}
           height={200} />
         <div>
           <h3 className={`${styles.instructionsTitle} title`}>Step 7:</h3>
@@ -138,7 +138,7 @@ export default function TapeInsctructions() {
           src="/images/instructions/step6.jpg"
           alt="QuiPtaping logo"
           loading="lazy"
-          width={300}
+          width={320}
           height={200} />
         <div>
           <h3 className={`${styles.instructionsTitle} title`}>Step 8:</h3>

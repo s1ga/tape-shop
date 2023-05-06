@@ -96,3 +96,60 @@ $copyright-text-color: #adadad;
 .copyrightLink {
   text-decoration: underline;
 }
+
+@media screen and (max-width: 800px) {
+  .footerContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footerItem {
+    text-align: center;
+  }
+
+  .footerLinksContainer {
+    width: 100%;
+    display: flex;
+    column-gap: 20%;
+    justify-content: center;
+  }
+
+  .footerLogo {
+    margin-bottom: 16px;
+  }
+
+  .sectionTitle {
+    margin-bottom: 8px;
+  }
+
+  .socialLinks {
+    margin-top: 16px;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+
+  .sectionList {
+    align-items: center;
+  }
+}
+
+@media screen and (max-width: 440px) {
+  .footerLinksContainer {
+    flex-direction: column;
+  }
+
+  .socialLinks {
+    margin-bottom: 24px;
+  }
+
+  .contact {
+    margin-top: 16px;
+    margin-bottom: 24px;
+  }
+
+  .copyright {
+    flex-direction: column;
+    align-items: center;
+    row-gap: $base-space-size-tiny;
+  }
+}

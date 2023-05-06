@@ -87,3 +87,50 @@
     background-color: $color-primary;
   }
 }
+
+@media screen and (max-width: 800px) {
+  .contact {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .contactForm {
+    width: 100%;
+  }
+
+  .contactText {
+    margin-bottom: $base-space-size-small;
+  }
+
+  .form {
+    width: 100%;
+    text-align: left;
+  }
+
+  .contactInfo {
+    width: 100%;
+    margin-top: $base-space-size-large;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .infoItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 0 $base-space-size-medium;
+    row-gap: $base-space-size-small;
+  }
+
+  .infoTitle {
+    font-size: 20px;
+    line-height: 20px;
+  }
+
+  .infoIcon {
+    width: $base-avatar-size-middle;
+    height: $base-avatar-size-middle;
+  }
+}

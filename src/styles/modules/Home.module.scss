@@ -159,3 +159,75 @@ $scaled-value: 1.08;
   will-change: transform;
   @include transition('transform');
 }
+
+@media screen and (max-width: 1024px) {
+  .intro {
+    flex-direction: column;
+    margin-top: 0;
+  }
+
+  .introBlock {
+    width: 100%;
+    text-align: center;
+
+    &:last-child {
+      margin-top: $base-space-size-huge;
+    }
+  }
+
+  .linkTitle {
+    font-size: 24px;
+    line-height: 32px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .introTitle {
+    font-size: 30px;
+    line-height: 36px;
+  }
+
+  .introText {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .introBtn {
+    padding: $base-space-size-middle $base-space-size-large;
+    margin-top: $base-space-size-medium;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  .features {
+    margin-top: $base-space-size-enormous;
+    flex-direction: column;
+  }
+
+  .feature {
+    width: 100%;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    & p {
+      padding: 0 $base-space-size-enormous;
+    }
+  }
+
+  .featuresText {
+    padding: 0;
+  }
+
+  .links {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .link {
+    width: 85%;
+    min-height: 240px;
+    margin: $base-space-size-middle 0;
+  }
+}

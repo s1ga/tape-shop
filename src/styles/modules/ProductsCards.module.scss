@@ -15,7 +15,7 @@ $text-color: #3a3f45;
 .products {
   display: flex;
   justify-content: space-between;
-  column-gap: $base-space-size-large;
+  gap: $base-space-size-large;
   color: $text-color;
 }
 
@@ -100,4 +100,24 @@ $text-color: #3a3f45;
   border-radius: $base-radius-medium;
   z-index: 2;
   transition: .8s ease-out;
+}
+
+@media screen and (max-width: 800px) {
+  .products {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .productCardContainer {
+    width: 85%;
+  }
+
+  .productImg {
+    min-height: 120px;
+    background-size: 55%;
+  }
+
+  .productsTitle {
+    font-size: 28px;
+  }
 }

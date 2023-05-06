@@ -39,3 +39,29 @@
   margin-right: $base-space-size-small;
   color: $color-primary;
 }
+
+@media screen and (max-width: 800px) {
+  .usageContainer {
+    text-align: center;
+    padding-top: $base-space-size-large;
+    padding-bottom: $base-space-size-large;
+
+    & h2 {
+      margin-bottom: $base-space-size-middle-plus;
+    }
+  }
+
+  .usageIcon {
+    width: $base-space-size-middle-plus;
+    height: $base-space-size-middle-plus;
+  }
+
+  .usageText {
+    margin-bottom: $base-space-size-small;
+  }
+
+  .usageBlock {
+    flex-direction: column;
+    row-gap: $base-space-size-medium;
+  }
+}

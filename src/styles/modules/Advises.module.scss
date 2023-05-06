@@ -17,3 +17,22 @@
 .advisesText {
   margin-bottom: $base-space-size-middle-plus;
 }
+
+@media screen and (max-width: 800px) {
+  .advisesSection {
+    margin-top: $base-space-size-large;
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
+
+  .advisesSectionTitle {
+    font-size: 20px;
+    margin-bottom: $base-space-size-middle-plus;
+  }
+
+  .advisesText {
+    margin-bottom: $base-space-size-small;
+  }
+}
