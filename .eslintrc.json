@@ -7,6 +7,11 @@
     "object-curly-newline": "off",
     "lines-between-class-members": "off",
     "import/extensions": "off",
+    "no-use-before-define": "off",
+    "no-shadow": "off",
+    "no-underscore-dangle": "off",
+    "no-undef": "off",
+    "vars-on-top": "warn",
     "max-len": [
       "error",
       {

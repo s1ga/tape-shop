@@ -2,8 +2,13 @@
 @import "../variables/base";
 
 $notes-bg-color: #319800;
+$header-height: 109px;
+$header-mobile-height: 70px;
+$notes-height: 44px;
+$notes-mobile-height: 66px;
 
 .notes {
+  height: $notes-height;
   width: 100%;
   padding-top: $base-space-size-middle;
   padding-bottom: $base-space-size-middle;
@@ -29,7 +34,14 @@ $notes-bg-color: #319800;
   height: $base-avatar-size-tiny;
 }
 
+.notesText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .header {
+  height: $header-height;
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -39,6 +51,10 @@ $notes-bg-color: #319800;
   color: $color-white;
   display: flex;
   justify-content: space-between;
+}
+
+.headerIcon {
+  margin-left: $base-space-size-small;
 }
 
 .headerImg {
@@ -56,6 +72,7 @@ $notes-bg-color: #319800;
 .navItem {
   padding: 0 $base-space-size-medium;
   transition: color 0.2s ease-out;
+  color: $color-white;
 }
 
 .navList li:hover,
@@ -64,18 +81,259 @@ $notes-bg-color: #319800;
   color: $color-primary;
 }
 
+.navIcon {
+  cursor: pointer;
+}
+
+.navBurgerIcon {
+  display: none;
+}
+
+.navDesktopItems {
+  display: block;
+}
+
+.headerProducts {
+  padding-top: $base-space-size-large;
+  padding-bottom: $base-space-size-large;
+  background-color: $color-white;
+  opacity: 0;
+  display: none;
+  transition: opacity .4s ease-out;
+
+  position: absolute;
+  top: calc($header-height + $notes-height);
+  width: 100%;
+  z-index: 999;
+}
+
+.headerProductsFixed {
+  position: fixed;
+  top: $header-height;
+}
+
+.headerProductsOpen {
+  opacity: 1;
+  display: flex;
+  justify-content: space-between;
+}
+
+.typeLinks {
+  width: 25%;
+  text-align: center;
+}
+
+.typeLink {
+  display: block;
+  border-bottom: 1px solid #c4c4c4;
+  padding: $base-space-size-middle-plus $base-space-size-medium;
+  transition: color .3s ease;
+
+  &:hover {
+    border-bottom: 2px solid $color-accent;
+    color: $color-accent;
+  }
+}
+
+.typeCards {
+  width: 72%;
+  text-align: center;
+}
+
+.typeCardList {
+  width: 100%;
+  display: grid;
+  justify-content: center;
+  row-gap: $base-space-size-medium;
+  column-gap: $base-space-size-large;
+}
+
+.typeCardGrid2 {
+  grid-template-columns: repeat(2, minmax(220px, 280px));
+}
+
+.typeCardGrid3 {
+  grid-template-columns: repeat(3, minmax(150px, 280px));
+}
+
+.typeCard {
+  border-style: groove;
+  border-width: 2px;
+  border-radius: $base-radius-medium;
+  padding: $base-space-size-small;
+  transition: transform .3s ease;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  &:hover {
+    transform: scale(1.04);
+  }
+}
+
+.typeCardImg {
+  width: 100%;
+  max-width: 280px;
+  aspect-ratio: 1.1;
+  height: auto;
+}
+
+.typeCardTitle {
+  color: $color-primary;
+}
+
+.typeCardCaption {
+  font-size: 14px;
+}
+
+.navMobileList {
+  display: none;
+  opacity: 0;
+  transition: opacity .4s ease;
+
+  position: absolute;
+  top: calc($header-mobile-height + $notes-mobile-height);
+  width: 100%;
+  z-index: 999;
+
+  width: 100%;
+  background-color: $color-white;
+
+  & li {
+    border-bottom: 1px solid $border-color;
+  }
+
+  .navMobileItem {
+    width: 100%;
+    text-align: left;
+    display: block;
+    color: $color-black;
+    transition: color 0.2s ease-out;
+    padding-top: $base-space-size-medium;
+    padding-bottom: $base-space-size-medium;
+  }
+
+  & li:hover,
+  .navMobileItem:hover {
+    .navMobileItem {
+      cursor: pointer;
+      color: $color-primary;
+    }
+  }
+}
+
+.navMobileListFixed {
+  position: fixed;
+  top: $header-mobile-height;
+}
+
 @media screen and (max-width: 800px) {
+  .header {
+    height: $header-mobile-height;
+    padding-top: $base-space-size-middle-plus;
+    padding-bottom: $base-space-size-middle-plus;
+    justify-content: unset;
+  }
+
+  .nav {
+    width: 100%;
+  }
+
+  .navList>* {
+    margin-left: auto;
+  }
+
+  .notes {
+    height: $notes-mobile-height;
+  }
+
   .notesList {
     flex-direction: column;
     row-gap: $base-space-size-tiniest;
   }
 
-  .nav {
-    display: none;
-  }
-
   .headerImg {
     width: 120px;
     height: 40px;
+  }
+
+  .headerProducts {
+    position: initial;
+    padding-top: 0;
+    padding-bottom: $base-space-size-medium;
+  }
+
+  .headerProductsFixed {
+    top: $header-mobile-height;
+  }
+
+  .headerProductsOpen {
+    flex-direction: column;
+    row-gap: $base-space-size-medium;
+  }
+
+  .navBurgerIcon {
+    display: block;
+  }
+
+  .navDesktopItems {
+    display: none;
+  }
+
+  .navMobileListOpen {
+    display: block;
+    opacity: 1;
+  }
+
+  .typeLinks {
+    width: 100%;
+  }
+
+  .typeLink {
+    padding: $base-space-size-middle $base-space-size-middle-plus;
+  }
+
+  .typeCards {
+    width: 100%;
+  }
+
+  .typeCard {
+    &:hover {
+      transform: scale(1.03);
+    }
+  }
+
+  .typeCardList {
+    row-gap: $base-space-size-middle;
+    column-gap: $base-space-size-medium;
+  }
+
+  .typeCardGrid2 {
+    grid-template-columns: repeat(2, minmax(120px, 220px));
+  }
+
+  .typeCardGrid3 {
+    grid-template-columns: repeat(3, minmax(120px, 220px));
+  }
+
+  .typeCardImg {
+    max-width: 220px;
+  }
+
+  .typeCardCaption {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 440px) {
+  .typeCardList {
+    row-gap: $base-space-size-small;
+    column-gap: $base-space-size-middle-plus;
+  }
+
+  .typeCardGrid3 {
+    grid-template-columns: repeat(2, minmax(120px, 220px));
   }
 }

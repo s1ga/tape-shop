@@ -4,8 +4,20 @@ import Link from 'next/link';
 import ProductsCards from '@/components/ProductsCards/ProductsCards';
 import { faCheck, faClock, faEye, faHeart, faThumbsUp, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import TypeService from '@/services/type.service';
+import { Type } from '@/interfaces/type';
+import dbConnect from '@/utils/db';
 
-export default function Home() {
+export async function getServerSideProps() {
+  await dbConnect();
+  return {
+    props: {
+      types: JSON.parse(JSON.stringify(await TypeService.findAll())),
+    },
+  };
+}
+
+export default function Home({ types }: { types: Type[] }) {
   return (
     <>
       <Head>
@@ -38,7 +50,7 @@ export default function Home() {
             gyroscope; picture-in-picture; web-share" allowFullScreen />
         </div>
 
-        <ProductsCards isHomePage={true} />
+        <ProductsCards isHomePage={true} types={types} />
       </div>
 
       <section className={`${styles.featuresContainer} container`}>

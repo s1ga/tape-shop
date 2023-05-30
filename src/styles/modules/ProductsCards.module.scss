@@ -14,16 +14,18 @@ $text-color: #3a3f45;
 
 .products {
   display: flex;
-  justify-content: space-between;
-  gap: $base-space-size-large;
+  justify-content: center;
+  column-gap: $base-space-size-huge;
+  row-gap: $base-space-size-large;
   color: $text-color;
 }
 
 .productCardContainer {
+  max-width: 400px;
   width: 30%;
   background-color: $color-white;
   text-align: center;
-  border-radius: $base-radius-medium;
+  border-radius: $base-radius-large;
   transition: box-shadow .6s ease-in-out;
 
   &:not(.noShadow):hover {
@@ -55,21 +57,9 @@ $text-color: #3a3f45;
 .productImg {
   min-height: 200px;
   width: 100%;
-  background-size: 90%;
+  background-size: 80%;
   background-repeat: no-repeat;
   background-position: 50%;
-}
-
-.dispenserImg {
-  background-image: url('/images/products/dispensers.jpg');
-}
-
-.systainerImg {
-  background-image: url('/images/products/systainer.jpg');
-}
-
-.maskingtapeImg {
-  background-image: url('/images/products/maskingtape.jpg');
 }
 
 .productBtn {

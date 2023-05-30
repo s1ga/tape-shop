@@ -1,17 +1,30 @@
 import styles from '@/styles/modules/ProductsCards.module.scss';
 import Link from 'next/link';
-import { Card, getCards } from './cards';
+import { ProductTypeCard } from '@/interfaces/productTypeCard';
+import { Type } from '@/interfaces/type';
+import getCardsText from './cards';
 
-export default function ProductsCards({ isHomePage = false }: { isHomePage?: boolean }) {
-  const cards: Card[] = getCards(isHomePage);
+export default function ProductsCards(
+  { isHomePage = false, types }: { isHomePage?: boolean, types: Type[] },
+) {
+  const getCards = (): ProductTypeCard[] => {
+    const cardsText = getCardsText(isHomePage);
+    return types.map((t: Type) => ({
+      id: t.id,
+      title: t.name,
+      text: cardsText.find((c: Partial<ProductTypeCard>) => c.id === t.id)?.text || '',
+    }));
+  };
 
   return (
     <section className={styles.aboutProducts}>
       <h2 className={`${isHomePage ? styles.productsTitle : ''} title centered`}>Our products</h2>
       <div className={styles.products}>
-        {cards.map((card: Card) => (
-          <Link key={card.id} href={card.link} className={styles.productCardContainer}>
-            <div className={`${styles.productImg} ${styles[card.className]}`}></div>
+        {getCards().map((card: ProductTypeCard) => (
+          <Link key={card.id} href={`/info/${card.id}`} className={styles.productCardContainer}>
+            <div
+              className={styles.productImg}
+              style={{ backgroundImage: `url(/images/types/${card.id}.jpg)` }}></div>
             <div className={styles.productCard}>
               <h3 className={styles.productTitle}>
                 {card.title}
@@ -22,7 +35,7 @@ export default function ProductsCards({ isHomePage = false }: { isHomePage?: boo
         ))}
 
         {/* TODO: For test purposes. Choose one of the styles and uncomment code in cards.ts  */}
-        <div className={`${styles.productCardContainer} ${styles.noShadow}`}>
+        {/* <div className={`${styles.productCardContainer} ${styles.noShadow}`}>
           <div className={`${styles.productImg} ${styles.productImgTest} ${styles.maskingtapeImg}`}>
             <div className={styles.overlay}></div>
           </div>
@@ -34,7 +47,7 @@ export default function ProductsCards({ isHomePage = false }: { isHomePage?: boo
             </p>
             <Link href="/" className={styles.productBtn}>Read more</Link>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

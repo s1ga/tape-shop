@@ -1,0 +1,39 @@
+@import "../variables/base";
+@import "../variables/colors";
+
+.mainBlock {
+  // position: absolute;
+  display: flex;
+  overflow: hidden;
+}
+
+.thumbContainer {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: $base-space-size-small;
+  row-gap: $base-space-size-small;
+}
+
+.thumbImg {
+  opacity: .5;
+  cursor: pointer;
+  transition: opacity .2s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.thumbImgActive {
+  opacity: 1;
+}
+
+.mainImg {
+  opacity: 1;
+  transition: opacity .4 ease-out;
+}
+
+.mainImgHidden {
+  opacity: 0;
+  transition: opacity .4 ease-out;
+}

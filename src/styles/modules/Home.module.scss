@@ -31,7 +31,7 @@ $scaled-value: 1.08;
 
 .introBtn {
   display: inline-block;
-  background-color: $color-accent;
+  background-color: $color-primary;
   color: $color-white;
   padding: $base-space-size-middle-plus $base-space-size-large;
   margin-top: $base-space-size-large;
@@ -42,13 +42,14 @@ $scaled-value: 1.08;
   transition: background-color .3s ease-out;
 
   &:hover {
-    background-color: $color-primary;
+    background-color: $color-primary-dark;
   }
 }
 
 .video {
   border-radius: $base-radius-medium;
   aspect-ratio: 1.8;
+  height: auto;
 }
 
 .featuresContainer {

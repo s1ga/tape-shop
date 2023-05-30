@@ -1,0 +1,76 @@
+@import "../variables/base";
+@import "../variables/colors";
+
+.cart {
+  color: $product-text;
+}
+
+.cartTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: $base-space-size-enormous;
+  text-align: left;
+
+  & thead {
+    background-color: $color-white;
+  }
+
+  & tr {
+    border: 1px solid $border-color;
+  }
+
+  & td,
+  & th {
+    padding: $base-space-size-medium;
+  }
+}
+
+.cartTableIcon {
+  cursor: pointer;
+  transition: opacity .3s ease;
+
+  &:hover {
+    opacity: .8;
+  }
+}
+
+.cartTableImg {
+  width: 85px;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.cartTableName {
+  color: $color-primary;
+  transition: color .3s ease;
+
+  &:hover {
+    color: $cart-hover-text;
+  }
+}
+
+.cartTableAction {
+  display: flex;
+  align-items: center;
+  column-gap: $base-space-size-middle-plus;
+}
+
+.cartTableInput {
+  border: 1px solid $border-color;
+  border-radius: $base-radius-medium;
+  padding: $base-space-size-small;
+  max-height: 35px;
+}
+
+.cartTableBtn {
+  color: $color-white;
+  background-color: $color-primary;
+  border-radius: $base-radius-large;
+  padding: $base-space-size-small $base-space-size-medium;
+  transition: background-color .3s ease;
+
+  &:hover {
+    cursor: pointer;
+    background-color: $color-primary-dark;
+  }
+}

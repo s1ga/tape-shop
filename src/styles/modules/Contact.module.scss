@@ -71,12 +71,16 @@
   border-radius: $base-radius-medium;
 }
 
+.formTextarea {
+  resize: vertical;
+}
+
 .formBtn {
   font-size: 15px;
   width: 100%;
   padding: $base-space-size-middle $base-space-size-medium;
   transition: background-color .3s ease-out;
-  background-color: $color-accent;
+  background-color: $color-primary;
   color: $color-white;
   border-radius: $base-radius-medium;
   outline: none;
@@ -84,7 +88,7 @@
 
   &:hover {
     cursor: pointer;
-    background-color: $color-primary;
+    background-color: $color-primary-dark;
   }
 }
 
