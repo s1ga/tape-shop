@@ -10,7 +10,7 @@ import { ReactElement } from 'react';
 import { Product } from '@/interfaces/product/product';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
-import resourceMap from '../../constants/resources';
+import adminResourceMap from '@/constants/admin-resources';
 
 const req: any[] = [required()];
 const reqWithMinLength = [...req, minLength(3, 'Should be at least 3 characters')];
@@ -121,15 +121,15 @@ export default function ProductForm({ children }: { children: ReactElement }) {
           </Grid>
         </TabbedForm.Tab>
         <TabbedForm.Tab label="References" path="references">
-          <ReferenceArrayInput validate={req} source="categories" reference={resourceMap.categories}>
+          <ReferenceArrayInput validate={req} source="categories" reference={adminResourceMap.categories}>
             <SelectArrayInput validate={req} />
           </ReferenceArrayInput>
-          <ReferenceArrayInput validate={req} source="productType" reference={resourceMap.types}>
+          <ReferenceArrayInput validate={req} source="productType" reference={adminResourceMap.types}>
             <SelectInput optionValue="_id" optionText="name" validate={req} />
           </ReferenceArrayInput>
           <ReferenceArrayInput
             source="related"
-            reference={resourceMap.products}
+            reference={adminResourceMap.products}
             filter={record ? { excludeOne: record._id } : undefined}
           >
             <SelectArrayInput />

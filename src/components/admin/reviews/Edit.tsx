@@ -10,7 +10,7 @@ import {
 import { isBoolean } from '@/utils/validTypes';
 import Rate from '@/components/Rate';
 import { Product } from '@/interfaces/product/product';
-import resourceMap from '../../constants/resources';
+import adminResourceMap from '@/constants/admin-resources';
 
 interface Props extends EditProps<FullReview> {
   onCancel: () => void;
@@ -27,7 +27,7 @@ export default function ReviewEdit({ onCancel, products, ...props }: Props) {
         sx={{ textTransform: 'initial', padding: 0, textAlign: 'left' }}
         type="button"
         color="primary"
-        onClick={() => redirect(`/${resourceMap.products}/${id}`)}
+        onClick={() => redirect(`/${adminResourceMap.products}/${id}`)}
       >
         {name}
       </Button>
@@ -107,7 +107,7 @@ function EditToolbar({ onRedirect }: { onRedirect: CallableFunction }) {
     return null;
   }
 
-  const redirect = (resource: string | undefined = `/${resourceMap.reviews}`) => {
+  const redirect = (resource: string | undefined = `/${adminResourceMap.reviews}`) => {
     onRedirect();
     return resource;
   };

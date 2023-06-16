@@ -4,7 +4,7 @@ import {
 } from '@mui/material';
 import Image from 'next/image';
 import { NumberField, useListContext, useRedirect } from 'react-admin';
-import resourceMap from '../../constants/resources';
+import adminResourceMap from '@/constants/admin-resources';
 
 // eslint-disable-next-line no-unused-vars
 const times = (nbChildren: number, fn: (key: number) => any) => (
@@ -47,7 +47,7 @@ function LoadedList() {
       {data.map((record: Product) => (
         <ImageListItem
           key={record._id}
-          onClick={() => redirect(`/${resourceMap.products}/${record._id}`)}
+          onClick={() => redirect(`/${adminResourceMap.products}/${record._id}`)}
           sx={{
             display: 'flex',
             justifyContent: 'center',

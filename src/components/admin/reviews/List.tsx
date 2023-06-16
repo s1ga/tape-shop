@@ -1,23 +1,31 @@
-import itemsPerPage from '@/constants/perPage';
-import { Box, Drawer } from '@mui/material';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  BulkDeleteWithConfirmButton, Button, Datagrid,
-  DateField, List, TextField, WithRecord, useListContext, useNotify, useUnselectAll, useUpdateMany,
-} from 'react-admin';
 import { useRouter } from 'next/router';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Box, Drawer } from '@mui/material';
+import {
+  BulkDeleteWithConfirmButton, Button, Datagrid, DateField, List,
+  TextField, WithRecord, useGetList, useListContext, useNotify,
+  useUnselectAll, useUpdateMany,
+} from 'react-admin';
+import itemsPerPage from '@/constants/perPage';
+import Rate from '@/components/Rate';
+import { isBoolean } from '@/utils/validTypes';
+import { Product } from '@/interfaces/product/product';
+import Loader from '@/components/Loader';
+import adminResourceMap from '@/constants/admin-resources';
 import rowStyle from './rowStyle';
-import FeedbackEdit from './Edit';
-import resourceMap from '../../constants/resources';
-import feedbackFilters from './filters';
+import reviewFilters from './filters';
+import ReviewEdit from './Edit';
 
-export default function FeedbacksList() {
+export default function ReivewsList() {
   const router = useRouter();
   const [currentId, setCurrentId] = useState<string>('');
   const matchRef = useRef<boolean>(false);
+  const { data: products } = useGetList<Product>(adminResourceMap.products, {
+    pagination: { page: 1, perPage: 100 },
+  });
 
   const handleClose = useCallback(() => {
-    router.push(`/admin#/${resourceMap.feedback}`);
+    router.push(`/admin#/${adminResourceMap.reviews}`);
   }, []);
 
   const handleRowClick = (id: number | string, resource: string): false => {
@@ -27,7 +35,7 @@ export default function FeedbacksList() {
 
   useEffect(() => {
     const onHashChanged = (url: string) => {
-      matchRef.current = (/\/contact-feedback\/.+/g).test(url.split('#')[1]);
+      matchRef.current = (/\/reviews\/.+/g).test(url.split('#')[1]);
       const segments = url.split('/');
       setCurrentId(segments[segments.length - 1]);
     };
@@ -38,6 +46,12 @@ export default function FeedbacksList() {
       router.events.off('hashChangeComplete', onHashChanged);
     };
   }, []);
+
+  if (!products) {
+    return <Loader />;
+  }
+
+  const currentProduct = (productId: string) => products?.find((p: Product) => p._id === productId)!;
 
   return (
     <Box display="flex">
@@ -50,14 +64,14 @@ export default function FeedbacksList() {
           }),
         }}
         perPage={itemsPerPage.feedbacks}
-        filters={feedbackFilters}
+        filters={reviewFilters}
         sort={{ field: 'date', order: 'DESC' }}
       >
         <Datagrid
-          bulkActionButtons={<BulkActionButtons />}
-          rowClick={handleRowClick}
           optimized
+          rowClick={handleRowClick}
           rowStyle={rowStyle(matchRef.current ? currentId : undefined)}
+          bulkActionButtons={<BulkActionButtons />}
           sx={{
             '& .RaDatagrid-headerCell': {
               fontWeight: 700,
@@ -79,10 +93,21 @@ export default function FeedbacksList() {
           <DateField source="date" />
           <TextField sortable={false} source="email" />
           <TextField sortable={false} source="name" />
-          <TextField sortable={false} source="message" />
+          <TextField sortable={false} source="text" />
+          <WithRecord
+            label="Product"
+            render={(record) => <span>{currentProduct(record.productId)?.name}</span>}
+          />
+          <WithRecord
+            label="Rating"
+            render={(record) => <Rate isStatic={true} max={5} rating={record.rating} />}
+          />
           <WithRecord
             label="Status"
-            render={(record) => <span>{record.reviewed ? 'Reviewed' : 'Pending'}</span>}
+            render={(record) => <>
+              {record.isChecked && <span>{record.isApproved ? 'Approved' : 'Not approved'}</span>}
+              {!record.isChecked && <span>Pending</span>}
+            </>}
           />
         </Datagrid>
       </List>
@@ -94,7 +119,11 @@ export default function FeedbacksList() {
         onClose={handleClose}
         sx={{ zIndex: 100 }}
       >
-        {matchRef.current && <FeedbackEdit id={currentId} onCancel={handleClose} />}
+        {matchRef.current && <ReviewEdit
+          id={currentId}
+          onCancel={handleClose}
+          products={products}
+        />}
       </Drawer>
     </Box>
   );
@@ -103,24 +132,33 @@ export default function FeedbacksList() {
 function BulkActionButtons() {
   const { selectedIds = [] } = useListContext();
   const notify = useNotify();
-  const unselectAll = useUnselectAll(resourceMap.feedback);
+  const unselectAll = useUnselectAll(adminResourceMap.reviews);
   const [updateMany, { isLoading }] = useUpdateMany();
 
-  const update = (reviewed: boolean) => {
+  const update = (isChecked: boolean | null, isApproved: boolean | null) => {
+    const data: any = {};
+    if (isBoolean(isChecked)) {
+      data.isChecked = isChecked;
+    }
+    if (isBoolean(isApproved)) {
+      data.isApproved = isApproved;
+    }
+
     updateMany(
-      resourceMap.feedback,
-      { ids: selectedIds, data: { reviewed } },
+      adminResourceMap.reviews,
+      { ids: selectedIds, data },
       {
         mutationMode: 'undoable',
         onSuccess: () => {
-          notify(`All feedbacks are marked as ${reviewed ? 'reviewed' : 'pending'}`, {
+          notify('All reviews are updated', {
             type: 'info',
             undoable: true,
           });
           unselectAll();
         },
         onError: () => {
-          notify('Error while updating feedbacks', { type: 'error' });
+          notify('Error while updating reviews', { type: 'error' });
+          unselectAll();
         },
       },
     );
@@ -129,13 +167,23 @@ function BulkActionButtons() {
   return (
     <>
       <Button
-        label="Mark all as reviewed"
-        onClick={() => update(true)}
+        label="Mark all as checked"
+        onClick={() => update(true, null)}
         disabled={isLoading}
       />
       <Button
-        label="Mark all as pending"
-        onClick={() => update(false)}
+        label="Mark all as unchecked"
+        onClick={() => update(false, null)}
+        disabled={isLoading}
+      />
+      <Button
+        label="Mark all as approved"
+        onClick={() => update(null, true)}
+        disabled={isLoading}
+      />
+      <Button
+        label="Mark all as not approved"
+        onClick={() => update(null, false)}
         disabled={isLoading}
       />
       <BulkDeleteWithConfirmButton mutationMode="optimistic" />

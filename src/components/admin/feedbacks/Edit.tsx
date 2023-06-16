@@ -7,7 +7,7 @@ import {
   EmailField, Labeled, SaveButton, SimpleForm,
   TextField, Toolbar, WithRecord, useRecordContext,
 } from 'react-admin';
-import resourceMap from '../../constants/resources';
+import adminResourceMap from '@/constants/admin-resources';
 
 interface Props extends EditProps<ContactFeedback> {
   onCancel: () => void;
@@ -72,7 +72,7 @@ function EditToolbar({ onRedirect }: { onRedirect: CallableFunction }) {
     return null;
   }
 
-  const redirect = (resource: string | undefined = `/${resourceMap.feedback}`) => {
+  const redirect = (resource: string | undefined = `/${adminResourceMap.feedback}`) => {
     onRedirect();
     return resource;
   };

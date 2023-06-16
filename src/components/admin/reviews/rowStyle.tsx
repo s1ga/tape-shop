@@ -1,9 +1,6 @@
 import { useTheme } from '@mui/material/styles';
 import { FullReview } from '@/interfaces/review';
 import { Identifier } from 'react-admin';
-import green from '@mui/material/colors/green';
-import red from '@mui/material/colors/red';
-import orange from '@mui/material/colors/orange';
 
 const rowStyle = (selectedRow?: Identifier) => (record: FullReview) => {
   const theme = useTheme();
@@ -20,7 +17,7 @@ const rowStyle = (selectedRow?: Identifier) => (record: FullReview) => {
   if (!record.isChecked) {
     return {
       ...style,
-      borderLeftColor: orange[500],
+      borderLeftColor: '#ff9800',
       borderLeftWidth: 5,
       borderLeftStyle: 'solid',
     };
@@ -28,7 +25,7 @@ const rowStyle = (selectedRow?: Identifier) => (record: FullReview) => {
   if (record.isChecked && record.isApproved) {
     return {
       ...style,
-      borderLeftColor: green[500],
+      borderLeftColor: '#4caf50',
       borderLeftWidth: 5,
       borderLeftStyle: 'solid',
     };
@@ -36,7 +33,7 @@ const rowStyle = (selectedRow?: Identifier) => (record: FullReview) => {
   if (record.isChecked && !record.isApproved) {
     return {
       ...style,
-      borderLeftColor: red[500],
+      borderLeftColor: '#f44336',
       borderLeftWidth: 5,
       borderLeftStyle: 'solid',
     };

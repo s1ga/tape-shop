@@ -1,15 +1,15 @@
-import createMuiTheme from '@mui/material/styles/createTheme';
+import { createTheme } from '@mui/material/styles';
 import { Admin, Resource, defaultTheme } from 'react-admin';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookmark, faCartShopping, faComment, faMessage, faTag } from '@fortawesome/free-solid-svg-icons';
-import authProvider from '../providers/auth';
+import adminResourceMap from '@/constants/admin-resources';
+import authProvider from '@/context/adminAuthProvider';
+import dataProvider from '@/context/adminDataProvider';
 import categories from './categories';
 import types from './types';
 import feedbacks from './feedbacks';
 import products from './products';
 import reviews from './reviews';
-import dataProvider from '../providers/data';
-import resourceMap from '../constants/resources';
 
 const resourceIcons = {
   products: () => <FontAwesomeIcon icon={faCartShopping} />,
@@ -19,7 +19,7 @@ const resourceIcons = {
   reviews: () => <FontAwesomeIcon icon={faComment} />,
 };
 
-const theme = createMuiTheme(
+const theme = createTheme(
   {
     ...defaultTheme,
     palette: {
@@ -39,11 +39,11 @@ export default function AdminPage() {
       theme={theme}
       requireAuth
     >
-      <Resource name={resourceMap.products} {...products} icon={resourceIcons.products} />
-      <Resource name={resourceMap.categories} {...categories} icon={resourceIcons.categories} />
-      <Resource name={resourceMap.types} {...types} icon={resourceIcons.types} />
-      <Resource name={resourceMap.feedback} {...feedbacks} icon={resourceIcons.contactFeedbacks} />
-      <Resource name={resourceMap.reviews} {...reviews} icon={resourceIcons.reviews} />
+      <Resource name={adminResourceMap.products} {...products} icon={resourceIcons.products} />
+      <Resource name={adminResourceMap.categories} {...categories} icon={resourceIcons.categories} />
+      <Resource name={adminResourceMap.types} {...types} icon={resourceIcons.types} />
+      <Resource name={adminResourceMap.feedback} {...feedbacks} icon={resourceIcons.contactFeedbacks} />
+      <Resource name={adminResourceMap.reviews} {...reviews} icon={resourceIcons.reviews} />
     </Admin>
   );
 }

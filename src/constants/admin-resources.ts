@@ -1,4 +1,4 @@
-const resourceMap = {
+const adminResourceMap = {
   categories: 'categories',
   types: 'types',
   feedback: 'contact-feedback',
@@ -6,4 +6,4 @@ const resourceMap = {
   reviews: 'reviews',
 };
 
-export default resourceMap;
+export default adminResourceMap;

@@ -1,37 +1,27 @@
-import { NewProductItem, Product } from '@/interfaces/product/product';
 import { Button } from '@mui/material';
-import {
-  DeleteWithConfirmButton, Edit, SaveButton, Toolbar, useRecordContext, useRedirect,
-} from 'react-admin';
+import { Create, SaveButton, Toolbar, useRedirect } from 'react-admin';
+import { NewProductItem } from '@/interfaces/product/product';
 import { ProductItemAdditional } from '@/interfaces/product/productAdditional';
-import resourceMap from '../../constants/resources';
+import adminResourceMap from '@/constants/admin-resources';
 import ProductForm from './Form';
 
-export default function ProductEdit() {
+export default function ProductCreate() {
   return (
-    <Edit title={<EditTitle />}>
+    <Create>
       <ProductForm>
         <EditToolbar />
       </ProductForm>
-    </Edit>
+    </Create >
   );
-}
-
-function EditTitle() {
-  const record = useRecordContext<Product>();
-  return record
-    ? <span>Edit product {record.name}</span>
-    : null;
 }
 
 function EditToolbar(props: any) {
   const redirect = useRedirect();
-  const record = useRecordContext<Product>();
 
   const transform = (record: NewProductItem) => {
     const updated = { ...record };
-    if ((record.features?.image as any)?.id) {
-      updated.features!.image = (record.features?.image as any).id;
+    if (!record.demo?.description && !record.demo?.video) {
+      updated.demo = undefined;
     }
     if (record.features?.features?.length) {
       updated.features!.features = record.features.features
@@ -41,18 +31,14 @@ function EditToolbar(props: any) {
       ?.filter((i: ProductItemAdditional) => i.caption && i.value);
     updated.characteristics.items = (record.characteristics.items as any[])
       .map(({ field }) => field);
+    updated.images = record.images.map((obj: any) => obj.rawFile);
     return updated;
   };
 
   return (
     <Toolbar {...props} sx={{ display: 'flex', columnGap: '16px' }}>
       <SaveButton type="button" transform={transform} />
-      <DeleteWithConfirmButton
-        confirmTitle={`Delete product ${record.name}`}
-      />
-      <Button color="primary" onClick={() => redirect(`/${resourceMap.products}`)}>
-        Back
-      </Button>
+      <Button color="primary" onClick={() => redirect(`/${adminResourceMap.products}`)}>Back</Button>
     </Toolbar>
   );
 }

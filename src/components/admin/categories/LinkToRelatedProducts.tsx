@@ -3,7 +3,7 @@ import { faImages } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from '@mui/material';
 import { useRecordContext, useRedirect } from 'react-admin';
-import resourceMap from '../../constants/resources';
+import adminResourceMap from '@/constants/admin-resources';
 
 export default function LinkToRelatedProducts() {
   const record = useRecordContext<Category>();
@@ -17,7 +17,7 @@ export default function LinkToRelatedProducts() {
     const query = new URLSearchParams({
       filter: JSON.stringify({ categories: [record._id] }),
     });
-    redirect(`/${resourceMap.products}?${query}`);
+    redirect(`/${adminResourceMap.products}?${query}`);
   };
 
   return (

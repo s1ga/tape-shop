@@ -7,7 +7,7 @@ import {
 } from 'react-admin';
 import { Type } from '@/interfaces/type';
 import { Category } from '@/interfaces/category';
-import resourceMap from '../../constants/resources';
+import adminResourceMap from '@/constants/admin-resources';
 
 export const productFilters = [
   <SearchInput
@@ -18,10 +18,10 @@ export const productFilters = [
 ];
 
 export default function AsideFilter() {
-  const { data: types } = useGetList<Type>(resourceMap.types, {
+  const { data: types } = useGetList<Type>(adminResourceMap.types, {
     pagination: { page: 1, perPage: 100 },
   });
-  const { data: categories } = useGetList<Category>(resourceMap.categories, {
+  const { data: categories } = useGetList<Category>(adminResourceMap.categories, {
     pagination: { page: 1, perPage: 100 },
   });
 

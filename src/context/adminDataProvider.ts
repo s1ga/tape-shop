@@ -8,8 +8,8 @@ import storageKeys from '@/constants/storageKeys';
 import { Type } from '@/interfaces/type';
 import { Category } from '@/interfaces/category';
 import { equalsPrimitiveArrays } from '@/utils/helpers';
-import resourceMap from '../constants/resources';
-import buildUrlQuery from './buildUrlQuery';
+import adminResourceMap from '@/constants/admin-resources';
+import buildUrlQuery from '@/utils/buildUrlQuery';
 
 const BASE_URL = `${getDomain()}/api`;
 
@@ -30,7 +30,7 @@ const updateMutation = (resource: string, params: UpdateParams<any>) => {
     headers: new Headers({ Authorization: token }),
   });
   switch (resource) {
-    case resourceMap.categories: {
+    case adminResourceMap.categories: {
       const body = new FormData();
       if (params.previousData.name !== params.data.name) {
         body.append('name', params.data.name);
@@ -40,7 +40,7 @@ const updateMutation = (resource: string, params: UpdateParams<any>) => {
       }
       return fetch(setRequest(body)).then(thenFunc);
     }
-    case resourceMap.types: {
+    case adminResourceMap.types: {
       const body: Record<string, string | string[]> = {};
       if (params.previousData.name !== params.data.name) {
         body.name = params.data.name;
@@ -53,12 +53,12 @@ const updateMutation = (resource: string, params: UpdateParams<any>) => {
       request.headers.set('Content-Type', 'Application/json');
       return fetch(request).then(thenFunc);
     }
-    case resourceMap.feedback: {
+    case adminResourceMap.feedback: {
       const request = setRequest(JSON.stringify({ reviewed: params.data.reviewed }));
       request.headers.set('Content-Type', 'Application/json');
       return fetch(request).then(thenFunc);
     }
-    case resourceMap.reviews: {
+    case adminResourceMap.reviews: {
       const request = setRequest(JSON.stringify({
         isApproved: params.data.isApproved,
         isChecked: params.data.isChecked,
@@ -66,7 +66,7 @@ const updateMutation = (resource: string, params: UpdateParams<any>) => {
       request.headers.set('Content-Type', 'Application/json');
       return fetch(request).then(thenFunc);
     }
-    case resourceMap.products: {
+    case adminResourceMap.products: {
       const { data } = params;
       const body = new FormData();
       if (data.features?.image?.rawFile) {
@@ -111,7 +111,7 @@ const updateManyMutation = async (resource: string, params: UpdateManyParams) =>
   console.log(resource, params);
   const token = LocalStorageService.get<string>(storageKeys.AdminAuth) || '';
   switch (resource) {
-    case resourceMap.feedback: {
+    case adminResourceMap.feedback: {
       const setRequest = (id: string | number) => new Request(`${BASE_URL}/${resource}/${id}`, {
         method: httpMethods.patch,
         body: JSON.stringify({ reviewed: params.data.reviewed }),
@@ -126,7 +126,7 @@ const updateManyMutation = async (resource: string, params: UpdateManyParams) =>
         ),
       });
     }
-    case resourceMap.reviews: {
+    case adminResourceMap.reviews: {
       const update = (id: string | number) => fetch(new Request(`${BASE_URL}/${resource}/${id}`, {
         method: httpMethods.patch,
         body: JSON.stringify(params.data),
@@ -155,13 +155,13 @@ const createMutation = (resource: string, params: CreateParams) => {
     headers: new Headers({ Authorization: token }),
   });
   switch (resource) {
-    case resourceMap.categories: {
+    case adminResourceMap.categories: {
       const body = new FormData();
       body.append('name', params.data.name);
       body.append('image', params.data.image.rawFile);
       return fetch(setRequest(body)).then(thenFunc);
     }
-    case resourceMap.types: {
+    case adminResourceMap.types: {
       const body: Record<string, string | string[]> = {};
       body.name = params.data.name;
       body.categories = params.data.categories;
@@ -169,7 +169,7 @@ const createMutation = (resource: string, params: CreateParams) => {
       request.headers.set('Content-Type', 'Application/json');
       return fetch(request).then(thenFunc);
     }
-    case resourceMap.products: {
+    case adminResourceMap.products: {
       const { data } = params;
       const body = new FormData();
       if (data.demo) {
@@ -198,7 +198,7 @@ const createMutation = (resource: string, params: CreateParams) => {
 
 const getOneMutation = (resource: string, params: GetOneParams<any>) => {
   const headers = new Headers();
-  if (resource === resourceMap.reviews) {
+  if (resource === adminResourceMap.reviews) {
     headers.set('Authorization', LocalStorageService.get<string>(storageKeys.AdminAuth) || '');
   }
   return fetch(`${BASE_URL}/${resource}/${params.id}`, { headers })
@@ -206,13 +206,13 @@ const getOneMutation = (resource: string, params: GetOneParams<any>) => {
     .then((data: ServerData<any>) => {
       const updated = { ...data };
       switch (resource) {
-        case resourceMap.categories:
+        case adminResourceMap.categories:
           updated.data.imageUrl = { id: data.data.imageUrl, src: data.data.imageUrl };
           break;
-        case resourceMap.types:
+        case adminResourceMap.types:
           updated.data.categories = updated.data.categories.map((c: Category) => c._id);
           break;
-        case resourceMap.products:
+        case adminResourceMap.products:
           updated.data.images = data.data.images.map((src: string) => ({ id: src, src }));
           updated.data.characteristics.items = data.data.characteristics.items
             .map((field: string) => ({ field }));
@@ -230,7 +230,7 @@ const getOneMutation = (resource: string, params: GetOneParams<any>) => {
 const dataProvider: DataProvider = {
   getList: (resource, params) => {
     const headers = new Headers();
-    if (resource === resourceMap.reviews) {
+    if (resource === adminResourceMap.reviews) {
       headers.set('Authorization', LocalStorageService.get<string>(storageKeys.AdminAuth) || '');
     }
     return fetch(`${BASE_URL}/${resource}?${buildUrlQuery(params)}`, {

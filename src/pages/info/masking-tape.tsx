@@ -10,7 +10,7 @@ import ProductsList from '@/components/ProductsList/ProductsList';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
-import { TapeDescription, tapesDescription } from './tapes-descriptions';
+import { TapeDescription, tapesDescription } from '@/constants/tapes-descriptions';
 
 export const getServerSideProps = async () => {
   await dbConnect();

@@ -1,7 +1,5 @@
 import { useTheme } from '@mui/material/styles';
 import { Identifier } from 'react-admin';
-import green from '@mui/material/colors/green';
-import orange from '@mui/material/colors/orange';
 import { ContactFeedback } from '@/interfaces/contactFeedback';
 
 const rowStyle = (selectedRow?: Identifier) => (record: ContactFeedback) => {
@@ -19,7 +17,7 @@ const rowStyle = (selectedRow?: Identifier) => (record: ContactFeedback) => {
   if (record.reviewed) {
     return {
       ...style,
-      borderLeftColor: green[500],
+      borderLeftColor: '#4caf50',
       borderLeftWidth: 5,
       borderLeftStyle: 'solid',
     };
@@ -27,19 +25,11 @@ const rowStyle = (selectedRow?: Identifier) => (record: ContactFeedback) => {
   if (!record.reviewed) {
     return {
       ...style,
-      borderLeftColor: orange[500],
+      borderLeftColor: '#ff9800',
       borderLeftWidth: 5,
       borderLeftStyle: 'solid',
     };
   }
-  // if (record.status === 'rejected') {
-  // return {
-  //   ...style,
-  //   borderLeftColor: red[500],
-  //   borderLeftWidth: 5,
-  //   borderLeftStyle: 'solid',
-  // };
-  // }
   return style;
 };
 

@@ -1,31 +1,23 @@
-import { useRouter } from 'next/router';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { Box, Drawer } from '@mui/material';
-import {
-  BulkDeleteWithConfirmButton, Button, Datagrid, DateField, List,
-  TextField, WithRecord, useGetList, useListContext, useNotify,
-  useUnselectAll, useUpdateMany,
-} from 'react-admin';
 import itemsPerPage from '@/constants/perPage';
-import Rate from '@/components/Rate';
-import { isBoolean } from '@/utils/validTypes';
-import { Product } from '@/interfaces/product/product';
-import Loader from '@/components/Loader';
-import resourceMap from '../../constants/resources';
+import { Box, Drawer } from '@mui/material';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  BulkDeleteWithConfirmButton, Button, Datagrid,
+  DateField, List, TextField, WithRecord, useListContext, useNotify, useUnselectAll, useUpdateMany,
+} from 'react-admin';
+import { useRouter } from 'next/router';
+import adminResourceMap from '@/constants/admin-resources';
 import rowStyle from './rowStyle';
-import reviewFilters from './filters';
-import ReviewEdit from './Edit';
+import FeedbackEdit from './Edit';
+import feedbackFilters from './filters';
 
-export default function ReivewsList() {
+export default function FeedbacksList() {
   const router = useRouter();
   const [currentId, setCurrentId] = useState<string>('');
   const matchRef = useRef<boolean>(false);
-  const { data: products } = useGetList<Product>(resourceMap.products, {
-    pagination: { page: 1, perPage: 100 },
-  });
 
   const handleClose = useCallback(() => {
-    router.push(`/admin#/${resourceMap.reviews}`);
+    router.push(`/admin#/${adminResourceMap.feedback}`);
   }, []);
 
   const handleRowClick = (id: number | string, resource: string): false => {
@@ -35,7 +27,7 @@ export default function ReivewsList() {
 
   useEffect(() => {
     const onHashChanged = (url: string) => {
-      matchRef.current = (/\/reviews\/.+/g).test(url.split('#')[1]);
+      matchRef.current = (/\/contact-feedback\/.+/g).test(url.split('#')[1]);
       const segments = url.split('/');
       setCurrentId(segments[segments.length - 1]);
     };
@@ -46,12 +38,6 @@ export default function ReivewsList() {
       router.events.off('hashChangeComplete', onHashChanged);
     };
   }, []);
-
-  if (!products) {
-    return <Loader />;
-  }
-
-  const currentProduct = (productId: string) => products?.find((p: Product) => p._id === productId)!;
 
   return (
     <Box display="flex">
@@ -64,14 +50,14 @@ export default function ReivewsList() {
           }),
         }}
         perPage={itemsPerPage.feedbacks}
-        filters={reviewFilters}
+        filters={feedbackFilters}
         sort={{ field: 'date', order: 'DESC' }}
       >
         <Datagrid
-          optimized
-          rowClick={handleRowClick}
-          rowStyle={rowStyle(matchRef.current ? currentId : undefined)}
           bulkActionButtons={<BulkActionButtons />}
+          rowClick={handleRowClick}
+          optimized
+          rowStyle={rowStyle(matchRef.current ? currentId : undefined)}
           sx={{
             '& .RaDatagrid-headerCell': {
               fontWeight: 700,
@@ -93,21 +79,10 @@ export default function ReivewsList() {
           <DateField source="date" />
           <TextField sortable={false} source="email" />
           <TextField sortable={false} source="name" />
-          <TextField sortable={false} source="text" />
-          <WithRecord
-            label="Product"
-            render={(record) => <span>{currentProduct(record.productId)?.name}</span>}
-          />
-          <WithRecord
-            label="Rating"
-            render={(record) => <Rate isStatic={true} max={5} rating={record.rating} />}
-          />
+          <TextField sortable={false} source="message" />
           <WithRecord
             label="Status"
-            render={(record) => <>
-              {record.isChecked && <span>{record.isApproved ? 'Approved' : 'Not approved'}</span>}
-              {!record.isChecked && <span>Pending</span>}
-            </>}
+            render={(record) => <span>{record.reviewed ? 'Reviewed' : 'Pending'}</span>}
           />
         </Datagrid>
       </List>
@@ -119,11 +94,7 @@ export default function ReivewsList() {
         onClose={handleClose}
         sx={{ zIndex: 100 }}
       >
-        {matchRef.current && <ReviewEdit
-          id={currentId}
-          onCancel={handleClose}
-          products={products}
-        />}
+        {matchRef.current && <FeedbackEdit id={currentId} onCancel={handleClose} />}
       </Drawer>
     </Box>
   );
@@ -132,33 +103,24 @@ export default function ReivewsList() {
 function BulkActionButtons() {
   const { selectedIds = [] } = useListContext();
   const notify = useNotify();
-  const unselectAll = useUnselectAll(resourceMap.reviews);
+  const unselectAll = useUnselectAll(adminResourceMap.feedback);
   const [updateMany, { isLoading }] = useUpdateMany();
 
-  const update = (isChecked: boolean | null, isApproved: boolean | null) => {
-    const data: any = {};
-    if (isBoolean(isChecked)) {
-      data.isChecked = isChecked;
-    }
-    if (isBoolean(isApproved)) {
-      data.isApproved = isApproved;
-    }
-
+  const update = (reviewed: boolean) => {
     updateMany(
-      resourceMap.reviews,
-      { ids: selectedIds, data },
+      adminResourceMap.feedback,
+      { ids: selectedIds, data: { reviewed } },
       {
         mutationMode: 'undoable',
         onSuccess: () => {
-          notify('All reviews are updated', {
+          notify(`All feedbacks are marked as ${reviewed ? 'reviewed' : 'pending'}`, {
             type: 'info',
             undoable: true,
           });
           unselectAll();
         },
         onError: () => {
-          notify('Error while updating reviews', { type: 'error' });
-          unselectAll();
+          notify('Error while updating feedbacks', { type: 'error' });
         },
       },
     );
@@ -167,23 +129,13 @@ function BulkActionButtons() {
   return (
     <>
       <Button
-        label="Mark all as checked"
-        onClick={() => update(true, null)}
+        label="Mark all as reviewed"
+        onClick={() => update(true)}
         disabled={isLoading}
       />
       <Button
-        label="Mark all as unchecked"
-        onClick={() => update(false, null)}
-        disabled={isLoading}
-      />
-      <Button
-        label="Mark all as approved"
-        onClick={() => update(null, true)}
-        disabled={isLoading}
-      />
-      <Button
-        label="Mark all as not approved"
-        onClick={() => update(null, false)}
+        label="Mark all as pending"
+        onClick={() => update(false)}
         disabled={isLoading}
       />
       <BulkDeleteWithConfirmButton mutationMode="optimistic" />

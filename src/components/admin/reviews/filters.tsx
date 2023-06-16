@@ -1,5 +1,5 @@
 import { DateInput, ReferenceInput, SelectArrayInput, SelectInput } from 'react-admin';
-import resourceMap from '../../constants/resources';
+import adminResourceMap from '@/constants/admin-resources';
 
 const reviewFilters = [
   <SelectInput
@@ -31,7 +31,7 @@ const reviewFilters = [
       { id: 5, name: 5 },
     ]}
   />,
-  <ReferenceInput key="productId" source="productId" reference={resourceMap.products}>
+  <ReferenceInput key="productId" source="productId" reference={adminResourceMap.products}>
     <SelectInput optionText="name" />
   </ReferenceInput>,
   <DateInput

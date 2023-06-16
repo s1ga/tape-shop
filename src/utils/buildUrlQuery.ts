@@ -1,7 +1,6 @@
 import { GetListParams } from 'react-admin';
 
 export default function buildUrlQuery(params: GetListParams): string {
-  console.log(params);
   const query = new URLSearchParams();
   if (params.pagination.page) {
     query.set('page', params.pagination.page.toString());
