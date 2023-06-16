@@ -6,13 +6,13 @@ import { ProductItemFeatures } from '@/interfaces/product/productFeatures';
 export default function ProductFeatures(
   { features, productName }: { features: ProductItemFeatures, productName: string },
 ) {
-  if (!features.image && !features.features.length) {
+  if (!features.image && !features.features?.length) {
     return null;
   }
 
   return (
     <div className={styles.productFeatures}>
-      {!!features.features.length
+      {!!features.features?.length
         && <>
           <h3 className={`${styles.productInfoSubtitle} title`}>Why use a {productName}?</h3>
           {features.features.map((f: Record<string, string>, idx: number) => (

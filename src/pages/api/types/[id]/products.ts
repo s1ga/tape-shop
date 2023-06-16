@@ -17,9 +17,9 @@ export default async function handler(
   const { method } = req;
   const { id } = req.query;
 
-  await dbConnect();
-
   try {
+    await dbConnect();
+
     if (method === httpMethods.get) {
       if (!isValidObjectId(id)) {
         res.status(400).json({ data: 'Provide valid id for product type' });

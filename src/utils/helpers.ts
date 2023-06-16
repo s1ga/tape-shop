@@ -13,3 +13,7 @@ export function formatPrice(num: number): string {
   parts[0] = parts[0].replace(PRICE_FORMATTER, ' ');
   return parts.join('.');
 }
+
+export function equalsPrimitiveArrays(firstArray: any[], secondArray: any[]): boolean {
+  return JSON.stringify(firstArray) === JSON.stringify(secondArray);
+}

@@ -1,4 +1,5 @@
 @import "../variables/base";
+@import "../variables/colors";
 
 $section-width: 45%;
 $section-width-mobile: 100%;
@@ -24,6 +25,10 @@ $section-width-mobile: 100%;
   &:last-of-type {
     padding: #{$base-space-size-enormous + $base-space-size-medium} 0;
   }
+}
+
+.dispenserBlockReverse {
+  flex-direction: row-reverse;
 }
 
 .dispenserImg {
@@ -71,6 +76,62 @@ $section-width-mobile: 100%;
   margin-bottom: $base-space-size-huge;
 }
 
+.systainerOptions {
+  margin-top: $base-space-size-huge;
+  margin-bottom: $base-space-size-huge;
+}
+
+.systainerOptionsTitle {
+  font-size: 24px;
+  line-height: 32px;
+}
+
+.systainerOptionsItem {
+  display: flex;
+  align-items: center;
+  column-gap: $base-space-size-medium;
+  margin-bottom: $base-space-size-small;
+}
+
+.systainerOptionsIcon {
+  width: $base-avatar-size-small;
+  height: $base-avatar-size-small;
+  color: $color-primary;
+}
+
+.tapeList {
+  margin-top: $base-space-size-medium;
+  margin-bottom: $base-space-size-medium;
+}
+
+.tapeListIcon {
+  width: $base-avatar-size-tiny;
+  height: $base-avatar-size-tiny;
+  color: $color-primary;
+}
+
+.tapeListItem {
+  margin-bottom: $base-space-size-tiny;
+  display: flex;
+  align-items: center;
+  column-gap: $base-space-size-small;
+}
+
+.tapeBtn {
+  display: block;
+  width: fit-content;
+  background-color: $color-primary;
+  color: $color-white;
+  transition: background-color .3s ease;
+  padding: $base-space-size-middle $base-space-size-large;
+  border-radius: $base-radius-large;
+
+  &:hover {
+    cursor: pointer;
+    background-color: $color-primary-dark;
+  }
+}
+
 @media screen and (max-width: 1024px) {
   .dispenserBlock {
     &:last-of-type {
@@ -106,6 +167,7 @@ $section-width-mobile: 100%;
     width: $section-width-mobile;
     max-width: 420px;
     aspect-ratio: 1.1;
+    height: auto;
   }
 
   .dispenserItem {
@@ -124,6 +186,28 @@ $section-width-mobile: 100%;
   .dispenserOrder {
     width: 100%;
     margin: $base-space-size-enormous 0 0;
+  }
+
+  .systainerOptions {
+    margin-top: $base-space-size-large;
+    margin-bottom: $base-space-size-large;
+  }
+
+  .systainerOptionsTitle {
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  .typeItemMobile {
+    margin-top: $base-space-size-medium;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tapeList {
+    margin-top: $base-space-size-middle-plus;
+    margin-bottom: $base-space-size-middle-plus;
   }
 }
 
@@ -146,5 +230,9 @@ $section-width-mobile: 100%;
 
   .dispenserOrder {
     margin: $base-space-size-huge 0 0;
+  }
+
+  .tapeBtn {
+    padding: $base-space-size-small $base-space-size-medium;
   }
 }

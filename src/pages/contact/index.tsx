@@ -26,14 +26,24 @@ export default function Contact() {
       message: form.get('message')?.toString() || '',
     });
 
-    const res = await fetch(CONTACT_URL, {
-      method: httpMethods.post,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    const { data }: ServerData<string> = await res.json();
-    setLoading(false);
-    ToastService.success(data);
+    try {
+      const res = await fetch(CONTACT_URL, {
+        method: httpMethods.post,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const { data }: ServerData<string> = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data as string);
+      }
+      ToastService.success(data);
+    } catch (error: any) {
+      console.error(error);
+      ToastService.error(error.message as string);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

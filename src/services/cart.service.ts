@@ -49,12 +49,14 @@ export default class CartService {
   public static prepareItem(product: Product, amount: number): CartItem {
     const info: ProductItemPreview = {
       _id: product._id,
+      id: product.id,
       name: product.name,
       rate: product.rate || 0,
       images: product.images,
       price: product.price,
       categories: product.categories,
       dateAdded: product.dateAdded,
+      availability: product.availability,
     };
     return {
       total: amount,

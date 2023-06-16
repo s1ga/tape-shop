@@ -1,12 +1,12 @@
-import { isValidObject, isValidString } from '@/utils/validTypes';
+import { isValidObject } from '@/utils/validTypes';
 
 export interface ProductItemFeatures {
-  image: string;
-  features: Record<string, string>[];
+  image?: string;
+  features?: Record<string, string>[];
 }
 
 export function isProductItemFeatures(obj: any): obj is ProductItemFeatures {
-  return isValidString(obj?.image) && Array.isArray(obj?.features)
+  return Array.isArray(obj?.features)
     && (obj?.features.length
       ? obj.features.every(isValidObject)
       : true);

@@ -8,6 +8,7 @@ import { Type } from '../type';
 
 export interface ProductItem {
   _id: string;
+  id: string;
   name: string;
   price: number;
   rate: number;
@@ -18,7 +19,7 @@ export interface ProductItem {
   description: string;
   images: string[];
   characteristics: ProductItemCharacteristics;
-  availability?: number;
+  availability?: number | null;
   related?: string[];
   features?: ProductItemFeatures;
   demo?: ProductItemDemo;
@@ -32,12 +33,12 @@ export type Product = Omit<
 
 export type NewProductItem = Omit<
   ProductItem,
-  '_id' | 'categories' | 'productType' | 'related' | 'rate'
+  '_id' | 'id' | 'categories' | 'productType' | 'related' | 'rate'
 > & { categories: Types.ObjectId[], related: Types.ObjectId[], productType: Types.ObjectId[] }
 
-export type PreparedProductItem = Omit<ProductItem, '_id' | 'rate' | 'dateAdded' | 'images' | 'rate'>
+export type PreparedProductItem = Omit<ProductItem, '_id' | 'id' | 'rate' | 'dateAdded' | 'images' | 'rate'>
 
 export type ProductItemPreview = Pick<
   Product,
-  '_id' | 'name' | 'rate' | 'price' | 'images' | 'categories' | 'dateAdded'
+  '_id' | 'id' | 'name' | 'rate' | 'price' | 'images' | 'categories' | 'dateAdded' | 'availability'
 >

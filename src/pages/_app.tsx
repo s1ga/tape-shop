@@ -11,10 +11,14 @@ import { Type } from '@/interfaces/type';
 import { ServerData } from '@/interfaces/serverData';
 import Loader from '@/components/Loader';
 import getDomain from '@/utils/getDomain';
+import { useRouter } from 'next/router';
+import ToastService from '@/services/toast.service';
 
 const DOMAIN = getDomain();
+const HIDE_MENU_PATHS = ['/admin'];
 
 export default function App({ Component, pageProps }: AppProps) {
+  const { pathname } = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const productTypes = useRef<ProductTypeCard[]>([]);
 
@@ -36,6 +40,11 @@ export default function App({ Component, pageProps }: AppProps) {
           });
         });
         productTypes.current = cards;
+      })
+      .catch(() => {
+        ToastService.error('An error has occured');
+      })
+      .finally(() => {
         setIsLoading(false);
       });
   }, []);
@@ -51,11 +60,11 @@ export default function App({ Component, pageProps }: AppProps) {
           {isLoading && <Loader />}
           {!isLoading
             && <>
-              <Header types={productTypes.current} />
+              {!HIDE_MENU_PATHS.includes(pathname) && <Header types={productTypes.current} />}
               <main className="main">
                 <Component {...pageProps} />
               </main>
-              <Footer />
+              {!HIDE_MENU_PATHS.includes(pathname) && <Footer />}
             </>
           }
         </div>

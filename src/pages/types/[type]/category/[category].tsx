@@ -1,8 +1,6 @@
 import ProductService from '@/services/product.service';
 import TypeService from '@/services/type.service';
-import { ProductItemPreview } from '@/interfaces/product/product';
 import { Category as ICategory } from '@/interfaces/category';
-import ReviewService from '@/services/review.service';
 import CategoryList from '@/components/Category';
 import dbConnect from '@/utils/db';
 
@@ -17,15 +15,24 @@ export const getServerSideProps = async ({ params }: Params) => {
   await dbConnect();
 
   const type = await TypeService.findById(params.type);
+  if (!type) {
+    return {
+      notFound: true,
+    };
+  }
   const categoryName = type.categories.find((c: ICategory) => c._id.toString() === params.category)?.name;
+  if (!categoryName) {
+    return {
+      notFound: true,
+    };
+  }
   const products = ProductService.toPreview(
     await ProductService.getByTypeCategories(type._id, params.category),
   );
-  const ratedProducts = await ReviewService.mapRatingsToProducts(products as ProductItemPreview[]);
 
   return {
     props: {
-      products: JSON.parse(JSON.stringify(ratedProducts)),
+      products: JSON.parse(JSON.stringify(products)),
       categoryName,
     },
   };

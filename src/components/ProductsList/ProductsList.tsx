@@ -4,8 +4,8 @@ import { ProductItemPreview } from '@/interfaces/product/product';
 import styles from '@/styles/modules/Webshop.module.scss';
 
 export default function ProductsList(
-  { products, categoryName, isMiniView }:
-    { products: ProductItemPreview[], categoryName?: string, isMiniView?: boolean },
+  { products, categoryName, isMiniView, isCentered = true }:
+    { products: ProductItemPreview[], categoryName?: string, isMiniView?: boolean, isCentered?: boolean },
 ) {
   const { addItems } = useCartContext();
 
@@ -14,8 +14,17 @@ export default function ProductsList(
     addItems(product);
   };
 
+  if (!products.length) {
+    return <div>No products found</div>;
+  }
+
   return (
-    <div className={`${styles.products} ${isMiniView && styles.productsMini}`}>
+    <div className={`
+      ${styles.products} 
+      ${styles[`products${products.length}`]}
+      ${isMiniView ? styles.productsMini : ''}
+      ${isCentered ? styles.productsCentered : ''}
+    `}>
       {products.map((product: ProductItemPreview) => (
         <ProductCard
           onAddToCart={addToCart}

@@ -5,9 +5,14 @@ import dbConnect from '@/utils/db';
 import ProductService from '@/services/product.service';
 import parseForm from '@/utils/parseForm';
 import { Product as IProduct, ProductItem } from '@/interfaces/product/product';
+import HashHandlerService from '@/services/hash.service';
+import itemsPerPage from '@/constants/perPage';
+import { Query, SortOrder, isValidObjectId } from 'mongoose';
+import sortingValue from '@/constants/sortingValues';
 
 type Response = {
   data: string | ProductItem | IProduct | IProduct[];
+  total?: number;
 };
 
 export const config = {
@@ -16,24 +21,103 @@ export const config = {
   },
 };
 
+const buildQuery = (params: NextApiRequest['query']) => {
+  const {
+    excludeOne, name, stock, stockGt, stockLt, sku,
+    priceGt, priceLt, priceLte, priceGte, type, categories,
+    sort, sortField,
+  } = params;
+
+  let query: Query<ProductItem[], ProductItem>;
+  const filters: any = {};
+  const stockFilter: any = {};
+  const priceFilter: any = {};
+  if (stock) {
+    filters.availability = stock === 'null' ? null : 0;
+  }
+  if (stockGt) {
+    stockFilter.$gt = +stockGt;
+  }
+  if (stockLt) {
+    stockFilter.$lt = +stockLt;
+  }
+  if (stockFilter.$gt || stockFilter.$lt) {
+    filters.availability = stockFilter;
+  }
+  if (priceGt) {
+    priceFilter.$gt = +priceGt;
+  }
+  if (priceLt) {
+    priceFilter.$lt = +priceLt;
+  }
+  if (priceGte) {
+    priceFilter.$gte = +priceGte;
+  }
+  if (priceLte) {
+    priceFilter.$lte = +priceLte;
+  }
+  if (priceFilter.$gt || priceFilter.$gte || priceFilter.$lt || priceFilter.$lte) {
+    filters.price = priceFilter;
+  }
+  if (excludeOne && isValidObjectId(excludeOne)) {
+    filters._id = { $ne: excludeOne };
+  }
+  if (name) {
+    filters.name = { $regex: new RegExp(name as string, 'ig') };
+  }
+  if (sku) {
+    filters.sku = { $regex: new RegExp(sku as string, 'ig') };
+  }
+  if (type) {
+    filters.productType = type;
+  }
+  if (categories) {
+    filters.categories = { $all: JSON.parse(categories as string) };
+  }
+  query = Product.find(filters);
+
+  const sortOption = +(sort as string) || (sort as string);
+  if (sort && sortField && sortingValue.includes(sortOption)) {
+    query = query.sort({ [sortField as string]: sort as SortOrder });
+  }
+  return query;
+};
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Response>,
 ) {
   const { method } = req;
 
-  await dbConnect();
-
   try {
+    await dbConnect();
+
     if (method === httpMethods.get) {
+      const page = +(req.query.page || 1);
+      const limit = page > 0 ? +(req.query.perPage || itemsPerPage.categories) : 0;
+      let toSkip: number = 0;
+      if (page > 0) {
+        toSkip = (page - 1) * limit;
+      }
+
       const data = ProductService.toFullProduct(
-        await Product.find({}).populate(['categories', 'productType']).exec(),
+        await buildQuery(req.query)
+          .skip(toSkip)
+          .limit(limit)
+          .populate(['categories', 'productType'])
+          .exec(),
       );
-      res.status(200).json({ data });
+      const total = await Product.count();
+      res.status(200).json({ data, total });
     } else if (method === httpMethods.post) {
+      const verify = await HashHandlerService.verifyAdminToken(req.headers.authorization);
+      if (!verify) {
+        res.status(401).json({ data: 'Invalid access token or role' });
+        return;
+      }
+
       const { fields, files } = await parseForm(req, { multiples: true });
       const preparedFields = ProductService.prepareFields(fields);
-
       try {
         const validation = ProductService.validate(preparedFields, files);
         if (typeof validation === 'string') {

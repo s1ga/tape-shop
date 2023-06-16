@@ -10,7 +10,7 @@ export function isValidString(str: string): boolean {
   return true;
 }
 
-export function isValidImage(image: File) {
+export function isValidImage(image: File | undefined) {
   if (!image || !imagesMimeTypes.includes(image.mimetype || '')) {
     return false;
   }

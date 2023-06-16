@@ -5,7 +5,6 @@ import Sorting from '@/components/ProductsSorting/ProductsSorting';
 import ProductsList from '@/components/ProductsList/ProductsList';
 import ProductService from '@/services/product.service';
 import { Product, ProductItemPreview } from '@/interfaces/product/product';
-import ReviewService from '@/services/review.service';
 import dbConnect from '@/utils/db';
 
 export const getServerSideProps = async () => {
@@ -14,11 +13,10 @@ export const getServerSideProps = async () => {
   const products = ProductService.toPreview(
     await ProductService.getAll() as Product[],
   );
-  const ratedProducts = await ReviewService.mapRatingsToProducts(products as ProductItemPreview[]);
 
   return {
     props: {
-      products: JSON.parse(JSON.stringify(ratedProducts)),
+      products: JSON.parse(JSON.stringify(products)),
     },
   };
 };

@@ -23,7 +23,7 @@ export default function CategoryList(
         <h1 className={`${styles.typeTitle} title centered`}>
           {categoryName}
         </h1>
-        <div className={styles.sortingBlock}>
+        {!!sortedProducts.length && <div className={styles.sortingBlock}>
           <div className={styles.sortingResult}>
             Showing {
               products.length > 1
@@ -32,8 +32,8 @@ export default function CategoryList(
             }
           </div>
           {sortedProducts.length > 1 && <Sorting value={products} onChange={onSorting} />}
-        </div>
-        <ProductsList categoryName={categoryName} products={sortedProducts} />
+        </div>}
+        <ProductsList isCentered={false} categoryName={categoryName} products={sortedProducts} />
       </section>
     </>
   );

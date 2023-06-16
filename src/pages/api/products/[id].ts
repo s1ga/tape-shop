@@ -6,6 +6,8 @@ import parseForm from '@/utils/parseForm';
 import ProductService from '@/services/product.service';
 import { Types } from 'mongoose';
 import { Product as IProduct } from '@/interfaces/product/product';
+import HashHandlerService from '@/services/hash.service';
+import { removeUploadedImage } from '@/utils/uploadedImage';
 
 export const config = {
   api: {
@@ -25,13 +27,13 @@ export default async function handler(
   const { id = '' } = req.query;
 
   if (!Types.ObjectId.isValid(id as string)) {
-    res.status(404).json({ data: `There is no such product category with given ID: ${id}` });
+    res.status(404).json({ data: `There is no such product with given ID: ${id}` });
     return;
   }
 
-  await dbConnect();
-
   try {
+    await dbConnect();
+
     const objectId = new Types.ObjectId(id as string);
     const foundType = await Product
       .findOne({ _id: objectId })
@@ -46,13 +48,19 @@ export default async function handler(
     if (method === httpMethods.get) {
       res.status(200).json({ data: ProductService.toFullProduct(foundType) as IProduct });
     } else if (method === httpMethods.patch) {
+      const verify = await HashHandlerService.verifyAdminToken(req.headers.authorization);
+      if (!verify) {
+        res.status(401).json({ data: 'Invalid access token or role' });
+        return;
+      }
+
       const { fields, files } = await parseForm(req, { multiples: true });
       const obj = await ProductService.preparePatchedFields(
         fields,
         files,
         foundType.images,
+        foundType.features.image || '',
       );
-
       if (typeof obj === 'string') {
         res.status(400).json({ data: obj });
         return;
@@ -68,8 +76,18 @@ export default async function handler(
 
       res.status(200).json({ data: ProductService.toFullProduct(updated) as IProduct });
     } else if (method === httpMethods.delete) {
+      const verify = await HashHandlerService.verifyAdminToken(req.headers.authorization);
+      if (!verify) {
+        res.status(401).json({ data: 'Invalid access token or role' });
+        return;
+      }
+
+      if (foundType.features.image) {
+        await removeUploadedImage(foundType.features.image);
+      }
+      await Promise.all(foundType.images.map(removeUploadedImage));
       await Product.findOneAndDelete({ _id: id });
-      res.status(200).json({ data: 'Product has been sucessfully deleted' });
+      res.status(200).json({ data: ProductService.toFullProduct(foundType) as IProduct });
     } else {
       console.warn(`There is no such handler for HTTP method: ${method}`);
       res.setHeader('Allow', [httpMethods.get, httpMethods.patch, httpMethods.delete]);

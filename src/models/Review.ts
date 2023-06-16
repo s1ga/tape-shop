@@ -8,6 +8,8 @@ const ReviewSchema = new Schema<PreparedReview & IReview>({
   name: { type: String, required: true },
   email: { type: String, required: true },
   date: { type: String, default: new Date().toISOString },
+  isApproved: { type: Boolean, default: false },
+  isChecked: { type: Boolean, default: false },
 });
 
 const Review = models.Review || model('Review', ReviewSchema);

@@ -4,6 +4,7 @@ import { Types } from 'mongoose';
 // eslint-disable-next-line import/no-named-default
 import { default as TypeModel } from '@/models/Type';
 import { Category } from '@/interfaces/category';
+import CategoryService from './category.service';
 
 export default class TypeService {
   public static generateId(name: string): string {
@@ -34,7 +35,9 @@ export default class TypeService {
     const mapObject = (o: Record<string, string | Category[]>): Type => ({
       _id: o._id.toString(),
       id: o.id as string,
-      categories: (o.categories || []) as Category[],
+      categories: CategoryService.fromServer(
+        (o.categories as unknown as Record<string, string>[]) || [],
+      ) as Category[],
       name: o.name as string,
     });
 

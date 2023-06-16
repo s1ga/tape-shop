@@ -50,6 +50,7 @@
 .categoryCardTitle {
   color: $color-primary;
   margin-bottom: $base-space-size-tiniest;
+  text-align: center;
 }
 
 .categoryCardCaption {
@@ -69,6 +70,10 @@
 
   .categoryCard {
     max-width: 300px;
+  }
+
+  .categoryCardCaption {
+    font-size: 12px;
   }
 }
 

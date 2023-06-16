@@ -70,6 +70,7 @@ $notes-mobile-height: 66px;
 }
 
 .navItem {
+  display: block;
   padding: 0 $base-space-size-medium;
   transition: color 0.2s ease-out;
   color: $color-white;

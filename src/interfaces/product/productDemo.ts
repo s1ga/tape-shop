@@ -6,5 +6,11 @@ export interface ProductItemDemo {
 }
 
 export function isProductItemDemo(obj: any): obj is ProductItemDemo {
-  return isValidString(obj?.video) && isValidString(obj?.description);
+  if (obj?.video && !isValidString(obj?.video)) {
+    return false;
+  }
+  if (obj?.description && !isValidString(obj?.description)) {
+    return false;
+  }
+  return true;
 }

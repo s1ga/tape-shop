@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { NOT_DIGIT } from '@/constants/regex';
+import { Product } from '@/interfaces/product/product';
 import styles from '@/styles/modules/Product.module.scss';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 
@@ -12,13 +13,14 @@ type Props = {
   readonly?: boolean;
   initialValue?: number;
   miniView?: boolean;
+  availability?: Product['availability'];
   onChange: (amount: number, isDeleteAction?: boolean) => void;
 }
 
 const MAX_NUMBER = 99;
 
 export default function AmountHandler(
-  { onChange = () => { }, readonly = false, initialValue = 1, miniView }: Props,
+  { onChange = () => { }, readonly = false, initialValue = 1, availability, miniView }: Props,
 ) {
   const [amount, setAmount] = useState<number>(1);
   const isDeleteRef = useRef<boolean>();
@@ -36,9 +38,21 @@ export default function AmountHandler(
   }, [amount, onChange]);
 
   const onInput = (e: FormEvent) => {
+    if (isDeleteRef.current === undefined) {
+      isDeleteRef.current = false;
+    }
     const { value } = e.target as HTMLInputElement;
-    const num = parseInt(value.replace(NOT_DIGIT, ''), 10) || 0;
-    setAmount(num > MAX_NUMBER ? 99 : num);
+    let num: number = parseInt(value.replace(NOT_DIGIT, ''), 10) || 0;
+    if (num < 0) {
+      num = 0;
+    }
+    if (num > MAX_NUMBER) {
+      num = 99;
+    }
+    if (availability && num > availability) {
+      num = availability;
+    }
+    setAmount(num);
   };
 
   const amountClick = (action: AmountActions) => {
@@ -46,7 +60,11 @@ export default function AmountHandler(
       case AmountActions.Add:
         setAmount((state: number) => {
           isDeleteRef.current = false;
-          return state + 1;
+          let newValue: number = state + 1;
+          if (availability && newValue > availability) {
+            newValue = availability;
+          }
+          return newValue;
         });
         break;
       case AmountActions.Remove:
@@ -64,6 +82,7 @@ export default function AmountHandler(
   return (
     <div className={styles.productHeaderCartActions}>
       <button
+        disabled={amount <= 0}
         onClick={() => amountClick(AmountActions.Remove)}
         className={`${styles.productHeaderActionBtn} ${miniView && styles.productHeaderActionBtnMini}`}>
         -
@@ -73,9 +92,11 @@ export default function AmountHandler(
         readOnly={readonly}
         className={`${styles.productHeaderInput} ${miniView && styles.productHeaderInputMini}`}
         value={amount}
+        max={availability ?? undefined}
         inputMode="numeric"
         onInput={onInput} />
       <button
+        disabled={!!availability && amount >= availability}
         onClick={() => amountClick(AmountActions.Add)}
         className={`${styles.productHeaderActionBtn} ${miniView && styles.productHeaderActionBtnMini}`}>
         +

@@ -18,6 +18,7 @@ type CartTableProps = {
   onCouponApplied: CallableFunction;
 }
 
+// TODO: add responsive design
 export default function Cart() {
   const { cart, removeAllItem, removeItem, addItems } = useCartContext();
 
@@ -103,6 +104,7 @@ function CartTable({ cart, removeAllItem, changeProductAmount, onCouponApplied }
             </td>
             <td>
               <AmountHandler
+                availability={c.info.availability}
                 initialValue={c.total}
                 readonly={true}
                 onChange={

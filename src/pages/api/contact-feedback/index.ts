@@ -6,10 +6,47 @@ import ContactFeedbackService from '@/services/contactFeedback.service';
 import { ContactFeedback as IContactFeedback, ServerContactFeedback } from '@/interfaces/contactFeedback';
 import sortingValue from '@/constants/sortingValues';
 import { Query, SortOrder } from 'mongoose';
+import itemsPerPage from '@/constants/perPage';
 
 type Response = {
   data: string | IContactFeedback | IContactFeedback[];
+  total?: number;
 }
+
+interface FilterOptions {
+  sort: string;
+  reviewed: string;
+  dateGte: string;
+  dateLte: string;
+}
+
+const buildFilterQuery = (params: unknown) => {
+  const { sort, reviewed, dateGte, dateLte } = params as FilterOptions;
+  let query: Query<ServerContactFeedback[], ServerContactFeedback>;
+
+  const filter: any = {};
+  const dateFilter: any = {};
+  if (dateGte) {
+    dateFilter.$gte = dateGte;
+  }
+  if (dateLte) {
+    dateFilter.$lte = dateLte;
+  }
+  if (dateFilter.$gte || dateFilter.$lte) {
+    filter.date = dateFilter;
+  }
+  if (['true', 'false'].includes(reviewed)) {
+    filter.reviewed = reviewed === 'true';
+  }
+  query = ContactFeedback.find(filter);
+
+  const sortOption = +sort || sort;
+  if (sortingValue.includes(sortOption)) {
+    query = query.sort({ date: sortOption as SortOrder });
+  }
+
+  return query;
+};
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,27 +54,27 @@ export default async function handler(
 ) {
   const { method } = req;
 
-  await dbConnect();
-
   try {
+    await dbConnect();
+
     if (method === httpMethods.get) {
-      const { sort, reviewed } = req.query as { sort: string, reviewed: string };
-      let query: Query<ServerContactFeedback[], ServerContactFeedback>;
-
-      if (['true', 'false'].includes(reviewed)) {
-        const val = reviewed === 'true';
-        query = ContactFeedback.find({ reviewed: val });
-      } else {
-        query = ContactFeedback.find({});
+      const query = buildFilterQuery(req.query as unknown);
+      const page = +(req.query.page || 1);
+      const limit = page > 0 ? +(req.query.perPage || itemsPerPage.feedbacks) : 0;
+      let toSkip: number = 0;
+      if (page > 0) {
+        toSkip = (page - 1) * limit;
       }
 
-      const sortOption = +sort || sort;
-      if (sortingValue.includes(sortOption)) {
-        query = query.sort({ date: sortOption as SortOrder });
-      }
-
-      const feedbacks = await query.exec();
-      res.status(200).json({ data: ContactFeedbackService.fromServer(feedbacks) as IContactFeedback[] });
+      const feedbacks = await query
+        .skip(toSkip)
+        .limit(limit)
+        .exec();
+      const total = await ContactFeedback.count();
+      res.status(200).json({
+        data: ContactFeedbackService.fromServer(feedbacks) as IContactFeedback[],
+        total,
+      });
     } else if (method === httpMethods.post) {
       const fields = ContactFeedbackService.prepareFields(req.body);
       const result = ContactFeedbackService.validate(fields);

@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import styles from '@/styles/modules/Product.module.scss';
 import Tabs from '@/components/Tabs';
@@ -6,19 +7,34 @@ import { Product, ProductItemPreview } from '@/interfaces/product/product';
 import ProductInfo from '@/components/Product/ProductInfo/ProductInfo';
 import ProductsList from '@/components/ProductsList/ProductsList';
 import { Review } from '@/interfaces/review';
-import Reviews from '@/components/Product/Reviews/Reviews';
 import ProductAdditionalInfo from '@/components/Product/ProductAdditionalInfo';
 import ProductService from '@/services/product.service';
 import dbConnect from '@/utils/db';
 import ReviewService from '@/services/review.service';
+import { isValidObjectId } from 'mongoose';
 import ProductHeader from '../../components/Product/ProductHeader';
+
+const Reviews = dynamic(
+  () => import('@/components/Product/Reviews/Reviews'),
+  { ssr: false },
+);
 
 export const getServerSideProps = async ({ params }: { params: { id: string } }) => {
   await dbConnect();
 
+  if (!isValidObjectId(params.id)) {
+    return {
+      notFound: true,
+    };
+  }
   const product = ProductService.toFullProduct(
     await ProductService.getById(params.id),
   ) as Product;
+  if (!product) {
+    return {
+      notFound: true,
+    };
+  }
   const relatedProducts = await Promise.all(
     product.related.map(ProductService.getById),
   );
@@ -58,7 +74,7 @@ export default function ProductPage(
           {!!relatedProducts.length
             && <aside className={styles.productRelated}>
               <h2 className={`${styles.productInfoTitle} title`}>Related products</h2>
-              <ProductsList products={relatedProducts} isMiniView={true} />
+              <ProductsList products={relatedProducts} isCentered={false} isMiniView={true} />
             </aside>
           }
         </div>
@@ -68,6 +84,7 @@ export default function ProductPage(
 }
 
 function generateTabs(product: Product, reviews: Review[]) {
+  const approved = reviews.filter((r: Review) => r.isApproved && r.isChecked);
   const tabs: Tab[] = [];
 
   tabs.push({
@@ -86,8 +103,12 @@ function generateTabs(product: Product, reviews: Review[]) {
 
   tabs.push({
     id: 'reviewsTab',
-    text: `Reviews (${reviews.length})`,
-    content: () => <Reviews fetchedReviews={reviews} productId={product._id} productName={product.name} />,
+    text: `Reviews (${approved.length})`,
+    content: () => <Reviews
+      fetchedReviews={reviews}
+      productId={product._id}
+      productName={product.name}
+    />,
   });
 
   return tabs;

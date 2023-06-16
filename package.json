@@ -14,16 +14,21 @@
     "@fortawesome/free-regular-svg-icons": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@mui/material": "^5.13.3",
     "@types/formidable": "^2.0.6",
     "@types/node": "18.16.3",
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.1",
+    "bcrypt": "^5.1.0",
     "eslint": "8.39.0",
     "eslint-config-next": "13.3.4",
     "formidable": "^2.1.1",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.1.1",
     "next": "13.3.4",
+    "nodemailer": "^6.9.3",
     "react": "18.2.0",
+    "react-admin": "^4.11.0",
     "react-dom": "18.2.0",
     "react-select": "^5.7.3",
     "react-toastify": "^9.1.2",
@@ -31,6 +36,9 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.2",
+    "@types/nodemailer": "^6.4.8",
     "eslint-config-airbnb-base": "^15.0.0"
   }
 }

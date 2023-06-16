@@ -23,8 +23,13 @@ export default function ReviewCard({ review }: { review: Review }) {
       />
       <div className={styles.reviewCardContent}>
         <div className={styles.reviewCardMeta}>
-          <span className={`${styles.reviewCardName} bold`}>{review.name}</span>
-          <time className={styles.reviewCardDate} dateTime={review.date}>{formatDate()}</time>
+          {review.isChecked
+            && <>
+              <span className={`${styles.reviewCardName} bold`}>{review.name}</span>
+              <time className={styles.reviewCardDate} dateTime={review.date}>{formatDate()}</time>
+            </>
+          }
+          {!review.isChecked && <span>Your review is awaiting approval</span>}
         </div>
         <Rate isStatic={true} rating={review.rating} />
         <p className={styles.reviewCardText}>{review.text}</p>

@@ -24,7 +24,10 @@ export default class LocalStorageService {
     localStorage.removeItem(key);
   }
 
-  private static getCompatibleValueToSet<T>(value: T): T {
+  private static getCompatibleValueToSet<T>(value: T): T[] | T {
+    if (Array.isArray(value)) {
+      return [...value];
+    }
     if (typeof value === 'object') {
       return { ...value };
     }

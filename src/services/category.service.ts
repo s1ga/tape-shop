@@ -9,6 +9,7 @@ export default class CategoryService {
   ): ICategory | ICategory[] {
     const mapObject = (o: Record<string, string>) => ({
       _id: o._id.toString(),
+      id: o._id.toString(),
       name: o.name,
       imageUrl: o.imageUrl,
     });

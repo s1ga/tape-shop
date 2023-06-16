@@ -39,6 +39,7 @@ export default class ContactFeedbackService {
     : ContactFeedback | ContactFeedback[] {
     const mapObject = (o: ServerContactFeedback) => ({
       _id: o._id.toString(),
+      id: o._id.toString(),
       name: o.name,
       message: o.message,
       email: o.email,

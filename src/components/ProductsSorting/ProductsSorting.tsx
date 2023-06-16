@@ -6,11 +6,15 @@ import LocalStorageService from '@/services/storage.service';
 import storageKeys from '@/constants/storageKeys';
 import { options, Option, SortingOptions, DEFAULT_OPTION } from './options';
 
-// TODO: style select
 export default function ProductsSorting(
   { value, onChange }: { value: ProductItemPreview[], onChange: CallableFunction },
 ) {
   const [currentOption, setCurrentOption] = useState<Option>(DEFAULT_OPTION);
+
+  const selectStyles = {
+    control: (styles: any) => ({ ...styles, width: '250px', cursor: 'pointer' }),
+    option: (styles: any) => ({ ...styles, cursor: 'pointer' }),
+  };
 
   const selectChange = (selected: SingleValue<Option>) => {
     const optionValue: SortingOptions = selected?.value || SortingOptions.Price;
@@ -32,6 +36,7 @@ export default function ProductsSorting(
         isSearchable={false}
         value={currentOption}
         options={options}
+        styles={selectStyles}
         onChange={selectChange} />
     </div>
   );

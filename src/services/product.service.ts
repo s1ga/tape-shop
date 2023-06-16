@@ -4,8 +4,10 @@ import {
 import Product from '@/models/Product';
 import { removeUploadedImage, saveUploadedImage } from '@/utils/uploadedImage';
 import ProductValidator from '@/validation/product.validator';
-import { Fields, Files } from 'formidable';
+import { Fields, Files, File } from 'formidable';
 import { Types } from 'mongoose';
+import { isValidImage } from '@/utils/validTypes';
+import { ProductItemFeatures } from '@/interfaces/product/productFeatures';
 import CategoryService from './category.service';
 import TypeService from './type.service';
 
@@ -43,9 +45,14 @@ export default class ProductService {
     return obj;
   }
 
-  public static async preparePatchedFields(fields: Fields, files: Files, oldImages: string[])
-    : Promise<Partial<IProduct> | string> {
-    const validator = new ProductValidator(null, null);
+  public static async preparePatchedFields(
+    fields: Fields,
+    files: Files,
+    oldImages: string[],
+    oldFeatureImage: string,
+  ): Promise<Partial<IProduct> | string> {
+    const validator = new ProductValidator({}, null);
+    const remainedImages: string[] = JSON.parse(fields.remainedImages as string);
 
     const obj: Partial<IProduct> = {};
     if (fields.name) {
@@ -114,6 +121,9 @@ export default class ProductService {
       if (typeof result === 'string') {
         return result;
       }
+      if (oldFeatureImage && (!features.image || files.featureImage)) {
+        await removeUploadedImage(oldFeatureImage);
+      }
       obj.features = features;
     }
     if (fields.demo) {
@@ -132,29 +142,45 @@ export default class ProductService {
       }
       obj.additionalInformation = additionalInformation;
     }
-    if (fields.availability) {
+    if (!['null', 'undefined'].includes(fields.availability as string)) {
       const result = validator.isValidAvailability(+fields.availability);
       if (typeof result === 'string') {
         return result;
       }
       obj.availability = +fields.availability;
+    } else {
+      obj.availability = null;
     }
-    if (files.images) {
+    if ((files.images as File[])?.length || files.images) {
       const images = Array.isArray(files.images) ? files.images : [files.images];
       const result = validator.isValidImages(images);
       if (typeof result === 'string') {
         return result;
       }
+      obj.images = [...remainedImages, ...await this.addImages(files)];
+    }
+    await Promise.all(
+      oldImages
+        .filter((src: string) => !remainedImages.includes(src))
+        .map(removeUploadedImage),
+    );
+    if (files.featureImage) {
+      const result = isValidImage(files.featureImage as File);
+      if (typeof result === 'string') {
+        return result;
+      }
 
-      await Promise.all(oldImages.map(removeUploadedImage));
-      obj.images = await this.addImages(files);
+      if (!obj.features) {
+        obj.features = {} as ProductItemFeatures;
+      }
+      obj.features!.image = await saveUploadedImage(files.featureImage as File);
     }
 
     return obj;
   }
 
   public static async toServer(fields: PreparedProductItem, files: Files): Promise<NewProductItem> {
-    return {
+    const obj = {
       ...fields,
       dateAdded: new Date().toISOString(),
       categories: fields.categories!.map((id: string) => new Types.ObjectId(id)),
@@ -162,14 +188,22 @@ export default class ProductService {
       related: (fields.related || []).map((id: string) => new Types.ObjectId(id)),
       images: await this.addImages(files),
     };
+    if (files.featureImage) {
+      obj.features = {
+        features: obj.features?.features || [],
+        image: await saveUploadedImage(files.featureImage as File),
+      };
+    }
+    return obj;
   }
 
   public static fromServer(item: any | any[]): ProductItem | ProductItem[] {
     const mapObject = (o: any) => ({
       _id: o._id,
+      id: o._id.toString(),
       name: o.name,
       price: o.price,
-      rate: o.rate || 0,
+      rate: Math.round(o.rate || 0),
       dateAdded: o.dateAdded,
       sku: o.sku,
       description: o.description,
@@ -194,9 +228,10 @@ export default class ProductService {
   public static toFullProduct(product: any): IProduct | IProduct[] {
     const mapObject = (o: any) => ({
       _id: o._id,
+      id: o._id.toString(),
       name: o.name,
       price: o.price,
-      rate: o.rate || 0,
+      rate: Math.round(o.rate || 0),
       dateAdded: o.dateAdded,
       sku: o.sku,
       description: o.description,
@@ -220,12 +255,14 @@ export default class ProductService {
   public static toPreview(products: IProduct | IProduct[]): ProductItemPreview | ProductItemPreview[] {
     const mapObject = (o: IProduct): ProductItemPreview => ({
       _id: o._id,
+      id: o._id.toString(),
       name: o.name,
-      rate: o.rate || 0,
+      rate: Math.round(o.rate || 0),
       images: o.images,
       price: o.price,
       categories: o.categories,
       dateAdded: o.dateAdded,
+      availability: o.availability,
     });
 
     if (Array.isArray(products)) {

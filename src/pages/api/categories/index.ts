@@ -8,9 +8,12 @@ import parseForm, { FileFormError } from '@/utils/parseForm';
 import { saveUploadedImage } from '@/utils/uploadedImage';
 import { File } from 'formidable';
 import { isValidImage, isValidString } from '@/utils/validTypes';
+import HashHandlerService from '@/services/hash.service';
+import itemsPerPage from '@/constants/perPage';
 
 type Response = {
   data: string | ICategory | ICategory[];
+  total?: number;
 };
 
 export const config = {
@@ -25,13 +28,34 @@ export default async function handler(
 ) {
   const { method } = req;
 
-  await dbConnect();
-
   try {
+    await dbConnect();
+
     if (method === httpMethods.get) {
-      const categories = await Category.find({});
-      res.status(200).json({ data: CategoryService.fromServer(categories) });
+      const page = +(req.query.page || 1);
+      const limit = page > 0 ? +(req.query.perPage || itemsPerPage.categories) : 0;
+      let toSkip: number = 0;
+      if (page > 0) {
+        toSkip = (page - 1) * limit;
+      }
+
+      const categories = await Category
+        .find({})
+        .skip(toSkip)
+        .limit(limit);
+      const total = await Category.count();
+
+      res.status(200).json({
+        data: CategoryService.fromServer(categories),
+        total,
+      });
     } else if (method === httpMethods.post) {
+      const verify = await HashHandlerService.verifyAdminToken(req.headers.authorization);
+      if (!verify) {
+        res.status(401).json({ data: 'Invalid access token or role' });
+        return;
+      }
+
       const { fields, files } = await parseForm(req);
       const image = files.image as File;
       const newName = CategoryService.trimName(fields.name as string);

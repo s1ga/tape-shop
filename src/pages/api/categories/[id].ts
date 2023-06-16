@@ -9,6 +9,7 @@ import parseForm from '@/utils/parseForm';
 import { File } from 'formidable';
 import { saveUploadedImage, removeUploadedImage } from '@/utils/uploadedImage';
 import { isValidString, isValidImage } from '@/utils/validTypes';
+import HashHandlerService from '@/services/hash.service';
 
 type Response = {
   data: string | ICategory;
@@ -32,11 +33,11 @@ export default async function handler(
     return;
   }
 
-  await dbConnect();
-
   try {
+    await dbConnect();
+
     const objectId = new Types.ObjectId(id as string);
-    const foundType = await Category.findById<ICategory>(objectId);
+    const foundType = await Category.findById<Record<string, string>>(objectId);
 
     if (!foundType) {
       res.status(404).json({ data: `There is no such product category with given ID: ${id}` });
@@ -44,8 +45,16 @@ export default async function handler(
     }
 
     if (method === httpMethods.get) {
-      res.status(200).json({ data: foundType });
+      res.status(200).json({
+        data: CategoryService.fromServer(foundType) as ICategory,
+      });
     } else if (method === httpMethods.patch) {
+      const verify = await HashHandlerService.verifyAdminToken(req.headers.authorization);
+      if (!verify) {
+        res.status(401).json({ data: 'Invalid access token or role' });
+        return;
+      }
+
       const { fields, files } = await parseForm(req);
       const image = files.image as File;
       const newName = CategoryService.trimName(fields.name as string);
@@ -81,8 +90,17 @@ export default async function handler(
       });
       res.status(201).json({ data: CategoryService.fromServer(category) as ICategory });
     } else if (method === httpMethods.delete) {
+      const verify = await HashHandlerService.verifyAdminToken(req.headers.authorization);
+      if (!verify) {
+        res.status(401).json({ data: 'Invalid access token or role' });
+        return;
+      }
+
+      await removeUploadedImage(foundType.imageUrl);
       await Category.findByIdAndDelete(objectId);
-      res.status(200).json({ data: 'Product category has been sucessfully deleted' });
+      res.status(200).json({
+        data: CategoryService.fromServer(foundType) as ICategory,
+      });
     } else {
       console.warn(`There is no such handler for HTTP method: ${method}`);
       res.setHeader('Allow', [httpMethods.get, httpMethods.patch, httpMethods.delete]);

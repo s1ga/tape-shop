@@ -6,11 +6,22 @@ $card-width-mobile: 250px;
 
 .products {
   display: grid;
-  grid-template-columns: repeat(3, minmax(auto, $card-width));
-  justify-content: space-around;
+  grid-template-columns: repeat(4, minmax(auto, $card-width));
   column-gap: $base-space-size-large;
   row-gap: $base-space-size-enormous;
   color: $color-primary;
+}
+
+.products2 {
+  grid-template-columns: repeat(2, minmax(auto, $card-width));
+}
+
+.products3 {
+  grid-template-columns: repeat(3, minmax(auto, $card-width));
+}
+
+.productsCentered {
+  justify-content: center;
 }
 
 .productsMini {
@@ -127,5 +138,6 @@ $card-width-mobile: 250px;
   .productImg {
     max-width: $card-width-mobile;
     aspect-ratio: 1.2;
+    height: auto;
   }
 }

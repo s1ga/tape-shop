@@ -12,6 +12,11 @@ export const getServerSideProps = async ({ params }: { params: { type: string } 
   await dbConnect();
 
   const type = await TypeService.findById(params.type);
+  if (!type) {
+    return {
+      notFound: true,
+    };
+  }
   const products = await Promise.all(
     type.categories.map(({ _id }) => ProductService.getByTypeCategories(type._id, _id).count()),
   );

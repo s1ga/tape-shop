@@ -9,11 +9,13 @@ import { isValidObjectId } from 'mongoose';
 export default class ProductValidator {
   private readonly body: any;
   private readonly images: File[] | undefined;
+  private readonly featureImage: File | undefined;
 
   constructor(body: any, files: Files | null) {
     this.body = body;
     if (files) {
       this.images = Array.isArray(files.images) ? files.images : [files.images];
+      this.featureImage = files.featureImage as File;
     }
   }
 
@@ -62,7 +64,7 @@ export default class ProductValidator {
 
   public isValidCategories(categories?: string[]): boolean | string {
     if (!Array.isArray(categories || this.body.categories)
-      || !(categories || this.body).categories.every(isValidObjectId)) {
+      || !(categories || this.body.categories).every(isValidObjectId)) {
       return 'Product categories should be array of ID\'s';
     }
     return true;
@@ -118,7 +120,10 @@ export default class ProductValidator {
   }
 
   public isValidFeatures(features?: any): boolean | string {
-    if ((features || this.body.features) && isProductItemFeatures(features || this.body.features)) {
+    if (
+      ((features || this.body.features) && !isProductItemFeatures(features || this.body.features))
+      || (this.featureImage && !isValidImage(this.featureImage))
+    ) {
       return 'Provide valid features';
     }
     return true;

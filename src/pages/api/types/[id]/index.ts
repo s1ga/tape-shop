@@ -5,6 +5,7 @@ import { Type as IType, NewType } from '@/interfaces/type';
 import Type from '@/models/Type';
 import TypeService from '@/services/type.service';
 import { isValidObjectId } from 'mongoose';
+import HashHandlerService from '@/services/hash.service';
 
 type Response = {
   data: string | IType;
@@ -17,9 +18,8 @@ export default async function handler(
   const { method } = req;
   const { id } = req.query;
 
-  await dbConnect();
-
   try {
+    await dbConnect();
     const foundType = await TypeService.findById(id as string);
 
     if (!foundType) {
@@ -28,8 +28,16 @@ export default async function handler(
     }
 
     if (method === httpMethods.get) {
-      res.status(200).json({ data: foundType });
+      res.status(200).json({
+        data: TypeService.fromServer(foundType as unknown as Record<string, string>) as IType,
+      });
     } else if (method === httpMethods.patch) {
+      const verify = await HashHandlerService.verifyAdminToken(req.headers.authorization);
+      if (!verify) {
+        res.status(401).json({ data: 'Invalid access token or role' });
+        return;
+      }
+
       const { name, categories } = req.body;
       const generateId = TypeService.generateId(name);
 
@@ -61,8 +69,16 @@ export default async function handler(
       }).populate('categories').exec();
       res.status(201).json({ data: TypeService.fromServer(type) as IType });
     } else if (method === httpMethods.delete) {
+      const verify = await HashHandlerService.verifyAdminToken(req.headers.authorization);
+      if (!verify) {
+        res.status(401).json({ data: 'Invalid access token or role' });
+        return;
+      }
+
       await Type.findOneAndDelete({ id });
-      res.status(200).json({ data: 'Product type has been sucessfully deleted' });
+      res.status(200).json({
+        data: TypeService.fromServer(foundType as unknown as Record<string, string>) as IType,
+      });
     } else {
       console.warn(`There is no such handler for HTTP method: ${method}`);
       res.setHeader('Allow', [httpMethods.get, httpMethods.patch, httpMethods.delete]);

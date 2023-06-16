@@ -20,6 +20,12 @@
   margin-bottom: $base-space-size-medium;
 }
 
+@media screen and (min-width: 1920px) {
+  .container {
+    padding: 40px 340px;
+  }
+}
+
 @media screen and (max-width: 1366px) {
   .container {
     padding: 40px 80px;

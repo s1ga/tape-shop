@@ -2,31 +2,32 @@ import ProductsList from '@/components/ProductsList/ProductsList';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import styles from '@/styles/modules/TapeDispenser.module.scss';
+import styles from '@/styles/modules/TypesPage.module.scss';
 import TypeService from '@/services/type.service';
 import productTypes from '@/constants/productTypes';
 import ProductService from '@/services/product.service';
 import { Product, ProductItemPreview } from '@/interfaces/product/product';
-import ReviewService from '@/services/review.service';
 import dbConnect from '@/utils/db';
 
 export const getServerSideProps = async () => {
   await dbConnect();
 
   const type = await TypeService.findById(productTypes.TapeDispensers);
-  const products = ProductService.toPreview(
-    await ProductService.getByTypeId(type._id) as Product[],
-  ) as ProductItemPreview[];
-  const ratedProducts = await ReviewService.mapRatingsToProducts(products);
+  let products: ProductItemPreview[] = [];
+  if (type) {
+    products = ProductService.toPreview(
+      await ProductService.getByTypeId(type._id) as Product[],
+    ) as ProductItemPreview[];
+  }
 
   return {
     props: {
-      products: JSON.parse(JSON.stringify(ratedProducts)),
+      products: JSON.parse(JSON.stringify(products)),
     },
   };
 };
 
-export default function TapeDispenser({ products }: { products: Product[] }) {
+export default function TapeDispenser({ products }: { products: ProductItemPreview[] }) {
   return (
     <>
       <Head>
@@ -151,12 +152,14 @@ export default function TapeDispenser({ products }: { products: Product[] }) {
             gyroscope; picture-in-picture; web-share" allowFullScreen />
         </div>
 
-        <section className={styles.dispenserOrder}>
-          <h2 className={`${styles.dispenserTitle} title`}>Order now</h2>
-          <p className={styles.dispenserOrderText}>Take the hassle out of your painting job.</p>
+        {!!products.length
+          && <section className={styles.dispenserOrder}>
+            <h2 className={`${styles.dispenserTitle} title`}>Order now</h2>
+            <p className={styles.dispenserOrderText}>Take the hassle out of your painting job.</p>
 
-          <ProductsList products={products} />
-        </section>
+            <ProductsList products={products} />
+          </section>
+        }
       </div>
     </>
   );

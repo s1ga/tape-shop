@@ -12,11 +12,15 @@ export default class ToastService {
     theme: 'light',
   };
 
-  public static success(text: string, options: ToastOptions = {}) {
-    toast.success(text, { ...this.defaultOptions, ...options });
+  public static success(text: string, options: ToastOptions = {}): number | string {
+    return toast.success(text, { ...this.defaultOptions, ...options });
   }
 
-  public static error(text: string, options: ToastOptions = {}) {
-    toast.error(text, { ...this.defaultOptions, ...options });
+  public static error(text: string, options: ToastOptions = {}): number | string {
+    return toast.error(text, { ...this.defaultOptions, ...options, autoClose: 4000 });
+  }
+
+  public static isActive(id: string | number = ''): boolean {
+    return toast.isActive(id);
   }
 }

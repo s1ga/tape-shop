@@ -44,16 +44,14 @@ export default function CartItem() {
         </span>
       </button>
 
-      {isDrawerOpened
-        && <Drawer isOpened={isDrawerOpened} setIsOpened={setIsDrawerOpened}>
-          <DrawerCart
-            cart={cart}
-            addItems={addItems}
-            removeItem={removeItem}
-            removeAllItem={removeAllItem}
-          />
-        </Drawer>
-      }
+      <Drawer isOpened={isDrawerOpened} setIsOpened={setIsDrawerOpened}>
+        <DrawerCart
+          cart={cart}
+          addItems={addItems}
+          removeItem={removeItem}
+          removeAllItem={removeAllItem}
+        />
+      </Drawer>
     </>
   );
 }
@@ -90,6 +88,7 @@ function DrawerCart({ cart, removeItem, addItems, removeAllItem }: CartDrawerPro
             </Link>
             <div className={styles.cartDrawerCardActions}>
               <AmountHandler
+                availability={i.info.availability}
                 miniView={true}
                 readonly={true}
                 initialValue={i.total}

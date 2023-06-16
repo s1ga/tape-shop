@@ -12,6 +12,7 @@
     "no-underscore-dangle": "off",
     "no-undef": "off",
     "vars-on-top": "warn",
+    "prefer-promise-reject-errors": "off",
     "max-len": [
       "error",
       {
