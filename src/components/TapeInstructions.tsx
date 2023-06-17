@@ -11,7 +11,7 @@ export default function TapeInsctructions() {
           title="YouTube video player"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media;
               gyroscope; picture-in-picture; web-share"
-          allowFullScreen />
+          allowFullScreen loading="lazy" />
         <div>
           <h3 className={`${styles.instructionsTitle} title`}>Instruction video</h3>
           <p>

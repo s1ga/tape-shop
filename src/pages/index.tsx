@@ -46,6 +46,7 @@ export default function Home({ types }: { types: Type[] }) {
             src="https://www.youtube.com/embed/XR4TYaGBWt0
             ?autoplay=1&loop=1&controls=0&mute=1&rel=0&showinfo=0&playlist=XR4TYaGBWt0"
             title="YouTube video player"
+            loading="lazy"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media;
             gyroscope; picture-in-picture; web-share" allowFullScreen />
         </div>

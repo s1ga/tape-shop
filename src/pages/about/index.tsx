@@ -41,6 +41,7 @@ export default function About({ types }: { types: Type[] }) {
             className={`${styles.video} ${styles.aboutItem}`}
             src="https://www.youtube.com/embed/GRXPl5X2SHk"
             title="YouTube video player"
+            loading="lazy"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media;
           gyroscope; picture-in-picture; web-share" allowFullScreen />
         </div>

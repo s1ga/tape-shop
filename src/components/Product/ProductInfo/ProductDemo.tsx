@@ -16,6 +16,7 @@ export default function ProductDemo({ demo, productName }: { demo: ProductItemDe
         height="350"
         src={demo.video}
         title={`Demo video of the ${productName}`}
+        loading="lazy"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media;
             gyroscope; picture-in-picture; web-share" allowFullScreen />
     </section>

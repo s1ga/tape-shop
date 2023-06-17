@@ -147,6 +147,7 @@ export default function TapeDispenser({ products }: { products: ProductItemPrevi
             width="560"
             height="315"
             src="https://www.youtube.com/embed/bh2vlymVoyU"
+            loading="lazy"
             title="Demo and Details of the Quip Tape Dispenser & Systainer - QuiPtaping"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media;
             gyroscope; picture-in-picture; web-share" allowFullScreen />
