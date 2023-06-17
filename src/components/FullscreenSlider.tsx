@@ -7,6 +7,7 @@ import Image from 'next/image';
 const GAP = 32;
 
 // TODO: add draggable slider in v2.0
+// TODO: fix on Mozila
 export default function FullscreenSlider(
   { images, onClose }: { images: string[], onClose: CallableFunction },
 ) {

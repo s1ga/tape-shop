@@ -61,6 +61,7 @@ export default function Thumbnails({ images }: { images: string[] }) {
                     alt={''}
                     width={295}
                     height={295}
+                    priority
                   />
                   <div className={styles.mainBlockIcon}>
                     <FontAwesomeIcon
@@ -77,6 +78,8 @@ export default function Thumbnails({ images }: { images: string[] }) {
                   height={590}
                   src={img}
                   alt=''
+                  decoding="async"
+                  loading="lazy"
                 />
               </div>
             ))}
@@ -97,6 +100,7 @@ export default function Thumbnails({ images }: { images: string[] }) {
                   alt={''}
                   width={100}
                   height={100}
+                  priority
                 />
               </li>
             ))}
