@@ -4,6 +4,8 @@ import { extname } from 'path';
 
 const folder = './public';
 
+console.log(process.cwd());
+
 export async function saveUploadedImage(file: File): Promise<string> {
   const fileFolder = '/images/uploaded';
 
