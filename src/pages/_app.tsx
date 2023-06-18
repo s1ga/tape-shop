@@ -13,6 +13,7 @@ import Loader from '@/components/Loader';
 import getDomain from '@/utils/getDomain';
 import { useRouter } from 'next/router';
 import ToastService from '@/services/toast.service';
+import '@justinribeiro/lite-youtube';
 
 const DOMAIN = getDomain();
 const HIDE_MENU_PATHS = ['/admin'];

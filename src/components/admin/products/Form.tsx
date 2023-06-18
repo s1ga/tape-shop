@@ -207,7 +207,7 @@ export default function ProductForm({ children }: { children: ReactElement }) {
                   sx={{ '& .RaImageField-image': { width: '240px', height: 'auto', aspectRatio: 1 } }}
                 />
               </ImageInput>
-              <ArrayInput fullWidth source="features.features">
+              <ArrayInput fullWidth source="features.features" defaultValue={[]}>
                 <SimpleFormIterator fullWidth inline>
                   <TextInput source="key" />
                   <TextInput source="value" />
