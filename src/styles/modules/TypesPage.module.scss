@@ -165,7 +165,7 @@ $section-width-mobile: 100%;
 
   .dispenserImg {
     width: $section-width-mobile;
-    max-width: 420px;
+    max-width: 380px;
     aspect-ratio: 1.1;
     height: auto;
   }
@@ -175,7 +175,7 @@ $section-width-mobile: 100%;
   }
 
   .dispenserVideo {
-    width: $section-width-mobile;
+    width: calc($section-width-mobile - 10%);
     margin-top: $base-space-size-medium;
   }
 

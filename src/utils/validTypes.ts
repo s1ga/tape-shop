@@ -1,5 +1,5 @@
-import isBase64 from 'is-base64';
 import { EMAIL_REGEX } from '@/constants/regex';
+import isBase64 from './isBase64';
 
 export function isValidString(str: string): boolean {
   if (!str || typeof str !== 'string') {
