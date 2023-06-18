@@ -2,59 +2,50 @@ import {
   NewProductItem, PreparedProductItem, Product as IProduct, ProductItem, ProductItemPreview,
 } from '@/interfaces/product/product';
 import Product from '@/models/Product';
-import { removeUploadedImage, saveUploadedImage } from '@/utils/uploadedImage';
 import ProductValidator from '@/validation/product.validator';
-import { Fields, Files, File } from 'formidable';
 import { Types } from 'mongoose';
-import { isValidImage } from '@/utils/validTypes';
-import { ProductItemFeatures } from '@/interfaces/product/productFeatures';
 import CategoryService from './category.service';
 import TypeService from './type.service';
 
 export default class ProductService {
-  public static validate(body: any, files: Files): string | boolean {
-    const validator = new ProductValidator(body, files);
+  public static validate(body: any): string | boolean {
+    const validator = new ProductValidator(body);
     return validator.isAllValid();
   }
 
-  public static prepareFields(fields: Fields): PreparedProductItem {
+  public static prepareFields(fields: any): PreparedProductItem {
     const obj: PreparedProductItem = {
       name: fields.name as string,
       price: +fields.price,
-      categories: JSON.parse(fields.categories as string),
-      productType: JSON.parse(fields.productType as string),
+      categories: fields.categories,
+      productType: fields.productType,
       sku: fields.sku as string,
       description: fields.description as string,
-      characteristics: JSON.parse(fields.characteristics as string),
+      characteristics: fields.characteristics,
+      images: fields.images,
     };
     if (fields.related) {
-      obj.related = JSON.parse(fields.related as string);
+      obj.related = fields.related;
     }
     if (fields.availability) {
       obj.availability = +fields.availability;
     }
     if (fields.features) {
-      obj.features = JSON.parse(fields.features as string);
+      obj.features = fields.features;
     }
     if (fields.demo) {
-      obj.demo = JSON.parse(fields.demo as string);
+      obj.demo = fields.demo;
     }
     if (fields.additionalInformation) {
-      obj.additionalInformation = JSON.parse(fields.additionalInformation as string);
+      obj.additionalInformation = fields.additionalInformation;
     }
     return obj;
   }
 
-  public static async preparePatchedFields(
-    fields: Fields,
-    files: Files,
-    oldImages: string[],
-    oldFeatureImage: string,
-  ): Promise<Partial<IProduct> | string> {
-    const validator = new ProductValidator({}, null);
-    const remainedImages: string[] = JSON.parse(fields.remainedImages as string);
+  public static async preparePatchedFields(fields: any): Promise<Partial<ProductItem> | string> {
+    const validator = new ProductValidator({});
+    const obj: Partial<ProductItem> = {};
 
-    const obj: Partial<IProduct> = {};
     if (fields.name) {
       const result = validator.isValidName(fields.name as string);
       if (typeof result === 'string') {
@@ -70,7 +61,7 @@ export default class ProductService {
       obj.price = +fields.price;
     }
     if (fields.categories) {
-      const categories = JSON.parse(fields.categories as string);
+      const categories = fields.categories as string[];
       const result = validator.isValidCategories(categories);
       if (typeof result === 'string') {
         return result;
@@ -78,7 +69,7 @@ export default class ProductService {
       obj.categories = categories;
     }
     if (fields.productType) {
-      const productType = JSON.parse(fields.productType as string);
+      const productType = fields.productType as string[];
       const result = validator.isValidproductType(productType);
       if (typeof result === 'string') {
         return result;
@@ -86,7 +77,7 @@ export default class ProductService {
       obj.productType = productType;
     }
     if (fields.related) {
-      const related = JSON.parse(fields.related as string);
+      const related = fields.related as string[];
       const result = validator.isValidRelatedProducts(related);
       if (typeof result === 'string') {
         return result;
@@ -108,7 +99,7 @@ export default class ProductService {
       obj.description = fields.description as string;
     }
     if (fields.characteristics) {
-      const characteristics = JSON.parse(fields.characteristics as string);
+      const { characteristics } = fields;
       const result = validator.isValidCharacteristics(characteristics);
       if (typeof result === 'string') {
         return result;
@@ -116,18 +107,15 @@ export default class ProductService {
       obj.characteristics = characteristics;
     }
     if (fields.features) {
-      const features = JSON.parse(fields.features as string);
+      const { features } = fields;
       const result = validator.isValidFeatures(features);
       if (typeof result === 'string') {
         return result;
       }
-      if (oldFeatureImage && (!features.image || files.featureImage)) {
-        await removeUploadedImage(oldFeatureImage);
-      }
       obj.features = features;
     }
     if (fields.demo) {
-      const demo = JSON.parse(fields.demo as string);
+      const { demo } = fields;
       const result = validator.isValidDemo(demo);
       if (typeof result === 'string') {
         return result;
@@ -135,7 +123,7 @@ export default class ProductService {
       obj.demo = demo;
     }
     if (fields.additionalInformation) {
-      const additionalInformation = JSON.parse(fields.additionalInformation as string);
+      const { additionalInformation } = fields;
       const result = validator.isValidAdditionalInfo(additionalInformation);
       if (typeof result === 'string') {
         return result;
@@ -151,50 +139,26 @@ export default class ProductService {
     } else {
       obj.availability = null;
     }
-    if ((files.images as File[])?.length || files.images) {
-      const images = Array.isArray(files.images) ? files.images : [files.images];
+    if (fields.images?.length) {
+      const { images } = fields;
       const result = validator.isValidImages(images);
       if (typeof result === 'string') {
         return result;
       }
-      obj.images = [...remainedImages, ...await this.addImages(files)];
-    }
-    await Promise.all(
-      oldImages
-        .filter((src: string) => !remainedImages.includes(src))
-        .map(removeUploadedImage),
-    );
-    if (files.featureImage) {
-      const result = isValidImage(files.featureImage as File);
-      if (typeof result === 'string') {
-        return result;
-      }
-
-      if (!obj.features) {
-        obj.features = {} as ProductItemFeatures;
-      }
-      obj.features!.image = await saveUploadedImage(files.featureImage as File);
+      obj.images = images;
     }
 
     return obj;
   }
 
-  public static async toServer(fields: PreparedProductItem, files: Files): Promise<NewProductItem> {
-    const obj = {
+  public static async toServer(fields: PreparedProductItem): Promise<NewProductItem> {
+    return ({
       ...fields,
       dateAdded: new Date().toISOString(),
       categories: fields.categories!.map((id: string) => new Types.ObjectId(id)),
       productType: [new Types.ObjectId(fields.productType[0])],
       related: (fields.related || []).map((id: string) => new Types.ObjectId(id)),
-      images: await this.addImages(files),
-    };
-    if (files.featureImage) {
-      obj.features = {
-        features: obj.features?.features || [],
-        image: await saveUploadedImage(files.featureImage as File),
-      };
-    }
-    return obj;
+    });
   }
 
   public static fromServer(item: any | any[]): ProductItem | ProductItem[] {
@@ -269,11 +233,6 @@ export default class ProductService {
       return products.map(mapObject);
     }
     return mapObject(products);
-  }
-
-  private static async addImages(files: Files): Promise<string[]> {
-    const images = Array.isArray(files.images) ? files.images : [files.images];
-    return Promise.all(images.map(saveUploadedImage));
   }
 
   public static getByTypeCategories(typeId: string, categoryId: string) {

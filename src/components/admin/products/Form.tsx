@@ -4,9 +4,9 @@ import {
   ArrayInput, ImageField, ImageInput, Labeled,
   NumberInput, RecordContextProvider, ReferenceArrayInput,
   SelectArrayInput, SelectInput, SimpleFormIterator, TabbedForm,
-  TextInput, minLength, required, useRecordContext,
+  TextInput, minLength, required, useNotify, useRecordContext,
 } from 'react-admin';
-import { ReactElement } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { Product } from '@/interfaces/product/product';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
@@ -20,13 +20,48 @@ const nonZeroValidation = (value: number) => {
   }
   return undefined;
 };
+const MAX_FILE_SIZE = 1000 * 1000;
+const MAX_FILES = 8;
 
 export default function ProductForm({ children }: { children: ReactElement }) {
+  const [filesLength, setFilesLength] = useState<number>(0);
+  const [context, setContext] = useState<any>();
   const record = useRecordContext<Product>();
-  let context: any;
+  const notify = useNotify();
 
-  if (record) {
-    context = {
+  const fileSizeValidation = (file: File) => {
+    if (file.size > MAX_FILE_SIZE) {
+      notify('File size should not exceed 1MB', { type: 'error' });
+      return {
+        code: 'size-too-large',
+        message: 'File size should not exceed 1MB',
+      };
+    }
+
+    return null;
+  };
+
+  const fileSizeWithLengthValidation = (file: File) => {
+    const sizeValidation = fileSizeValidation(file);
+    if (sizeValidation) {
+      return sizeValidation;
+    }
+    if (filesLength === MAX_FILES) {
+      notify('Maximum files amount is 8', { type: 'error' });
+      return {
+        code: 'length-too-large',
+        message: 'Maximum files amount is 8',
+      };
+    }
+
+    setFilesLength((state: number) => state + 1);
+    return null;
+  };
+
+  useEffect(() => {
+    if (!record) return;
+    setFilesLength(record.images.length);
+    setContext({
       ...record,
       images: typeof record.images[0] === 'string'
         ? record.images.map((src: string) => ({ id: src, src }))
@@ -37,8 +72,8 @@ export default function ProductForm({ children }: { children: ReactElement }) {
       features: record.features
         ? { ...record.features, image: { id: record.features.image, src: record.features.image } }
         : record.features,
-    };
-  }
+    });
+  }, [record]);
 
   return (
     <RecordContextProvider value={context || record}>
@@ -46,7 +81,6 @@ export default function ProductForm({ children }: { children: ReactElement }) {
         sanitizeEmptyValues
         warnWhenUnsavedChanges
         toolbar={children}
-        defaultValues={{ availability: 0 }}
       >
         <TabbedForm.Tab label="Main info">
           <Grid container columnSpacing={2}>
@@ -95,6 +129,12 @@ export default function ProductForm({ children }: { children: ReactElement }) {
         <TabbedForm.Tab label="Images" path="images">
           <ImageInput
             validate={req}
+            maxSize={MAX_FILE_SIZE}
+            validateFileRemoval={() => {
+              setFilesLength((state: number) => state - 1);
+              return true;
+            }}
+            options={{ maxFiles: MAX_FILES, validator: fileSizeWithLengthValidation }}
             source="images"
             accept={imagesMimeTypes.join(',')}
             multiple
@@ -108,7 +148,7 @@ export default function ProductForm({ children }: { children: ReactElement }) {
         <TabbedForm.Tab label="Characteristics" path="characteristics">
           <Grid container rowSpacing={2}>
             <Grid item xs={12} sm={5}>
-              <TextInput fullWidth source="characteristics.phrase" validate={req} />
+              <TextInput fullWidth source="characteristics.phrase" defaultValue={''} />
             </Grid>
             <Grid item xs={0} sm={5} />
             <Grid item xs={12} sm={7}>
@@ -157,7 +197,9 @@ export default function ProductForm({ children }: { children: ReactElement }) {
           <Labeled label="Features">
             <>
               <ImageInput
-                source={record ? 'features.image' : 'featureImage'}
+                source="features.image"
+                maxSize={MAX_FILE_SIZE}
+                options={{ validator: fileSizeValidation }}
                 accept={imagesMimeTypes.join(',')}
               >
                 <ImageField

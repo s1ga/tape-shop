@@ -36,7 +36,7 @@ export type NewProductItem = Omit<
   '_id' | 'id' | 'categories' | 'productType' | 'related' | 'rate'
 > & { categories: Types.ObjectId[], related: Types.ObjectId[], productType: Types.ObjectId[] }
 
-export type PreparedProductItem = Omit<ProductItem, '_id' | 'id' | 'rate' | 'dateAdded' | 'images' | 'rate'>
+export type PreparedProductItem = Omit<ProductItem, '_id' | 'id' | 'rate' | 'dateAdded' | 'rate'>
 
 export type ProductItemPreview = Pick<
   Product,

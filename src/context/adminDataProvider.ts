@@ -10,6 +10,7 @@ import { Category } from '@/interfaces/category';
 import { equalsPrimitiveArrays } from '@/utils/helpers';
 import adminResourceMap from '@/constants/admin-resources';
 import buildUrlQuery from '@/utils/buildUrlQuery';
+import decodeBaseImage from '@/utils/getBaseImage';
 
 const BASE_URL = `${getDomain()}/api`;
 
@@ -21,7 +22,7 @@ const thenFunc = async (res: Response) => {
   return data;
 };
 
-const updateMutation = (resource: string, params: UpdateParams<any>) => {
+const updateMutation = async (resource: string, params: UpdateParams<any>) => {
   console.log(resource, params);
   const token = LocalStorageService.get<string>(storageKeys.AdminAuth) || '';
   const setRequest = (body: any) => new Request(`${BASE_URL}/${resource}/${params.id}`, {
@@ -31,14 +32,16 @@ const updateMutation = (resource: string, params: UpdateParams<any>) => {
   });
   switch (resource) {
     case adminResourceMap.categories: {
-      const body = new FormData();
+      const body: Record<string, string> = {};
       if (params.previousData.name !== params.data.name) {
-        body.append('name', params.data.name);
+        body.name = params.data.name;
       }
       if (params.data.imageUrl.rawFile) {
-        body.append('image', params.data.imageUrl.rawFile);
+        body.imageUrl = await decodeBaseImage(params.data.imageUrl.rawFile);
       }
-      return fetch(setRequest(body)).then(thenFunc);
+      const request = setRequest(JSON.stringify(body));
+      request.headers.set('Content-Type', 'Application/json');
+      return fetch(request).then(thenFunc);
     }
     case adminResourceMap.types: {
       const body: Record<string, string | string[]> = {};
@@ -68,38 +71,40 @@ const updateMutation = (resource: string, params: UpdateParams<any>) => {
     }
     case adminResourceMap.products: {
       const { data } = params;
-      const body = new FormData();
-      if (data.features?.image?.rawFile) {
-        body.append('featureImage', data.features?.image?.rawFile);
-        data.features.image = undefined;
-      } else if (typeof data.features?.image !== 'string') {
-        data.features.image = undefined;
+      const body: Record<string, any> = {};
+      body.name = data.name;
+      body.price = data.price;
+      body.sku = data.sku;
+      body.availability = data.availability;
+      body.description = data.description;
+      body.characteristics = data.characteristics;
+      body.features = data.features;
+      if (body.features?.image) {
+        let { src } = body.features.image;
+        const file = body.features.image.rawFile;
+        if (file) {
+          src = await decodeBaseImage(file);
+        }
+        body.features.image = src;
       }
-      body.append('name', data.name);
-      body.append('price', data.price);
-      body.append('sku', data.sku);
-      body.append('availability', data.availability);
-      body.append('description', data.description);
-      body.append('characteristics', JSON.stringify(data.characteristics));
-      body.append('features', JSON.stringify(data.features));
-      body.append('related', JSON.stringify(data.related || []));
-      body.append('productType', JSON.stringify([data.productType]));
-      body.append('categories', JSON.stringify(data.categories));
-      body.append('additionalInformation', JSON.stringify(data.additionalInformation || []));
-      body.append('demo', JSON.stringify(data.demo));
-      const images: File[] = [];
-      const remainedImages: string[] = data.images
-        .filter((i: any) => {
+      body.related = data.related || [];
+      body.productType = [data.productType];
+      body.categories = data.categories;
+      body.additionalInformation = data.additionalInformation || [];
+      body.demo = data.demo;
+      body.images = await Promise.all(
+        data.images.map(async (i: any) => {
+          let { src } = i;
           const file = i.rawFile;
           if (file) {
-            images.push(file);
+            src = await decodeBaseImage(file);
           }
-          return !file;
-        })
-        .map((i: any) => i.src);
-      body.append('remainedImages', JSON.stringify(remainedImages));
-      images.forEach((f: File) => body.append('images', f));
-      return fetch(setRequest(body)).then(thenFunc);
+          return src;
+        }),
+      );
+      const request = setRequest(JSON.stringify(body));
+      request.headers.set('Content-Type', 'Application/json');
+      return fetch(request).then(thenFunc);
     }
     default:
       console.warn(`No handler for resource ${resource}`);
@@ -147,7 +152,7 @@ const updateManyMutation = async (resource: string, params: UpdateManyParams) =>
   }
 };
 
-const createMutation = (resource: string, params: CreateParams) => {
+const createMutation = async (resource: string, params: CreateParams) => {
   const token = LocalStorageService.get<string>(storageKeys.AdminAuth) || '';
   const setRequest = (body: any) => new Request(`${BASE_URL}/${resource}`, {
     method: httpMethods.post,
@@ -156,39 +161,49 @@ const createMutation = (resource: string, params: CreateParams) => {
   });
   switch (resource) {
     case adminResourceMap.categories: {
-      const body = new FormData();
-      body.append('name', params.data.name);
-      body.append('image', params.data.image.rawFile);
-      return fetch(setRequest(body)).then(thenFunc);
+      const imageUrl = await decodeBaseImage(params.data.image.rawFile);
+      const request = setRequest(JSON.stringify({
+        name: params.data.name,
+        imageUrl,
+      }));
+      request.headers.set('Content-Type', 'Application/json');
+      return fetch(request).then(thenFunc);
     }
     case adminResourceMap.types: {
-      const body: Record<string, string | string[]> = {};
-      body.name = params.data.name;
-      body.categories = params.data.categories;
-      const request = setRequest(JSON.stringify(body));
+      const request = setRequest(JSON.stringify({
+        name: params.data.name,
+        categories: params.data.categories,
+      }));
       request.headers.set('Content-Type', 'Application/json');
       return fetch(request).then(thenFunc);
     }
     case adminResourceMap.products: {
       const { data } = params;
-      const body = new FormData();
+      const body: Record<string, any> = {};
       if (data.demo) {
-        body.append('demo', JSON.stringify(data.demo));
+        body.demo = data.demo;
       }
-      body.append('name', data.name);
-      body.append('price', data.price);
-      body.append('sku', data.sku);
-      body.append('availability', data.availability);
-      body.append('description', data.description);
-      body.append('characteristics', JSON.stringify(data.characteristics));
-      body.append('features', JSON.stringify(data.features));
-      body.append('related', JSON.stringify(data.related || []));
-      body.append('productType', JSON.stringify([data.productType]));
-      body.append('categories', JSON.stringify(data.categories));
-      body.append('additionalInformation', JSON.stringify(data.additionalInformation || []));
-      body.append('featureImage', data.featureImage);
-      data.images.forEach((file: File) => body.append('images', file));
-      return fetch(setRequest(body)).then(thenFunc);
+      body.name = data.name;
+      body.price = data.price;
+      body.sku = data.sku;
+      body.availability = data.availability;
+      body.description = data.description;
+      body.characteristics = data.characteristics;
+      body.features = data.features;
+      if (body.features?.image) {
+        body.features.image = await decodeBaseImage(data.features.image.rawFile);
+      }
+      body.related = data.related || [];
+      body.productType = [data.productType];
+      body.categories = data.categories;
+      body.additionalInformation = data.additionalInformation || [];
+      body.featureImage = data.featureImage;
+      body.images = await Promise.all(
+        data.images.map(decodeBaseImage),
+      );
+      const request = setRequest(JSON.stringify(body));
+      request.headers.set('Content-Type', 'Application/json');
+      return fetch(request).then(thenFunc);
     }
     default:
       console.warn(`No handler for resource ${resource}`);
@@ -207,13 +222,16 @@ const getOneMutation = (resource: string, params: GetOneParams<any>) => {
       const updated = { ...data };
       switch (resource) {
         case adminResourceMap.categories:
-          updated.data.imageUrl = { id: data.data.imageUrl, src: data.data.imageUrl };
+          updated.data.imageUrl = { id: `${Date.now()}`, src: data.data.imageUrl };
           break;
         case adminResourceMap.types:
           updated.data.categories = updated.data.categories.map((c: Category) => c._id);
           break;
         case adminResourceMap.products:
-          updated.data.images = data.data.images.map((src: string) => ({ id: src, src }));
+          updated.data.images = data.data.images.map((src: string, idx: number) => ({
+            id: `${Date.now()}_${idx}`,
+            src,
+          }));
           updated.data.characteristics.items = data.data.characteristics.items
             .map((field: string) => ({ field }));
           updated.data.productType = data.data.productType[0]._id;

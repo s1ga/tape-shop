@@ -30,9 +30,6 @@ function EditToolbar(props: any) {
 
   const transform = (record: NewProductItem) => {
     const updated = { ...record };
-    if ((record.features?.image as any)?.id) {
-      updated.features!.image = (record.features?.image as any).id;
-    }
     if (record.features?.features?.length) {
       updated.features!.features = record.features.features
         .filter((r: Record<string, string>) => r.key && r.value);

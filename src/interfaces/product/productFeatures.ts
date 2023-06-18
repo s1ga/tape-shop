@@ -1,4 +1,4 @@
-import { isValidObject } from '@/utils/validTypes';
+import { isValidImage, isValidObject } from '@/utils/validTypes';
 
 export interface ProductItemFeatures {
   image?: string;
@@ -9,5 +9,5 @@ export function isProductItemFeatures(obj: any): obj is ProductItemFeatures {
   return Array.isArray(obj?.features)
     && (obj?.features.length
       ? obj.features.every(isValidObject)
-      : true);
+      : true) && (obj.image ? isValidImage(obj.image) : true);
 }

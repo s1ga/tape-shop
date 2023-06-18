@@ -1,6 +1,5 @@
-import imagesMimeTypes from '@/constants/mimeTypes';
+import isBase64 from 'is-base64';
 import { EMAIL_REGEX } from '@/constants/regex';
-import { File } from 'formidable';
 
 export function isValidString(str: string): boolean {
   if (!str || typeof str !== 'string') {
@@ -10,8 +9,8 @@ export function isValidString(str: string): boolean {
   return true;
 }
 
-export function isValidImage(image: File | undefined) {
-  if (!image || !imagesMimeTypes.includes(image.mimetype || '')) {
+export function isValidImage(image: string) {
+  if (!image || !isBase64(image, { mimeRequired: true })) {
     return false;
   }
 

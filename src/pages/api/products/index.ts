@@ -3,7 +3,6 @@ import httpMethods from '@/constants/httpMethods';
 import Product from '@/models/Product';
 import dbConnect from '@/utils/db';
 import ProductService from '@/services/product.service';
-import parseForm from '@/utils/parseForm';
 import { Product as IProduct, ProductItem } from '@/interfaces/product/product';
 import HashHandlerService from '@/services/hash.service';
 import itemsPerPage from '@/constants/perPage';
@@ -13,12 +12,6 @@ import sortingValue from '@/constants/sortingValues';
 type Response = {
   data: string | ProductItem | IProduct | IProduct[];
   total?: number;
-};
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
 };
 
 const buildQuery = (params: NextApiRequest['query']) => {
@@ -116,21 +109,15 @@ export default async function handler(
         return;
       }
 
-      const { fields, files } = await parseForm(req, { multiples: true });
-      const preparedFields = ProductService.prepareFields(fields);
-      try {
-        const validation = ProductService.validate(preparedFields, files);
-        if (typeof validation === 'string') {
-          res.status(400).json({ data: validation });
-          return;
-        }
-      } catch {
-        res.status(400).json({ data: 'Invalid body' });
+      const preparedFields = ProductService.prepareFields(req.body);
+      const validation = ProductService.validate(preparedFields);
+      if (typeof validation === 'string') {
+        res.status(400).json({ data: validation });
         return;
       }
 
       const newProduct = await Product.create(
-        await ProductService.toServer(preparedFields, files),
+        await ProductService.toServer(preparedFields),
       );
       res.status(201).json({ data: ProductService.fromServer(newProduct) as ProductItem });
     } else {

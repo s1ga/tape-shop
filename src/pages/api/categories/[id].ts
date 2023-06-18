@@ -5,20 +5,11 @@ import Category from '@/models/Category';
 import { Category as ICategory, NewCategory } from '@/interfaces/category';
 import CategoryService from '@/services/category.service';
 import { Types } from 'mongoose';
-import parseForm from '@/utils/parseForm';
-import { File } from 'formidable';
-import { saveUploadedImage, removeUploadedImage } from '@/utils/uploadedImage';
 import { isValidString, isValidImage } from '@/utils/validTypes';
 import HashHandlerService from '@/services/hash.service';
 
 type Response = {
   data: string | ICategory;
-};
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
 };
 
 export default async function handler(
@@ -55,12 +46,11 @@ export default async function handler(
         return;
       }
 
-      const { fields, files } = await parseForm(req);
-      const image = files.image as File;
-      const newName = CategoryService.trimName(fields.name as string);
+      const { name, imageUrl } = req.body;
+      const newName = CategoryService.trimName(name as string);
 
       const isValidName = isValidString(newName);
-      const isValidImg = isValidImage(image);
+      const isValidImg = isValidImage(imageUrl);
 
       if (!isValidName && !isValidImg) {
         res.status(400).json({
@@ -77,8 +67,6 @@ export default async function handler(
 
       let object: Partial<NewCategory> = {};
       if (isValidImg) {
-        const imageUrl = await saveUploadedImage(image);
-        await removeUploadedImage(foundType.imageUrl);
         object = { ...object, imageUrl };
       }
       if (isValidName) {
@@ -96,7 +84,6 @@ export default async function handler(
         return;
       }
 
-      await removeUploadedImage(foundType.imageUrl);
       await Category.findByIdAndDelete(objectId);
       res.status(200).json({
         data: CategoryService.fromServer(foundType) as ICategory,

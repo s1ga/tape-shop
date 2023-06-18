@@ -1,10 +1,12 @@
 import { isValidString } from '@/utils/validTypes';
 
 export interface ProductItemCharacteristics {
-  phrase: string;
+  phrase?: string;
   items: string[];
 }
 
 export function isProductItemCharacteristics(obj: any): obj is ProductItemCharacteristics {
-  return isValidString(obj.phrase) && !!obj.items?.length && obj.items.every(isValidString);
+  return (obj.phrase ? isValidString(obj.phrase) : true)
+    && !!obj.items?.length
+    && obj.items.every(isValidString);
 }

@@ -4,9 +4,6 @@ import dbConnect from '@/utils/db';
 import Category from '@/models/Category';
 import { Category as ICategory, NewCategory } from '@/interfaces/category';
 import CategoryService from '@/services/category.service';
-import parseForm, { FileFormError } from '@/utils/parseForm';
-import { saveUploadedImage } from '@/utils/uploadedImage';
-import { File } from 'formidable';
 import { isValidImage, isValidString } from '@/utils/validTypes';
 import HashHandlerService from '@/services/hash.service';
 import itemsPerPage from '@/constants/perPage';
@@ -14,12 +11,6 @@ import itemsPerPage from '@/constants/perPage';
 type Response = {
   data: string | ICategory | ICategory[];
   total?: number;
-};
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
 };
 
 export default async function handler(
@@ -56,13 +47,12 @@ export default async function handler(
         return;
       }
 
-      const { fields, files } = await parseForm(req);
-      const image = files.image as File;
-      const newName = CategoryService.trimName(fields.name as string);
+      const { name, imageUrl } = req.body;
+      const newName = CategoryService.trimName(name as string);
 
-      if (!isValidString(newName) || !isValidImage(image)) {
+      if (!isValidString(newName) || !isValidImage(imageUrl)) {
         res.status(400).json({
-          data: 'Name and image are required for product category and should be string and image file',
+          data: 'Name and image are required for product category and should be strings',
         });
         return;
       }
@@ -73,7 +63,6 @@ export default async function handler(
         return;
       }
 
-      const imageUrl = await saveUploadedImage(image);
       const object: NewCategory = { name: newName, imageUrl };
       const category = await Category.create(object);
       res.status(201).json({ data: CategoryService.fromServer(category) });
@@ -84,10 +73,6 @@ export default async function handler(
     }
   } catch (error) {
     console.error(error);
-    if (error instanceof FileFormError) {
-      res.status(error.httpCode || 400).json({ data: error.message });
-    } else {
-      res.status(500).json({ data: 'Internal server error' });
-    }
+    res.status(500).json({ data: 'Internal server error' });
   }
 }

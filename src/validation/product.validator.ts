@@ -3,20 +3,13 @@ import { isProductItemCharacteristics } from '@/interfaces/product/productCharac
 import { isProductItemDemo } from '@/interfaces/product/productDemo';
 import { isProductItemFeatures } from '@/interfaces/product/productFeatures';
 import { isValidImage, isValidNumber, isValidString } from '@/utils/validTypes';
-import { File, Files } from 'formidable';
 import { isValidObjectId } from 'mongoose';
 
 export default class ProductValidator {
   private readonly body: any;
-  private readonly images: File[] | undefined;
-  private readonly featureImage: File | undefined;
 
-  constructor(body: any, files: Files | null) {
+  constructor(body: any) {
     this.body = body;
-    if (files) {
-      this.images = Array.isArray(files.images) ? files.images : [files.images];
-      this.featureImage = files.featureImage as File;
-    }
   }
 
   public isAllValid(): boolean | string {
@@ -122,15 +115,17 @@ export default class ProductValidator {
   public isValidFeatures(features?: any): boolean | string {
     if (
       ((features || this.body.features) && !isProductItemFeatures(features || this.body.features))
-      || (this.featureImage && !isValidImage(this.featureImage))
     ) {
       return 'Provide valid features';
     }
     return true;
   }
 
-  public isValidImages(images?: File[]): boolean | string {
-    if (!Array.isArray(images || this.images) || !(images || this.images || []).every(isValidImage)) {
+  public isValidImages(images?: string[]): boolean | string {
+    if (
+      !Array.isArray(images || this.body.images)
+      || !(images || this.body.images || []).every(isValidImage)
+    ) {
       return 'Images are required and should be array of images';
     }
     return true;

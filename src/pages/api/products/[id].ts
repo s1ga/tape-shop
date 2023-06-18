@@ -2,18 +2,10 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import httpMethods from '@/constants/httpMethods';
 import dbConnect from '@/utils/db';
 import Product from '@/models/Product';
-import parseForm from '@/utils/parseForm';
 import ProductService from '@/services/product.service';
 import { Types } from 'mongoose';
 import { Product as IProduct } from '@/interfaces/product/product';
 import HashHandlerService from '@/services/hash.service';
-import { removeUploadedImage } from '@/utils/uploadedImage';
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
 
 type Response = {
   data: string | IProduct;
@@ -54,13 +46,7 @@ export default async function handler(
         return;
       }
 
-      const { fields, files } = await parseForm(req, { multiples: true });
-      const obj = await ProductService.preparePatchedFields(
-        fields,
-        files,
-        foundType.images,
-        foundType.features.image || '',
-      );
+      const obj = await ProductService.preparePatchedFields(req.body);
       if (typeof obj === 'string') {
         res.status(400).json({ data: obj });
         return;
@@ -82,10 +68,6 @@ export default async function handler(
         return;
       }
 
-      if (foundType.features.image) {
-        await removeUploadedImage(foundType.features.image);
-      }
-      await Promise.all(foundType.images.map(removeUploadedImage));
       await Product.findOneAndDelete({ _id: id });
       res.status(200).json({ data: ProductService.toFullProduct(foundType) as IProduct });
     } else {
