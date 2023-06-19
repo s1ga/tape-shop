@@ -8,6 +8,57 @@ export default function UserInstructions() {
     <>
       <Head>
         <title>User instructions - QuiPtaping</title>
+        <meta
+          name="description"
+          content="Everybody recognises the time and effort that is spent on preparation.
+          Also the appliance of tape is such a time consuming job and requires
+          some skills and practice to mask properly. Finally, when you remove the tape … the result is
+          not what you had in mind: straight painting lines."
+        />
+        <meta name="dc.title" content="User instructions - QuiPtaping" />
+        <meta
+          name="dc.description"
+          content="Everybody recognises the time and effort that is spent on preparation.
+          Also the appliance of tape is such a time consuming job and requires
+          some skills and practice to mask properly. Finally, when you remove the tape … the result is
+          not what you had in mind: straight painting lines."
+        />
+        <meta name="dc.relation" content={`${process.env.DOMAIN}/user-instructions`} />
+        <meta name="robots" content="index, follow" />
+        <meta
+          name="googlebot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        <link rel="canonical" href={`${process.env.DOMAIN}/user-instructions`} />
+        <meta name="og:url" content={`${process.env.DOMAIN}/user-instructions`} />
+        <meta property="og:title" content="User instructions - QuiPtaping" />
+        <meta
+          name="og:description"
+          content="Everybody recognises the time and effort that is spent on preparation.
+          Also the appliance of tape is such a time consuming job and requires
+          some skills and practice to mask properly. Finally, when you remove the tape … the result is
+          not what you had in mind: straight painting lines."
+        />
+        <meta
+          property="og:image"
+          content="/images/instructions/step1.jpg"
+        />
+        <meta
+          property="og:image:secure_url"
+          content="/images/instructions/step1.jpg"
+        />
+        <meta name="twitter:title" content="User instructions - QuiPtaping" />
+        <meta
+          name="twitter:description"
+          content="Everybody recognises the time and effort that is spent on preparation.
+          Also the appliance of tape is such a time consuming job and requires
+          some skills and practice to mask properly. Finally, when you remove the tape … the result is
+          not what you had in mind: straight painting lines."
+        />
+        <meta
+          property="twitter:image"
+          content="/images/instructions/step1.jpg"
+        />
       </Head>
       <div className={styles.instructions}>
         <div className={`container ${styles.instructionsBlock}`}>

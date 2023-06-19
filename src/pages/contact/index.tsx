@@ -48,18 +48,53 @@ export default function Contact() {
 
   return (
     <>
-      <Head><title>Contact - QuiPtaping</title></Head>
+      <Head>
+        <title>Contact - QuiPtaping</title>
+        <meta
+          name="description"
+          content="QuiPtaping is a registered brand of Mypro BV., the Netherlands.
+           We develop and market applications for tape.
+           Our products are marketed in Europe, North America, Canada, Mexico, Australia and New Zealand."
+        />
+        <meta name="dc.title" content="Contact - QuiPtaping" />
+        <meta
+          name="dc.description"
+          content="QuiPtaping is a registered brand of Mypro BV., the Netherlands.
+           We develop and market applications for tape.
+           Our products are marketed in Europe, North America, Canada, Mexico, Australia and New Zealand."
+        />
+        <meta name="dc.relation" content={`${process.env.DOMAIN}/contact`} />
+        <meta name="robots" content="index, follow" />
+        <meta
+          name="googlebot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        <link rel="canonical" href={`${process.env.DOMAIN}/contact`} />
+        <meta name="og:url" content={`${process.env.DOMAIN}/contact`} />
+        <meta property="og:title" content="Contact - QuiPtaping" />
+        <meta
+          name="og:description"
+          content="QuiPtaping is a registered brand of Mypro BV., the Netherlands.
+           We develop and market applications for tape.
+           Our products are marketed in Europe, North America, Canada, Mexico, Australia and New Zealand."
+        />
+        <meta name="twitter:title" content="Contact - QuiPtaping" />
+        <meta
+          name="twitter:description"
+          content="QuiPtaping is a registered brand of Mypro BV., the Netherlands.
+           We develop and market applications for tape.
+           Our products are marketed in Europe, North America, Canada, Mexico, Australia and New Zealand."
+        />
+      </Head>
       <div className={`${styles.contact} container`}>
         <section className={styles.contactForm}>
           <h2 className="title centered">Contact</h2>
           {loading && <Loader />}
           {!loading
             && <>
-              <p>
+              <p className={styles.contactText}>
                 QuiPtaping is a registered brand of Mypro BV., the Netherlands.
                 We develop and market applications for tape.
-              </p>
-              <p className={styles.contactText}>
                 Our products are marketed in Europe, North America, Canada, Mexico, Australia and New Zealand.
               </p>
               <p>

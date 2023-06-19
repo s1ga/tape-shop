@@ -6,6 +6,45 @@ export default function PaintingTips() {
     <>
       <Head>
         <title>Painting tips - QuiPtaping</title>
+        <meta
+          name="description"
+          content="Painting tips from the professional are often about good preparation and the choice of the
+          right materials. The painting technique is also important to achieve a good end result.
+          The QuiP tape dispenser also helps you with this, so that you achieve tight paintwork.
+          But also the technique and the conditions for painting can come in handy."
+        />
+        <meta name="dc.title" content="Painting tips - QuiPtaping" />
+        <meta
+          name="dc.description"
+          content="Painting tips from the professional are often about good preparation and the choice of the
+          right materials. The painting technique is also important to achieve a good end result.
+          The QuiP tape dispenser also helps you with this, so that you achieve tight paintwork.
+          But also the technique and the conditions for painting can come in handy."
+        />
+        <meta name="dc.relation" content={`${process.env.DOMAIN}/advises`} />
+        <meta name="robots" content="index, follow" />
+        <meta
+          name="googlebot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        <link rel="canonical" href={`${process.env.DOMAIN}/advises`} />
+        <meta name="og:url" content={`${process.env.DOMAIN}/advises`} />
+        <meta property="og:title" content="Painting tips - QuiPtaping" />
+        <meta
+          name="og:description"
+          content="Painting tips from the professional are often about good preparation and the choice of the
+          right materials. The painting technique is also important to achieve a good end result.
+          The QuiP tape dispenser also helps you with this, so that you achieve tight paintwork.
+          But also the technique and the conditions for painting can come in handy."
+        />
+        <meta name="twitter:title" content="Painting tips - QuiPtaping" />
+        <meta
+          name="twitter:description"
+          content="Painting tips from the professional are often about good preparation and the choice of the
+          right materials. The painting technique is also important to achieve a good end result.
+          The QuiP tape dispenser also helps you with this, so that you achieve tight paintwork.
+          But also the technique and the conditions for painting can come in handy."
+        />
       </Head>
       <article className="container">
         <h1 className="title">Useful tips from the professionals</h1>

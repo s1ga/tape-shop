@@ -4,7 +4,36 @@ import styles from '@/styles/modules/Policy.module.scss';
 export default function Disclaimer() {
   return (
     <>
-      <Head><title>Disclaimer - QuiPtaping</title></Head>
+      <Head>
+        <title>Disclaimer - QuiPtaping</title>
+        <meta
+          name="description"
+          content="LEGAL NOTE COPYRIGHT 2011 MYPRO"
+        />
+        <meta name="dc.title" content="Disclaimer - QuiPtaping" />
+        <meta
+          name="dc.description"
+          content="LEGAL NOTE COPYRIGHT 2011 MYPRO"
+        />
+        <meta name="dc.relation" content={`${process.env.DOMAIN}/disclaimer`} />
+        <meta name="robots" content="index, follow" />
+        <meta
+          name="googlebot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        <link rel="canonical" href={`${process.env.DOMAIN}/disclaimer`} />
+        <meta name="og:url" content={`${process.env.DOMAIN}/disclaimer`} />
+        <meta property="og:title" content="Disclaimer - QuiPtaping" />
+        <meta
+          name="og:description"
+          content="LEGAL NOTE COPYRIGHT 2011 MYPRO"
+        />
+        <meta name="twitter:title" content="Disclaimer - QuiPtaping" />
+        <meta
+          name="twitter:description"
+          content="LEGAL NOTE COPYRIGHT 2011 MYPRO"
+        />
+      </Head>
       <div className="container">
         <section>
           <h2 className={`title ${styles.policyTitle}`}>Legal note</h2>

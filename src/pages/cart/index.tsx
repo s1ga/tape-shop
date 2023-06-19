@@ -39,6 +39,15 @@ export default function Cart() {
     <>
       <Head>
         <title>Cart - QuiPtaping</title>
+        <meta name="dc.title" content="Cart - QuiPtaping" />
+        <meta name="dc.description" content="Cart" />
+        <meta name="dc.relation" content={`${process.env.DOMAIN}/cart`} />
+        <meta name="robots" content="follow, noindex" />
+        <meta name="og:url" content={`${process.env.DOMAIN}/cart`} />
+        <meta property="og:title" content="Cart - QuiPtaping" />
+        <meta property="og:description" content="Cart" />
+        <meta name="twitter:title" content="Cart - QuiPtaping" />
+        <meta name="twitter:description" content="Cart" />
       </Head>
 
       <section className={`${styles.cart} container`}>

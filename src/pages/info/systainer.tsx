@@ -32,6 +32,37 @@ export default function Systainer({ products }: { products: ProductItemPreview[]
     <>
       <Head>
         <title>QuiP Systainer - QuiPtaping</title>
+        <meta
+          name="description"
+          content="The QuiP Systainer with foam inlay for storage of Masking Dispenser and tape
+          helps you to work organised, safe and efficient can be delivered in different versions."
+        />
+        <meta name="dc.title" content="QuiP Systainer - QuiPtaping" />
+        <meta
+          name="dc.description"
+          content="The QuiP Systainer with foam inlay for storage of Masking Dispenser and tape
+          helps you to work organised, safe and efficient can be delivered in different versions."
+        />
+        <meta name="dc.relation" content={`${process.env.DOMAIN}/info/systainer`} />
+        <meta name="robots" content="index, follow" />
+        <meta
+          name="googlebot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        <link rel="canonical" href={`${process.env.DOMAIN}/info/systainer`} />
+        <meta name="og:url" content={`${process.env.DOMAIN}/info/systainer`} />
+        <meta property="og:title" content="QuiP Systainer - QuiPtaping" />
+        <meta
+          name="og:description"
+          content="The QuiP Systainer with foam inlay for storage of Masking Dispenser and tape
+          helps you to work organised, safe and efficient can be delivered in different versions."
+        />
+        <meta name="twitter:title" content="QuiP Systainer - QuiPtaping" />
+        <meta
+          name="twitter:description"
+          content="The QuiP Systainer with foam inlay for storage of Masking Dispenser and tape
+          helps you to work organised, safe and efficient can be delivered in different versions."
+        />
       </Head>
       <div className="container">
         <section>

@@ -9,6 +9,7 @@ export default function NotFound() {
     <>
       <Head>
         <title>404 - Page not found - QuiPtaping</title>
+        <meta name="robots" content="follow, noindex" />
       </Head>
       <div className={`${styles.notFoundContainer} container`}>
         <h2 className={styles.notFoundTitle}>Oops... Wrong turn</h2>

@@ -19,7 +19,6 @@ export async function getServerSideProps() {
   };
 }
 
-// TODO: add title to iframe
 export default function Home({ types }: { types: Type[] }) {
   useEffect(() => {
     const el = document.querySelector('.lty-playbtn') as HTMLButtonElement;
@@ -53,7 +52,7 @@ export default function Home({ types }: { types: Type[] }) {
           <div className={`${styles.introBlock} ${styles.videoContainer}`}>
             <LiteYouTubeEmbed
               id="XR4TYaGBWt0"
-              title=""
+              title="Details of the QuiP tape dispenser - QuiPtaping"
               params="autoplay=1&loop=1&controls=0&rel=0&showinfo=0&playlist=XR4TYaGBWt0"
               muted={true}
               noCookie={true}

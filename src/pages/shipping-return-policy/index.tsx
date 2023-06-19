@@ -4,7 +4,40 @@ import styles from '@/styles/modules/Policy.module.scss';
 export default function ShippingReturnPolicy() {
   return (
     <>
-      <Head><title>Shipping & Return Policy - QuiPtaping</title></Head>
+      <Head>
+        <title>Shipping & Return Policy - QuiPtaping</title>
+        <meta
+          name="description"
+          content="When you want to return something from QuiPtaping.
+          It is useful to check our return conditions in advance."
+        />
+        <meta name="dc.title" content="Shipping & Return Policy - QuiPtaping" />
+        <meta
+          name="dc.description"
+          content="When you want to return something from QuiPtaping.
+          It is useful to check our return conditions in advance."
+        />
+        <meta name="dc.relation" content={`${process.env.DOMAIN}/shipping-return-policy`} />
+        <meta name="robots" content="index, follow" />
+        <meta
+          name="googlebot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        <link rel="canonical" href={`${process.env.DOMAIN}/shipping-return-policy`} />
+        <meta name="og:url" content={`${process.env.DOMAIN}/shipping-return-policy`} />
+        <meta property="og:title" content="Shipping & Return Policy - QuiPtaping" />
+        <meta
+          name="og:description"
+          content="When you want to return something from QuiPtaping.
+          It is useful to check our return conditions in advance."
+        />
+        <meta name="twitter:title" content="Shipping & Return Policy - QuiPtaping" />
+        <meta
+          name="twitter:description"
+          content="When you want to return something from QuiPtaping.
+          It is useful to check our return conditions in advance."
+        />
+      </Head>
       <section className="container">
         <h1 className={`title ${styles.policyTitle}`}>Shipping & Return policy</h1>
 

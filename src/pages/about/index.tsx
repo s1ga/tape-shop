@@ -15,11 +15,47 @@ export async function getServerSideProps() {
   };
 }
 
-// TODO: add title to iframe
 export default function About({ types }: { types: Type[] }) {
   return (
     <>
-      <Head><title>About QuiP - QuiPtaping</title></Head>
+      <Head>
+        <title>About QuiP - QuiPtaping</title>
+        <meta
+          name="description"
+          content="Our passion for smart, functional and high-quality products with added value for
+          professionals focuses on the construction, maintenance and renovation sectors
+          and for the do-it-yourselfer."
+        />
+        <meta name="dc.title" content="About QuiP - QuiPtaping" />
+        <meta
+          name="dc.description"
+          content="Our passion for smart, functional and high-quality products with added value for
+          professionals focuses on the construction, maintenance and renovation sectors
+          and for the do-it-yourselfer."
+        />
+        <meta name="dc.relation" content={`${process.env.DOMAIN}/about`} />
+        <link rel="canonical" href={`${process.env.DOMAIN}/about`} />
+        <meta name="og:url" content={`${process.env.DOMAIN}/about`} />
+        <meta property="og:title" content="About QuiP - QuiPtaping" />
+        <meta
+          name="og:description"
+          content="Our passion for smart, functional and high-quality products with added value for
+          professionals focuses on the construction, maintenance and renovation sectors
+          and for the do-it-yourselfer."
+        />
+        <meta name="twitter:title" content="About QuiP - QuiPtaping" />
+        <meta
+          name="twitter:description"
+          content="Our passion for smart, functional and high-quality products with added value for
+          professionals focuses on the construction, maintenance and renovation sectors
+          and for the do-it-yourselfer."
+        />
+        <meta name="robots" content="index, follow" />
+        <meta
+          name="googlebot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+      </Head>
       <div className="container">
         <div className={styles.about}>
           <section className={styles.aboutItem}>
@@ -42,7 +78,7 @@ export default function About({ types }: { types: Type[] }) {
           <div className={`${styles.video} ${styles.aboutItem}`}>
             <LiteYouTubeEmbed
               id="GRXPl5X2SHk"
-              title={'Demo video of the'}
+              title="Masking Tape Dispenser - QuiPtaping (English)"
               iframeClass={styles.video}
               noCookie={true}
               aspectWidth={5}

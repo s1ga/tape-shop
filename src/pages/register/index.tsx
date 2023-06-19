@@ -22,6 +22,12 @@ export default function Register() {
     <>
       <Head>
         <title>Create account - QuiPtaping</title>
+        <meta name="dc.title" content="Create account - QuiPtaping" />
+        <meta name="dc.relation" content={`${process.env.DOMAIN}/register`} />
+        <meta property="og:url" content={`${process.env.DOMAIN}/register`} />
+        <meta property="og:title" content="Create account - QuiPtaping" />
+        <meta name="twitter:title" content="Create account - QuiPtaping" />
+        <meta name="robots" content="follow, noindex" />
       </Head>
       <div className={`${styles.wrapper} container`}>
         {loading && <Loader />}

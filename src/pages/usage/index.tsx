@@ -8,6 +8,33 @@ export default function Usage() {
     <>
       <Head>
         <title>Usage - QuiPtaping</title>
+        <meta
+          name="description"
+          content="Describing usage of QuiP tapes"
+        />
+        <meta name="dc.title" content="Usage - QuiPtaping" />
+        <meta
+          name="dc.description"
+          content="Describing usage of QuiP tapes"
+        />
+        <meta name="dc.relation" content={`${process.env.DOMAIN}/usage`} />
+        <meta name="robots" content="index, follow" />
+        <meta
+          name="googlebot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        <link rel="canonical" href={`${process.env.DOMAIN}/usage`} />
+        <meta name="og:url" content={`${process.env.DOMAIN}/usage`} />
+        <meta property="og:title" content="Usage - QuiPtaping" />
+        <meta
+          name="og:description"
+          content="Describing usage of QuiP tapes"
+        />
+        <meta name="twitter:title" content="Usage - QuiPtaping" />
+        <meta
+          name="twitter:description"
+          content="Describing usage of QuiP tapes"
+        />
       </Head>
       <section className={`${styles.usageContainer} container`}>
         <h2 className="title">What masking tape for what surface</h2>

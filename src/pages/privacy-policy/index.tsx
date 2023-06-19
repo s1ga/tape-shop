@@ -4,7 +4,36 @@ import styles from '@/styles/modules/Policy.module.scss';
 export default function PrivacyPolicy() {
   return (
     <>
-      <Head><title>Privacy policy - QuiPtaping</title></Head>
+      <Head>
+        <title>Privacy policy - QuiPtaping</title>
+        <meta
+          name="description"
+          content="QuiPtaping privacy policy"
+        />
+        <meta name="dc.title" content="Privacy policy - QuiPtaping" />
+        <meta
+          name="dc.description"
+          content="QuiPtaping privacy policy"
+        />
+        <meta name="dc.relation" content={`${process.env.DOMAIN}/privacy-policy`} />
+        <meta name="robots" content="index, follow" />
+        <meta
+          name="googlebot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        <link rel="canonical" href={`${process.env.DOMAIN}/privacy-policy`} />
+        <meta name="og:url" content={`${process.env.DOMAIN}/privacy-policy`} />
+        <meta property="og:title" content="Privacy policy - QuiPtaping" />
+        <meta
+          name="og:description"
+          content="QuiPtaping privacy policy"
+        />
+        <meta property="twitter:title" content="Privacy policy - QuiPtaping" />
+        <meta
+          name="twitter:description"
+          content="QuiPtaping privacy policy"
+        />
+      </Head>
       <section className="container">
         <h1 className={`title ${styles.policyTitle}`}>Privacy policy</h1>
 

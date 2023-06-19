@@ -32,6 +32,33 @@ export default function Webshop({ products }: { products: ProductItemPreview[] }
     <>
       <Head>
         <title>Shop - QuiPtaping</title>
+        <meta
+          name="description"
+          content="Our products"
+        />
+        <meta name="dc.title" content="Shop - QuiPtaping" />
+        <meta
+          name="dc.description"
+          content="Our products"
+        />
+        <meta name="dc.relation" content={`${process.env.DOMAIN}/webshop`} />
+        <meta name="robots" content="index, follow" />
+        <meta
+          name="googlebot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        <link rel="canonical" href={`${process.env.DOMAIN}/webshop`} />
+        <meta name="og:url" content={`${process.env.DOMAIN}/webshop`} />
+        <meta property="og:title" content="Shop - QuiPtaping" />
+        <meta
+          name="og:description"
+          content="Our products"
+        />
+        <meta name="twitter:title" content="Shop - QuiPtaping" />
+        <meta
+          name="twitter:description"
+          content="Our products"
+        />
       </Head>
       <section className="container">
         <h2 className={`${styles.productsTitle} title centered`}>Our products</h2>

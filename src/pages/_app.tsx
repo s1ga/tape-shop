@@ -53,7 +53,32 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta charSet="UTF-8" />
         <link rel="icon" href="/images/favicon.png" />
+        {!HIDE_MENU_PATHS.includes(pathname)
+          && <>
+            <meta name="dc.source" content={process.env.DOMAIN} />
+            <meta name="dc.language" content="en_US" />
+            <meta property="og:site_name" content="Quiptaping" />
+            <meta property="og:locale" content="en_US" />
+            <meta property="og:type" content="article" />
+            <meta property="article:author" content="https://www.facebook.com/Quiptaping/" />
+            <meta property="article:publisher" content="https://www.facebook.com/Quiptaping/" />
+            <meta
+              property="og:image"
+              content="/images/favicon.png"
+            />
+            <meta
+              property="og:image:secure_url"
+              content="/images/favicon.png"
+            />
+            <meta property="og:image:width" content="512" />
+            <meta property="og:image:height" content="512" />
+            <meta property="og:image:alt" content="QuiPtaping favicon" />
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="theme-color" content="#EEEEEE" />
+          </>
+        }
       </Head>
       <CartProvider>
         <div className="content">

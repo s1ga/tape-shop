@@ -7,7 +7,54 @@ export default function FrequentlyAskedQuestions({ isStandalone = true }: { isSt
 
   return (
     <>
-      {isStandalone && <Head><title>Frequently Asked Questions - QuiPtaping</title></Head>}
+      {isStandalone
+        && <Head>
+          <title>Frequently Asked Questions - QuiPtaping</title>
+          <meta
+            name="description"
+            content="The painting tape of QuiP meets the highest requirements for perfectly tight paintwork.
+            QuiP tape has been specially developed for use on different surfaces.
+            QuiP tape provides very tight paint lines and can be removed after a longer period of
+            time without glue residue. Very nice if you have spent many hours masking and preparing.
+            Good tape pays for itself quickly."
+          />
+          <meta name="dc.title" content="Frequently Asked Questions - QuiPtaping" />
+          <meta
+            name="dc.description"
+            content="The painting tape of QuiP meets the highest requirements for perfectly tight paintwork.
+            QuiP tape has been specially developed for use on different surfaces.
+            QuiP tape provides very tight paint lines and can be removed after a longer period of
+            time without glue residue. Very nice if you have spent many hours masking and preparing.
+            Good tape pays for itself quickly."
+          />
+          <meta name="dc.relation" content={`${process.env.DOMAIN}/frequently-asked-questions`} />
+          <meta name="robots" content="index, follow" />
+          <meta
+            name="googlebot"
+            content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+          />
+          <link rel="canonical" href={`${process.env.DOMAIN}/frequently-asked-questions`} />
+          <meta name="og:url" content={`${process.env.DOMAIN}/frequently-asked-questions`} />
+          <meta property="og:title" content="Frequently Asked Questions - QuiPtaping" />
+          <meta
+            name="og:description"
+            content="The painting tape of QuiP meets the highest requirements for perfectly tight paintwork.
+            QuiP tape has been specially developed for use on different surfaces.
+            QuiP tape provides very tight paint lines and can be removed after a longer period of
+            time without glue residue. Very nice if you have spent many hours masking and preparing.
+            Good tape pays for itself quickly."
+          />
+          <meta name="twitter:title" content="Frequently Asked Questions - QuiPtaping" />
+          <meta
+            name="twitter:description"
+            content="The painting tape of QuiP meets the highest requirements for perfectly tight paintwork.
+            QuiP tape has been specially developed for use on different surfaces.
+            QuiP tape provides very tight paint lines and can be removed after a longer period of
+            time without glue residue. Very nice if you have spent many hours masking and preparing.
+            Good tape pays for itself quickly."
+          />
+        </Head>
+      }
       <article className={containerClassName}>
         <h2 className="title">QuiP tape dispenser: questions and answers</h2>
         <p>
