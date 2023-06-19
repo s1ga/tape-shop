@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze": "cross-env ANALYZE=true next build"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
@@ -35,9 +36,11 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^13.4.6",
     "@types/bcrypt": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/nodemailer": "^6.4.8",
+    "cross-env": "^7.0.3",
     "eslint-config-airbnb-base": "^15.0.0"
   }
 }

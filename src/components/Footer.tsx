@@ -34,7 +34,8 @@ export default function Footer() {
               alt="QuiPtaping logo"
               width={120}
               height={42}
-              priority
+              loading="lazy"
+              decoding="async"
             />
           </Link>
 

@@ -1,4 +1,3 @@
-import getDomain from '@/utils/getDomain';
 import { Transporter, createTransport } from 'nodemailer';
 
 export default class MailService {
@@ -30,7 +29,7 @@ export default class MailService {
           <tr>
             <td>
               Your account has been created. To proceed using it, please verify your account using this
-              <a href="${getDomain()}/account?hash=${hash}">link</a>.
+              <a href="${process.env.DOMAIN}/account?hash=${hash}">link</a>.
             </td>
           </tr>
         </table>
@@ -52,7 +51,7 @@ export default class MailService {
           </tr>
           <tr>
             <td>
-              <a href="${getDomain()}/password?hash=${hash}">Reset password</a>.
+              <a href="${process.env.DOMAIN}/password?hash=${hash}">Reset password</a>.
             </td>
           </tr>
         </table>

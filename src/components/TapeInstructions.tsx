@@ -62,6 +62,7 @@ export default function TapeInsctructions() {
           src="/images/instructions/step3.jpg"
           alt="QuiPtaping logo"
           loading="lazy"
+          decoding="async"
           width={320}
           height={200} />
         <div>
@@ -76,6 +77,7 @@ export default function TapeInsctructions() {
           src="/images/instructions/step4.jpg"
           alt="QuiPtaping logo"
           loading="lazy"
+          decoding="async"
           width={320}
           height={200} />
         <div>
@@ -93,6 +95,7 @@ export default function TapeInsctructions() {
           src="/images/instructions/step5.jpg"
           alt="QuiPtaping logo"
           loading="lazy"
+          decoding="async"
           width={320}
           height={200} />
         <div>
@@ -111,6 +114,7 @@ export default function TapeInsctructions() {
           src="/images/instructions/step6.jpg"
           alt="QuiPtaping logo"
           loading="lazy"
+          decoding="async"
           width={320}
           height={200} />
         <div>
@@ -128,6 +132,7 @@ export default function TapeInsctructions() {
           src="/images/instructions/step7.jpg"
           alt="QuiPtaping logo"
           loading="lazy"
+          decoding="async"
           width={320}
           height={200} />
         <div>
@@ -142,6 +147,7 @@ export default function TapeInsctructions() {
           src="/images/instructions/step6.jpg"
           alt="QuiPtaping logo"
           loading="lazy"
+          decoding="async"
           width={320}
           height={200} />
         <div>

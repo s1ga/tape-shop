@@ -42,6 +42,11 @@
   border-radius: $base-radius-medium;
 }
 
+.formActions {
+  display: flex;
+  column-gap: $base-space-size-large;
+}
+
 .formBtn {
   width: fit-content;
   padding: $base-space-size-middle $base-space-size-large;
@@ -101,6 +106,10 @@
 @media screen and (max-width: 800px) {
   .formWrapper {
     margin-top: 0;
+  }
+
+  .formActions {
+    column-gap: $base-space-size-medium;
   }
 }
 

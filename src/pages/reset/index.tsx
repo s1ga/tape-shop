@@ -6,11 +6,13 @@ import { FormEvent, useState } from 'react';
 import { ServerData } from '@/interfaces/serverData';
 import ToastService from '@/services/toast.service';
 import Loader from '@/components/Loader';
+import { useRouter } from 'next/router';
 
 const RESET_URL = `${getDomain()}/api/user/reset`;
 
 export default function Reset() {
   const [loading, setLoading] = useState<boolean>(false);
+  const { back } = useRouter();
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -63,9 +65,14 @@ export default function Reset() {
                   name="email" required
                 />
               </div>
-              <button className={styles.formBtn} type="submit">
-                Reset password
-              </button>
+              <div className={styles.formActions}>
+                <button className={styles.formBtn} type="submit">
+                  Reset password
+                </button>
+                <button className={styles.link} onClick={() => back()}>
+                  Back
+                </button>
+              </div>
             </form>
           </>
         }

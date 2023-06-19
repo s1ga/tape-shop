@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
+module.exports = withBundleAnalyzer({
   reactStrictMode: true,
   experimental: {
     largePageDataBytes: 128 * 1000 * 5,
@@ -14,6 +18,4 @@ const nextConfig = {
       },
     ],
   },
-};
-
-module.exports = nextConfig;
+});
