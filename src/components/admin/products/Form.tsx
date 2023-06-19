@@ -179,7 +179,7 @@ export default function ProductForm({ children }: { children: ReactElement }) {
           <Labeled fullWidth label="Demo">
             <Grid container spacing={4}>
               <Grid item xs={12} sm={4}>
-                <TextInput source="demo.video" fullWidth />
+                <TextInput label="Video id" source="demo.video" fullWidth />
               </Grid>
               <Grid item xs={12} sm={8}>
                 <TextInput source="demo.description" fullWidth />

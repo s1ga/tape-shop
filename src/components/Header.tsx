@@ -86,7 +86,8 @@ export default function Header({ types = [] }: { types: ProductTypeCard[] }) {
             alt="QuiPtaping logo"
             width={200}
             height={70}
-            priority
+            loading="lazy"
+            decoding="async"
           />
         </Link>
 

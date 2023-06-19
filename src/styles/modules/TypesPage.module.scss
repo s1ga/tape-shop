@@ -174,9 +174,12 @@ $section-width-mobile: 100%;
     width: $section-width-mobile;
   }
 
+  .dispenserVideoContainer {
+    margin-top: $base-space-size-medium;
+  }
+
   .dispenserVideo {
     width: calc($section-width-mobile - 10%);
-    margin-top: $base-space-size-medium;
   }
 
   .dispenserOrderText {

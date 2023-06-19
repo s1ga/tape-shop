@@ -27,14 +27,13 @@ export const getServerSideProps = async ({ params }: { params: { id: string } })
       notFound: true,
     };
   }
-  const product = ProductService.toFullProduct(
-    await ProductService.getById(params.id),
-  ) as Product;
+  let product = await ProductService.getById(params.id);
   if (!product) {
     return {
       notFound: true,
     };
   }
+  product = ProductService.toFullProduct(product);
   const relatedProducts = await Promise.all(
     product.related.map(ProductService.getById),
   );

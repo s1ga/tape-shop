@@ -8,6 +8,7 @@ import productTypes from '@/constants/productTypes';
 import ProductService from '@/services/product.service';
 import { Product, ProductItemPreview } from '@/interfaces/product/product';
 import dbConnect from '@/utils/db';
+import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 
 export const getServerSideProps = async () => {
   await dbConnect();
@@ -142,15 +143,16 @@ export default function TapeDispenser({ products }: { products: ProductItemPrevi
               </p>
             </section>
           </div>
-          <iframe
-            className={styles.dispenserVideo}
-            width="560"
-            height="315"
-            src="https://www.youtube.com/embed/bh2vlymVoyU"
-            loading="lazy"
-            title="Demo and Details of the Quip Tape Dispenser & Systainer - QuiPtaping"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media;
-            gyroscope; picture-in-picture; web-share" allowFullScreen />
+          <div className={`${styles.dispenserVideo} ${styles.dispenserVideoContainer}`}>
+            <LiteYouTubeEmbed
+              id="bh2vlymVoyU"
+              title="Demo and Details of the Quip Tape Dispenser & Systainer - QuiPtaping"
+              iframeClass={styles.dispenserVideo}
+              noCookie={true}
+              aspectWidth={7}
+              aspectHeight={4}
+            />
+          </div>
         </div>
 
         {!!products.length

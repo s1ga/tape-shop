@@ -1,5 +1,6 @@
 import { ProductItemDemo } from '@/interfaces/product/productDemo';
 import styles from '@/styles/modules/Product.module.scss';
+import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 
 export default function ProductDemo({ demo, productName }: { demo: ProductItemDemo, productName: string }) {
   if (!demo.video) {
@@ -10,15 +11,16 @@ export default function ProductDemo({ demo, productName }: { demo: ProductItemDe
     <section className={styles.productDemo}>
       <h3 className={`${styles.productInfoSubtitle} title`}>Demo video of the {productName}</h3>
       {!!demo.description && <p>{demo.description}</p>}
-      <iframe
-        className={styles.productVideo}
-        width="612"
-        height="350"
-        src={demo.video}
-        title={`Demo video of the ${productName}`}
-        loading="lazy"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media;
-            gyroscope; picture-in-picture; web-share" allowFullScreen />
+      <div className={`${styles.productVideo} ${styles.productVideoContainer}`}>
+        <LiteYouTubeEmbed
+          id="OBgRHfnl238"
+          title={`Demo video of the ${productName}`}
+          iframeClass={styles.productVideo}
+          noCookie={true}
+          aspectWidth={7}
+          aspectHeight={4}
+        />
+      </div>
     </section>
   );
 }

@@ -4,6 +4,7 @@ import ProductsCards from '@/components/ProductsCards/ProductsCards';
 import dbConnect from '@/utils/db';
 import TypeService from '@/services/type.service';
 import { Type } from '@/interfaces/type';
+import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 
 export async function getServerSideProps() {
   await dbConnect();
@@ -14,6 +15,7 @@ export async function getServerSideProps() {
   };
 }
 
+// TODO: add title to iframe
 export default function About({ types }: { types: Type[] }) {
   return (
     <>
@@ -37,13 +39,16 @@ export default function About({ types }: { types: Type[] }) {
               In addition, tape quickly becomes unusable in dusty or humid spaces and drops.
             </p>
           </section>
-          <iframe width="500" height="250"
-            className={`${styles.video} ${styles.aboutItem}`}
-            src="https://www.youtube.com/embed/GRXPl5X2SHk"
-            title="YouTube video player"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media;
-          gyroscope; picture-in-picture; web-share" allowFullScreen />
+          <div className={`${styles.video} ${styles.aboutItem}`}>
+            <LiteYouTubeEmbed
+              id="GRXPl5X2SHk"
+              title={'Demo video of the'}
+              iframeClass={styles.video}
+              noCookie={true}
+              aspectWidth={5}
+              aspectHeight={3}
+            />
+          </div>
         </div>
         <p className={styles.aboutText}>
           The QuiP tape dispenser offers the solution so that you can always work neatly, quickly and easily.

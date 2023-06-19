@@ -2,6 +2,7 @@
 @import "./variables/colors";
 @import "./variables/base";
 @import "./mixins";
+@import "~react-lite-youtube-embed/dist/LiteYouTubeEmbed.css";
 
 * {
   box-sizing: border-box;
@@ -56,6 +57,23 @@ input {
   font-size: inherit;
   letter-spacing: inherit;
   line-height: inherit;
+}
+
+.yt-lite {
+  border: none;
+  border-radius: $base-radius-medium;
+
+  &>iframe {
+    height: auto;
+  }
+
+  &>.lty-playbtn {
+    background-color: red;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }
 
 @media screen and (max-width: 1024px) {

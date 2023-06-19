@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TypeService from '@/services/type.service';
 import { Type } from '@/interfaces/type';
 import dbConnect from '@/utils/db';
+import LiteYouTubeEmbed from 'react-lite-youtube-embed';
+import { useEffect } from 'react';
 
 export async function getServerSideProps() {
   await dbConnect();
@@ -17,7 +19,15 @@ export async function getServerSideProps() {
   };
 }
 
+// TODO: add title to iframe
 export default function Home({ types }: { types: Type[] }) {
+  useEffect(() => {
+    const el = document.querySelector('.lty-playbtn') as HTMLButtonElement;
+    if (el) {
+      el.click();
+    }
+  }, []);
+
   return (
     <>
       <Head>
@@ -40,15 +50,18 @@ export default function Home({ types }: { types: Type[] }) {
             </p>
             <Link href="/webshop" className={styles.introBtn}>Order Now</Link>
           </section>
-          <iframe
-            className={`${styles.video} ${styles.introBlock}`}
-            width="630" height="350"
-            src="https://www.youtube.com/embed/XR4TYaGBWt0
-            ?autoplay=1&loop=1&controls=0&mute=1&rel=0&showinfo=0&playlist=XR4TYaGBWt0"
-            title="YouTube video player"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media;
-            gyroscope; picture-in-picture; web-share" allowFullScreen />
+          <div className={`${styles.introBlock} ${styles.videoContainer}`}>
+            <LiteYouTubeEmbed
+              id="XR4TYaGBWt0"
+              title=""
+              params="autoplay=1&loop=1&controls=0&rel=0&showinfo=0&playlist=XR4TYaGBWt0"
+              muted={true}
+              noCookie={true}
+              iframeClass={styles.video}
+              aspectWidth={8}
+              aspectHeight={5}
+            />
+          </div>
         </div>
 
         <ProductsCards isHomePage={true} types={types} />

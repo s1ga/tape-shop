@@ -1,17 +1,21 @@
 import Image from 'next/image';
 import styles from '@/styles/modules/UserInstructions.module.scss';
+import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 
 export default function TapeInsctructions() {
   return (
     <div className={`${styles.steps} ${styles.instructionsBlock} container`}>
       <div className={styles.step}>
-        <iframe width="340" height="230"
-          className={styles.stepAsset}
-          src="https://www.youtube.com/embed/-_L_OiKvEQQ"
-          title="YouTube video player"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media;
-              gyroscope; picture-in-picture; web-share"
-          allowFullScreen loading="lazy" />
+        <div className={styles.stepAsset}>
+          <LiteYouTubeEmbed
+            id="bh2vlymVoyU"
+            title="QuiP tape dispenser - User instructions"
+            iframeClass={styles.stepAsset}
+            noCookie={true}
+            aspectWidth={3}
+            aspectHeight={2}
+          />
+        </div>
         <div>
           <h3 className={`${styles.instructionsTitle} title`}>Instruction video</h3>
           <p>
@@ -26,7 +30,7 @@ export default function TapeInsctructions() {
           className={styles.stepAsset}
           src="/images/instructions/step1.jpg"
           alt="QuiPtaping logo"
-          loading="lazy"
+          priority
           width={320}
           height={200} />
         <div>
@@ -43,7 +47,7 @@ export default function TapeInsctructions() {
           className={styles.stepAsset}
           src="/images/instructions/step2.jpg"
           alt="QuiPtaping logo"
-          loading="lazy"
+          priority
           width={320}
           height={200} />
         <div>

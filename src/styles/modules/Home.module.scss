@@ -10,6 +10,7 @@ $scaled-value: 1.08;
 .intro {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-top: $base-space-size-enormous;
   padding-bottom: $base-space-size-enormous;
 }
@@ -48,7 +49,7 @@ $scaled-value: 1.08;
 
 .video {
   border-radius: $base-radius-medium;
-  aspect-ratio: 1.8;
+  aspect-ratio: 1.6;
   height: auto;
 }
 
@@ -220,6 +221,10 @@ $scaled-value: 1.08;
     font-size: 24px;
     line-height: 32px;
   }
+
+  .videoContainer {
+    width: 85%;
+  }
 }
 
 @media screen and (max-width: 800px) {
@@ -279,5 +284,9 @@ $scaled-value: 1.08;
     top: 0;
     left: 0;
     transform: translateX(0);
+  }
+
+  .videoContainer {
+    width: 100%;
   }
 }

@@ -171,8 +171,11 @@
   margin-bottom: $base-space-size-large;
 }
 
-.productVideo {
+.productVideoContainer {
   margin-top: $base-space-size-middle-plus;
+}
+
+.productVideo {
   width: 100%;
   max-width: 600px;
   height: auto;
