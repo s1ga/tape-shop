@@ -15,14 +15,14 @@ export default function TermsCondiitons() {
           name="dc.description"
           content="Terms & Conditions - QuiPtaping"
         />
-        <meta name="dc.relation" content={`${process.env.DOMAIN}/terms-conditions`} />
+        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/terms-conditions`} />
         <meta name="robots" content="index, follow" />
         <meta
           name="googlebot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
-        <link rel="canonical" href={`${process.env.DOMAIN}/terms-conditions`} />
-        <meta name="og:url" content={`${process.env.DOMAIN}/terms-conditions`} />
+        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/terms-conditions`} />
+        <meta name="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/terms-conditions`} />
         <meta property="og:title" content="Terms & Conditions - QuiPtaping" />
         <meta
           name="og:description"

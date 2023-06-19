@@ -44,14 +44,14 @@ export default function TapeDispenser({ products }: { products: ProductItemPrevi
           content="Applying tape with the QuiP Masking Tape Dispenser enables you to work fast and precise!
           You want to achieve straight and sharp painting lines."
         />
-        <meta name="dc.relation" content={`${process.env.DOMAIN}/info/tape-dispensers`} />
+        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/info/tape-dispensers`} />
         <meta name="robots" content="index, follow" />
         <meta
           name="googlebot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
-        <link rel="canonical" href={`${process.env.DOMAIN}/info/tape-dispensers`} />
-        <meta name="og:url" content={`${process.env.DOMAIN}/info/tape-dispensers`} />
+        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/info/tape-dispensers`} />
+        <meta name="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/info/tape-dispensers`} />
         <meta property="og:title" content="Quip Masking Tape Dispenser - QuiPtaping" />
         <meta
           name="og:description"

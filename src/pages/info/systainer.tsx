@@ -43,14 +43,14 @@ export default function Systainer({ products }: { products: ProductItemPreview[]
           content="The QuiP Systainer with foam inlay for storage of Masking Dispenser and tape
           helps you to work organised, safe and efficient can be delivered in different versions."
         />
-        <meta name="dc.relation" content={`${process.env.DOMAIN}/info/systainer`} />
+        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/info/systainer`} />
         <meta name="robots" content="index, follow" />
         <meta
           name="googlebot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
-        <link rel="canonical" href={`${process.env.DOMAIN}/info/systainer`} />
-        <meta name="og:url" content={`${process.env.DOMAIN}/info/systainer`} />
+        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/info/systainer`} />
+        <meta name="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/info/systainer`} />
         <meta property="og:title" content="QuiP Systainer - QuiPtaping" />
         <meta
           name="og:description"

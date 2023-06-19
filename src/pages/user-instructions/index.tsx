@@ -23,14 +23,14 @@ export default function UserInstructions() {
           some skills and practice to mask properly. Finally, when you remove the tape … the result is
           not what you had in mind: straight painting lines."
         />
-        <meta name="dc.relation" content={`${process.env.DOMAIN}/user-instructions`} />
+        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/user-instructions`} />
         <meta name="robots" content="index, follow" />
         <meta
           name="googlebot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
-        <link rel="canonical" href={`${process.env.DOMAIN}/user-instructions`} />
-        <meta name="og:url" content={`${process.env.DOMAIN}/user-instructions`} />
+        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/user-instructions`} />
+        <meta name="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/user-instructions`} />
         <meta property="og:title" content="User instructions - QuiPtaping" />
         <meta
           name="og:description"

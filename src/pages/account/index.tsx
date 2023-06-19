@@ -27,8 +27,8 @@ export default function AccountPage() {
       <Head>
         <title>My account - QuiPtaping</title>
         <meta name="dc.title" content="My account - QuiPtaping" />
-        <meta name="dc.relation" content={`${process.env.DOMAIN}/account`} />
-        <meta property="og:url" content={`${process.env.DOMAIN}/account`} />
+        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/account`} />
+        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/account`} />
         <meta property="og:title" content="My account - QuiPtaping" />
         <meta name="twitter:title" content="My account - QuiPtaping" />
         <meta name="robots" content="follow, noindex" />

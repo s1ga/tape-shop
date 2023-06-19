@@ -17,14 +17,14 @@ export default function ShippingReturnPolicy() {
           content="When you want to return something from QuiPtaping.
           It is useful to check our return conditions in advance."
         />
-        <meta name="dc.relation" content={`${process.env.DOMAIN}/shipping-return-policy`} />
+        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/shipping-return-policy`} />
         <meta name="robots" content="index, follow" />
         <meta
           name="googlebot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
-        <link rel="canonical" href={`${process.env.DOMAIN}/shipping-return-policy`} />
-        <meta name="og:url" content={`${process.env.DOMAIN}/shipping-return-policy`} />
+        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/shipping-return-policy`} />
+        <meta name="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/shipping-return-policy`} />
         <meta property="og:title" content="Shipping & Return Policy - QuiPtaping" />
         <meta
           name="og:description"

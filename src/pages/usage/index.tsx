@@ -17,14 +17,14 @@ export default function Usage() {
           name="dc.description"
           content="Describing usage of QuiP tapes"
         />
-        <meta name="dc.relation" content={`${process.env.DOMAIN}/usage`} />
+        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/usage`} />
         <meta name="robots" content="index, follow" />
         <meta
           name="googlebot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
-        <link rel="canonical" href={`${process.env.DOMAIN}/usage`} />
-        <meta name="og:url" content={`${process.env.DOMAIN}/usage`} />
+        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/usage`} />
+        <meta name="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/usage`} />
         <meta property="og:title" content="Usage - QuiPtaping" />
         <meta
           name="og:description"

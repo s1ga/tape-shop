@@ -33,9 +33,9 @@ export default function About({ types }: { types: Type[] }) {
           professionals focuses on the construction, maintenance and renovation sectors
           and for the do-it-yourselfer."
         />
-        <meta name="dc.relation" content={`${process.env.DOMAIN}/about`} />
-        <link rel="canonical" href={`${process.env.DOMAIN}/about`} />
-        <meta name="og:url" content={`${process.env.DOMAIN}/about`} />
+        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/about`} />
+        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/about`} />
+        <meta name="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/about`} />
         <meta property="og:title" content="About QuiP - QuiPtaping" />
         <meta
           name="og:description"

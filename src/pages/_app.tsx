@@ -57,7 +57,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="icon" href="/images/favicon.png" />
         {!HIDE_MENU_PATHS.includes(pathname)
           && <>
-            <meta name="dc.source" content={process.env.DOMAIN} />
+            <meta name="dc.source" content={process.env.NEXT_PUBLIC_DOMAIN} />
             <meta name="dc.language" content="en_US" />
             <meta property="og:site_name" content="Quiptaping" />
             <meta property="og:locale" content="en_US" />

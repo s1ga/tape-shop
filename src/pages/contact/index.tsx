@@ -63,14 +63,14 @@ export default function Contact() {
            We develop and market applications for tape.
            Our products are marketed in Europe, North America, Canada, Mexico, Australia and New Zealand."
         />
-        <meta name="dc.relation" content={`${process.env.DOMAIN}/contact`} />
+        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/contact`} />
         <meta name="robots" content="index, follow" />
         <meta
           name="googlebot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
-        <link rel="canonical" href={`${process.env.DOMAIN}/contact`} />
-        <meta name="og:url" content={`${process.env.DOMAIN}/contact`} />
+        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/contact`} />
+        <meta name="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/contact`} />
         <meta property="og:title" content="Contact - QuiPtaping" />
         <meta
           name="og:description"
