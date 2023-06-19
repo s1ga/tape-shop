@@ -60,11 +60,11 @@ export default function TapeDispenser({ products }: { products: ProductItemPrevi
         />
         <meta
           property="og:image"
-          content="/images/info/dispenser/all.png"
+          content={`${process.env.NEXT_PUBLIC_DOMAIN}/images/info/dispenser/all.png`}
         />
         <meta
           property="og:image:secure_url"
-          content="/images/info/dispenser/all.png"
+          content={`${process.env.NEXT_PUBLIC_DOMAIN}/images/info/dispenser/all.png`}
         />
         <meta property="og:image:alt" content="All the quip masking tape dispenser" />
         <meta name="twitter:title" content="Quip Masking Tape Dispenser - QuiPtaping" />
@@ -75,7 +75,7 @@ export default function TapeDispenser({ products }: { products: ProductItemPrevi
         />
         <meta
           name="twitter:image"
-          content="/images/info/dispenser/all.png"
+          content={`${process.env.NEXT_PUBLIC_DOMAIN}/images/info/dispenser/all.png`}
         />
       </Head>
       <div className={`${styles.dispenser} container`}>

@@ -62,17 +62,17 @@ export default function MaskingTape({ products }: { products: ProductItemPreview
         />
         <meta
           property="og:image"
-          content="/images/types/masking-tape.png"
+          content={`${process.env.NEXT_PUBLIC_DOMAIN}/images/types/masking-tape.png`}
         />
         <meta
           property="og:image:secure_url"
-          content="/images/types/masking-tape.png"
+          content={`${process.env.NEXT_PUBLIC_DOMAIN}/images/types/masking-tape.png`}
         />
         <meta property="og:image:alt" content="All Masking Tape QuiP" />
         <meta name="twitter:title" content="Masking tape - QuiPtaping" />
         <meta
           name="twitter:image"
-          content="/images/types/masking-tape.png"
+          content={`${process.env.NEXT_PUBLIC_DOMAIN}/images/types/masking-tape.png`}
         />
         <meta
           name="twitter:description"

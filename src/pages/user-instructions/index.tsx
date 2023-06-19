@@ -41,11 +41,11 @@ export default function UserInstructions() {
         />
         <meta
           property="og:image"
-          content="/images/instructions/step1.jpg"
+          content={`${process.env.NEXT_PUBLIC_DOMAIN}/images/instructions/step1.jpg`}
         />
         <meta
           property="og:image:secure_url"
-          content="/images/instructions/step1.jpg"
+          content={`${process.env.NEXT_PUBLIC_DOMAIN}/images/instructions/step1.jpg`}
         />
         <meta name="twitter:title" content="User instructions - QuiPtaping" />
         <meta
@@ -57,7 +57,7 @@ export default function UserInstructions() {
         />
         <meta
           property="twitter:image"
-          content="/images/instructions/step1.jpg"
+          content={`${process.env.NEXT_PUBLIC_DOMAIN}/images/instructions/step1.jpg`}
         />
       </Head>
       <div className={styles.instructions}>

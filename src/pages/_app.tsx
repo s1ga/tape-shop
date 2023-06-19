@@ -66,11 +66,11 @@ export default function App({ Component, pageProps }: AppProps) {
             <meta property="article:publisher" content="https://www.facebook.com/Quiptaping/" />
             <meta
               property="og:image"
-              content="/images/favicon.png"
+              content={`${process.env.NEXT_PUBLIC_DOMAIN}/images/favicon.png`}
             />
             <meta
               property="og:image:secure_url"
-              content="/images/favicon.png"
+              content={`${process.env.NEXT_PUBLIC_DOMAIN}/images/favicon.png`}
             />
             <meta property="og:image:width" content="512" />
             <meta property="og:image:height" content="512" />
