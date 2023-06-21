@@ -107,7 +107,7 @@ export default function NewPassword() {
         <meta name="dc.title" content="Reset password - QuiPtaping" />
         <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/reset`} />
         <meta name="robots" content="follow, noindex" />
-        <meta name="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/reset`} />
+        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/reset`} />
         <meta property="og:title" content="Reset password - QuiPtaping" />
         <meta name="twitter:title" content="Reset password - QuiPtaping" />
       </Head>

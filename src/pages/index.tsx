@@ -34,6 +34,31 @@ export default function Home({ types }: { types: Type[] }) {
         <meta name="description" content="QuiPtaping have the passion for smart,
         functional and high-quality products with added value for professionals focuses,
         do-it-yourselfer on the construction." />
+        <meta name="dc.title" content="QuiPtaping" />
+        <meta name="dc.description" content="QuiPtaping have the passion for smart,
+        functional and high-quality products with added value for professionals focuses,
+        do-it-yourselfer on the construction." />
+        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}`} />
+        <meta name="robots" content="index, follow" />
+        <meta
+          name="googlebot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        <meta
+          name="bingbot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}`} />
+        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="QuiPtaping" />
+        <meta property="og:description" content="QuiPtaping have the passion for smart,
+        functional and high-quality products with added value for professionals focuses,
+        do-it-yourselfer on the construction." />
+        <meta name="twitter:title" content="QuiPtaping" />
+        <meta name="twitter:description" content="QuiPtaping have the passion for smart,
+        functional and high-quality products with added value for professionals focuses,
+        do-it-yourselfer on the construction." />
       </Head>
       <div className="container">
         <div className={styles.intro}>

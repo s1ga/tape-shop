@@ -52,6 +52,7 @@ $border-color: #69727d;
 }
 
 .cartDrawerCard {
+  padding-top: $base-space-size-middle-plus;
   padding-bottom: $base-space-size-large;
 
   &:not(:first-of-type) {

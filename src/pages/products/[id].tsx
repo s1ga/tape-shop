@@ -60,6 +60,53 @@ export default function ProductPage(
     <>
       <Head>
         <title>{`${product.name} - QuiPtaping`}</title>
+        <meta
+          name="description"
+          content={product.description}
+        />
+        <meta property="product:price:amount" content={product.price.toString()} />
+        <meta property="product:price:currency" content="USD" />
+        <meta name="dc.title" content={`${product.name} - QuiPtaping`} />
+        <meta
+          name="dc.description"
+          content={product.description}
+        />
+        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/product/${product._id}`} />
+        <meta name="robots" content="index, follow" />
+        <meta
+          name="googlebot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        <meta
+          name="bingbot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/product/${product._id}`} />
+        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/product/${product._id}`} />
+        <meta property="og:type" content="og:product" />
+        <meta property="og:title" content={`${product.name} - QuiPtaping`} />
+        <meta
+          property="og:description"
+          content={product.description}
+        />
+        <meta
+          property="og:image"
+          content={product.images[0]}
+        />
+        <meta
+          property="og:image:secure_url"
+          content={product.images[0]}
+        />
+        <meta property="og:image:alt" content="QuiP36 masking tape dispenser with pink masking tape" />
+        <meta name="twitter:title" content={`${product.name} - QuiPtaping`} />
+        <meta
+          name="twitter:description"
+          content={product.description}
+        />
+        <meta
+          property="twitter:image"
+          content={product.images[0]}
+        />
       </Head>
 
       <div className={`${styles.productContainer} container`}>

@@ -27,7 +27,7 @@ export default class ProductService {
     if (fields.related) {
       obj.related = fields.related;
     }
-    if (fields.availability) {
+    if (![null, undefined].includes(fields.availability)) {
       obj.availability = +fields.availability;
     }
     if (fields.features) {
@@ -130,7 +130,7 @@ export default class ProductService {
       }
       obj.additionalInformation = additionalInformation;
     }
-    if (!['null', 'undefined'].includes(fields.availability as string)) {
+    if (![null, undefined].includes(fields.availability)) {
       const result = validator.isValidAvailability(+fields.availability);
       if (typeof result === 'string') {
         return result;

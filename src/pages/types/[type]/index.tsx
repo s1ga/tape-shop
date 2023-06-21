@@ -39,6 +39,33 @@ export default function Page({ type, counts }: { type: Type, counts: Record<stri
     <>
       <Head>
         <title>{`${type.name} - QuiPtaping`}</title>
+        <meta name="robots" content="index, follow" />
+        <meta
+          name="googlebot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        <meta
+          name="bingbot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/types/${type.id}`} />
+        <meta property="canonical" content={`${process.env.NEXT_PUBLIC_DOMAIN}/types/${type.id}`} />
+        <meta property="og:type" content="object" />
+        <meta property="og:title" content={`${type.name} - QuiPtaping`} />
+        <meta
+          property="og:image"
+          content={`${process.env.NEXT_PUBLIC_DOMAIN}/images/types/${type.id}.jpg`}
+        />
+        <meta
+          property="og:image:secure_url"
+          content={`${process.env.NEXT_PUBLIC_DOMAIN}/images/types/${type.id}.jpg`}
+        />
+        <meta property="og:image:alt" content={`QuiP ${type.id}`} />
+        <meta name="twitter:title" content={`${type.name} - QuiPtaping`} />
+        <meta
+          name="twitter:image"
+          content={`${process.env.NEXT_PUBLIC_DOMAIN}/images/types/${type.id}.jpg`}
+        />
       </Head>
       <section className="container">
         <h1 className={`${styles.typeTitle} title centered`}>

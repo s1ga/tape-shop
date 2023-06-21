@@ -27,7 +27,7 @@ export const getServerSideProps = async ({ params }: { params: { id: string } })
   return {
     props: {
       products: JSON.parse(JSON.stringify(products)),
-      categoryName: category?.name,
+      category: JSON.parse(JSON.stringify(category)),
     },
   };
 };

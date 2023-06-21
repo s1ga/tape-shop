@@ -20,8 +20,8 @@ export const getServerSideProps = async ({ params }: Params) => {
       notFound: true,
     };
   }
-  const categoryName = type.categories.find((c: ICategory) => c._id.toString() === params.category)?.name;
-  if (!categoryName) {
+  const category = type.categories.find((c: ICategory) => c._id.toString() === params.category);
+  if (!category) {
     return {
       notFound: true,
     };
@@ -33,7 +33,9 @@ export const getServerSideProps = async ({ params }: Params) => {
   return {
     props: {
       products: JSON.parse(JSON.stringify(products)),
-      categoryName,
+      category: JSON.parse(JSON.stringify(category)),
+      typeId: type.id,
+      typeName: type.name,
     },
   };
 };

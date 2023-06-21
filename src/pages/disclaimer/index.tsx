@@ -21,11 +21,15 @@ export default function Disclaimer() {
           name="googlebot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
+        <meta
+          name="bingbot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
         <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/disclaimer`} />
-        <meta name="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/disclaimer`} />
+        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/disclaimer`} />
         <meta property="og:title" content="Disclaimer - QuiPtaping" />
         <meta
-          name="og:description"
+          property="og:description"
           content="LEGAL NOTE COPYRIGHT 2011 MYPRO"
         />
         <meta name="twitter:title" content="Disclaimer - QuiPtaping" />
@@ -215,8 +219,9 @@ export default function Disclaimer() {
             </p>
             <p>
               You can change your mind about allowing us to use your information anytime by
-              either sending us an E-mail to info@quiptaping.com, or by calling us at +31(0)235443566 or
-              by writing to us at our e-mail address info@quiptaping.com.
+              either sending us an E-mail to&nbsp;
+              <a className={styles.link} href="mailto:info@quiptaping.com">info@quiptaping.com</a>,
+              or by calling us at <a className={styles.link} href="tel:+310235443566">+31(0)235443566</a>.
             </p>
             <p>For more information, go to the pages where the data was recorded.</p>
           </div>
@@ -225,9 +230,9 @@ export default function Disclaimer() {
             <h3 className={styles.policyBlockTitle}>Right to information</h3>
             <p>
               You are authorized at any time to request the personal information
-              we have about you free of cost. You can send us such a request by E-mail to
-              info@quiptaping.com, or call us at
-              +31(0)23 5443566 or write to us at our e-mail address info@quiptaping.com
+              we have about you free of cost. You can send us such a request by E-mail to&nbsp;
+              <a className={styles.link} href="mailto:info@quiptaping.com">info@quiptaping.com</a>,
+              or call us at <a className={styles.link} href="tel:+310235443566">+31(0)23 5443566</a>.
             </p>
           </div>
 

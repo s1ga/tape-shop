@@ -21,11 +21,15 @@ export default function TermsCondiitons() {
           name="googlebot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
+        <meta
+          name="bingbot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
         <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/terms-conditions`} />
-        <meta name="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/terms-conditions`} />
+        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/terms-conditions`} />
         <meta property="og:title" content="Terms & Conditions - QuiPtaping" />
         <meta
-          name="og:description"
+          property="og:description"
           content="Terms & Conditions - QuiPtaping"
         />
         <meta name="twitter:title" content="Terms & Conditions - QuiPtaping" />

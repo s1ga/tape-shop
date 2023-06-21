@@ -45,8 +45,10 @@ export default function ProductHeader({ product }: { product: Product }) {
             </div>
           </div>
           <div className={`${styles.productHeaderPrice} bold`}>$ {product.price}</div>
-          {!!product.availability
+          {(product.availability ?? 0) > 0
             && <div><span className="bold">Availability: </span>{product.availability} in stock</div>}
+          {typeof product.availability === 'number' && product.availability === 0
+            && <div><span className="bold">Availability: </span>Out of stock</div>}
           <div className={styles.productHeaderActions}>
             <AmountHandler
               availability={product.availability}

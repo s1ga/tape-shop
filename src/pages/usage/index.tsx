@@ -23,11 +23,15 @@ export default function Usage() {
           name="googlebot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
+        <meta
+          name="bingbot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
         <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/usage`} />
-        <meta name="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/usage`} />
+        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/usage`} />
         <meta property="og:title" content="Usage - QuiPtaping" />
         <meta
-          name="og:description"
+          property="og:description"
           content="Describing usage of QuiP tapes"
         />
         <meta name="twitter:title" content="Usage - QuiPtaping" />

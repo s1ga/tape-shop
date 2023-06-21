@@ -33,11 +33,15 @@ export default function FrequentlyAskedQuestions({ isStandalone = true }: { isSt
             name="googlebot"
             content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
           />
+          <meta
+            name="bingbot"
+            content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+          />
           <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/frequently-asked-questions`} />
-          <meta name="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/frequently-asked-questions`} />
+          <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/frequently-asked-questions`} />
           <meta property="og:title" content="Frequently Asked Questions - QuiPtaping" />
           <meta
-            name="og:description"
+            property="og:description"
             content="The painting tape of QuiP meets the highest requirements for perfectly tight paintwork.
             QuiP tape has been specially developed for use on different surfaces.
             QuiP tape provides very tight paint lines and can be removed after a longer period of

@@ -43,7 +43,7 @@ export default function Cart() {
         <meta name="dc.description" content="Cart" />
         <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/cart`} />
         <meta name="robots" content="follow, noindex" />
-        <meta name="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/cart`} />
+        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/cart`} />
         <meta property="og:title" content="Cart - QuiPtaping" />
         <meta property="og:description" content="Cart" />
         <meta name="twitter:title" content="Cart - QuiPtaping" />

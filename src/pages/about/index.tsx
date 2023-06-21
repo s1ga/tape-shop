@@ -35,10 +35,10 @@ export default function About({ types }: { types: Type[] }) {
         />
         <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/about`} />
         <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/about`} />
-        <meta name="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/about`} />
+        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/about`} />
         <meta property="og:title" content="About QuiP - QuiPtaping" />
         <meta
-          name="og:description"
+          property="og:description"
           content="Our passion for smart, functional and high-quality products with added value for
           professionals focuses on the construction, maintenance and renovation sectors
           and for the do-it-yourselfer."
@@ -53,6 +53,10 @@ export default function About({ types }: { types: Type[] }) {
         <meta name="robots" content="index, follow" />
         <meta
           name="googlebot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        <meta
+          name="bingbot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
       </Head>

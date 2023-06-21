@@ -38,6 +38,16 @@
   row-gap: $base-space-size-tiny;
 }
 
+.link {
+  color: $color-primary;
+  transition: color .3s ease;
+
+  &:hover {
+    cursor: pointer;
+    color: $color-primary-dark;
+  }
+}
+
 @media screen and (max-width: 800px) {
   .policyBlockTitle {
     font-size: 14px;

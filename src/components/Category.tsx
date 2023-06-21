@@ -3,11 +3,17 @@ import styles from '@/styles/modules/Type.module.scss';
 import { useState } from 'react';
 import Sorting from '@/components/ProductsSorting/ProductsSorting';
 import Head from 'next/head';
+import { Category } from '@/interfaces/category';
 import ProductsList from './ProductsList/ProductsList';
 
-export default function CategoryList(
-  { products, categoryName }: { products: ProductItemPreview[], categoryName: string },
-) {
+interface Props {
+  products: ProductItemPreview[];
+  category: Category;
+  typeId?: string;
+  typeName?: string;
+}
+
+export default function CategoryList({ products, category, typeId, typeName }: Props) {
   const [sortedProducts, setSortedProducts] = useState<ProductItemPreview[]>(products);
 
   const onSorting = (result: ProductItemPreview[]) => {
@@ -17,11 +23,71 @@ export default function CategoryList(
   return (
     <>
       <Head>
-        <title>{`${categoryName} - QuiPtaping`}</title>
+        <title>{`${category.name} - QuiPtaping`}</title>
+        <meta name="robots" content="index, follow" />
+        <meta
+          name="googlebot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        <meta
+          name="bingbot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        {!!typeId
+          && <>
+            <link
+              rel="canonical"
+              href={`${process.env.NEXT_PUBLIC_DOMAIN}/types/${typeId}/category/${category._id}`}
+            />
+            <meta
+              property="og:url"
+              content={`${process.env.NEXT_PUBLIC_DOMAIN}/types/${typeId}/category/${category._id}`}
+            />
+          </>
+        }
+        {!typeId
+          && <>
+            <link
+              rel="canonical"
+              href={`${process.env.NEXT_PUBLIC_DOMAIN}/categories/${category._id}`}
+            />
+            <meta
+              property="og:url"
+              content={`${process.env.NEXT_PUBLIC_DOMAIN}/categories/${category._id}`}
+            />
+          </>
+        }
+        <meta property="og:type" content="object" />
+        <meta property="og:title" content={`${category.name} - QuiPtaping`} />
+        <meta property="og:description" content={`${category.name}${typeName ? ` ${typeName}` : ''}`} />
+        <meta
+          property="og:image"
+          content={typeId
+            ? `${process.env.NEXT_PUBLIC_DOMAIN}/images/types/${typeId}.jpg`
+            : category.imageUrl
+          }
+        />
+        <meta
+          property="og:image:secure_url"
+          content={typeId
+            ? `${process.env.NEXT_PUBLIC_DOMAIN}/images/types/${typeId}.jpg`
+            : category.imageUrl
+          }
+        />
+        <meta property="og:image:alt" content={`${category.name}${typeName ? ` ${typeName}` : ''}`} />
+        <meta name="twitter:title" content={`${category.name} - QuiPtaping`} />
+        <meta name="twitter:description" content={`${category.name}${typeName ? ` ${typeName}` : ''}`} />
+        <meta
+          name="twitter:image"
+          content={typeId
+            ? `${process.env.NEXT_PUBLIC_DOMAIN}/images/types/${typeId}.jpg`
+            : category.imageUrl
+          }
+        />
       </Head>
       <section className="container">
         <h1 className={`${styles.typeTitle} title centered`}>
-          {categoryName}
+          {category.name}
         </h1>
         {!!sortedProducts.length && <div className={styles.sortingBlock}>
           <div className={styles.sortingResult}>
@@ -33,7 +99,7 @@ export default function CategoryList(
           </div>
           {sortedProducts.length > 1 && <Sorting value={products} onChange={onSorting} />}
         </div>}
-        <ProductsList isCentered={false} categoryName={categoryName} products={sortedProducts} />
+        <ProductsList isCentered={false} categoryName={category.name} products={sortedProducts} />
       </section>
     </>
   );

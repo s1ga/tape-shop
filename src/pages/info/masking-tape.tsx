@@ -52,11 +52,15 @@ export default function MaskingTape({ products }: { products: ProductItemPreview
           name="googlebot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
+        <meta
+          name="bingbot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
         <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/info/masking-tape`} />
-        <meta name="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/info/masking-tape`} />
+        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/info/masking-tape`} />
         <meta property="og:title" content="Masking tape - QuiPtaping" />
         <meta
-          name="og:description"
+          property="og:description"
           content="QuiPtaping has suitable masking tape for every surface.
           This way, you have the best adhesion depending on the surface to be processed."
         />

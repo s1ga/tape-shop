@@ -29,11 +29,15 @@ export default function UserInstructions() {
           name="googlebot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
+        <meta
+          name="bingbot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
         <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/user-instructions`} />
-        <meta name="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/user-instructions`} />
+        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/user-instructions`} />
         <meta property="og:title" content="User instructions - QuiPtaping" />
         <meta
-          name="og:description"
+          property="og:description"
           content="Everybody recognises the time and effort that is spent on preparation.
           Also the appliance of tape is such a time consuming job and requires
           some skills and practice to mask properly. Finally, when you remove the tape … the result is
@@ -56,7 +60,7 @@ export default function UserInstructions() {
           not what you had in mind: straight painting lines."
         />
         <meta
-          property="twitter:image"
+          name="twitter:image"
           content={`${process.env.NEXT_PUBLIC_DOMAIN}/images/instructions/step1.jpg`}
         />
       </Head>

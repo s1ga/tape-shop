@@ -27,11 +27,15 @@ export default function PaintingTips() {
           name="googlebot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
+        <meta
+          name="bingbot"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
         <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/advises`} />
-        <meta name="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/advises`} />
+        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/advises`} />
         <meta property="og:title" content="Painting tips - QuiPtaping" />
         <meta
-          name="og:description"
+          property="og:description"
           content="Painting tips from the professional are often about good preparation and the choice of the
           right materials. The painting technique is also important to achieve a good end result.
           The QuiP tape dispenser also helps you with this, so that you achieve tight paintwork.
