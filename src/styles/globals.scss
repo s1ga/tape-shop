@@ -51,7 +51,9 @@ button {
   line-height: inherit;
 }
 
-input {
+input,
+select,
+option {
   outline: none;
   border: none;
   font-size: inherit;

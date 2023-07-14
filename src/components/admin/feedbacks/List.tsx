@@ -18,7 +18,7 @@ export default function FeedbacksList() {
 
   const handleClose = useCallback(() => {
     router.push(`/admin#/${adminResourceMap.feedback}`);
-  }, []);
+  }, [router]);
 
   const handleRowClick = (id: number | string, resource: string): false => {
     router.push(`/admin#/${resource}/${id}`);

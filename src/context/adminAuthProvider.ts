@@ -1,12 +1,12 @@
 import httpMethods from '@/constants/httpMethods';
 import storageKeys from '@/constants/storageKeys';
+import LinkService from '@/services/link.service';
 import LocalStorageService from '@/services/storage.service';
-import getDomain from '@/utils/getDomain';
 import { AuthProvider } from 'react-admin';
 
 const authProvider: AuthProvider = {
   login: ({ username, password }) => {
-    const request = new Request(`${getDomain()}/api/user/login`, {
+    const request = new Request(LinkService.apiUserLoginLink(), {
       method: httpMethods.post,
       headers: new Headers({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ email: username, password }),

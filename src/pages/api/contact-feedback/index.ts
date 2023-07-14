@@ -7,6 +7,7 @@ import { ContactFeedback as IContactFeedback, ServerContactFeedback } from '@/in
 import sortingValue from '@/constants/sortingValues';
 import { Query, SortOrder } from 'mongoose';
 import itemsPerPage from '@/constants/perPage';
+import HashHandlerService from '@/services/hash.service';
 
 type Response = {
   data: string | IContactFeedback | IContactFeedback[];
@@ -58,6 +59,12 @@ export default async function handler(
     await dbConnect();
 
     if (method === httpMethods.get) {
+      const verify = await HashHandlerService.verifyAdminToken(req.headers.authorization);
+      if (!verify) {
+        res.status(401).json({ data: 'Invalid access token or role' });
+        return;
+      }
+
       const query = buildFilterQuery(req.query as unknown);
       const page = +(req.query.page || 1);
       const limit = page > 0 ? +(req.query.perPage || itemsPerPage.feedbacks) : 0;

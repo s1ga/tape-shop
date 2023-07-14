@@ -16,6 +16,7 @@ export interface ProductItem {
   categories: string[];
   productType: string[];
   sku: string;
+  weight: number;
   description: string;
   images: string[];
   characteristics: ProductItemCharacteristics;
@@ -40,5 +41,5 @@ export type PreparedProductItem = Omit<ProductItem, '_id' | 'id' | 'rate' | 'dat
 
 export type ProductItemPreview = Pick<
   Product,
-  '_id' | 'id' | 'name' | 'rate' | 'price' | 'images' | 'categories' | 'dateAdded' | 'availability'
->
+  '_id' | 'id' | 'name' | 'rate' | 'price' | 'images' | 'categories' | 'dateAdded' | 'availability' | 'weight'
+>;

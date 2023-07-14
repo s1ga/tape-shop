@@ -4,6 +4,8 @@ const adminResourceMap = {
   feedback: 'contact-feedback',
   products: 'products',
   reviews: 'reviews',
+  coupons: 'coupons',
+  users: 'user',
 };
 
 export default adminResourceMap;

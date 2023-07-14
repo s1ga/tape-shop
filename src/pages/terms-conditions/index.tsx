@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import styles from '@/styles/modules/Policy.module.scss';
+import LinkService from '@/services/link.service';
 
 export default function TermsCondiitons() {
   return (
@@ -15,7 +16,7 @@ export default function TermsCondiitons() {
           name="dc.description"
           content="Terms & Conditions - QuiPtaping"
         />
-        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/terms-conditions`} />
+        <meta name="dc.relation" content={LinkService.tcLink()} />
         <meta name="robots" content="index, follow" />
         <meta
           name="googlebot"
@@ -25,8 +26,8 @@ export default function TermsCondiitons() {
           name="bingbot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
-        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/terms-conditions`} />
-        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/terms-conditions`} />
+        <link rel="canonical" href={LinkService.tcLink()} />
+        <meta property="og:url" content={LinkService.tcLink()} />
         <meta property="og:title" content="Terms & Conditions - QuiPtaping" />
         <meta
           property="og:description"

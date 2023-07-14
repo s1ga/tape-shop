@@ -8,11 +8,11 @@ import { PASSWORD_REGEX } from '@/constants/regex';
 import UserService from '@/services/user.service';
 import ToastService from '@/services/toast.service';
 import { ServerData } from '@/interfaces/serverData';
-import getDomain from '@/utils/getDomain';
 import { User } from '@/interfaces/user';
 import { CONFIRM_PASSWORD_MESSAGE, PASSWORD_MESSAGE } from '@/constants/messages';
+import LinkService from '@/services/link.service';
 
-const REGISTER_URL = `${getDomain()}/api/user`;
+const REGISTER_URL = LinkService.apiUserLink();
 
 export default function Register() {
   const [user, setUser] = useState<User>();
@@ -23,8 +23,8 @@ export default function Register() {
       <Head>
         <title>Create account - QuiPtaping</title>
         <meta name="dc.title" content="Create account - QuiPtaping" />
-        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/register`} />
-        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/register`} />
+        <meta name="dc.relation" content={LinkService.registerLink()} />
+        <meta property="og:url" content={LinkService.registerLink()} />
         <meta property="og:title" content="Create account - QuiPtaping" />
         <meta name="twitter:title" content="Create account - QuiPtaping" />
         <meta name="robots" content="follow, noindex" />

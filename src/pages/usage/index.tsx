@@ -2,6 +2,7 @@ import Head from 'next/head';
 import styles from '@/styles/modules/Usage.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import LinkService from '@/services/link.service';
 
 export default function Usage() {
   return (
@@ -17,7 +18,7 @@ export default function Usage() {
           name="dc.description"
           content="Describing usage of QuiP tapes"
         />
-        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/usage`} />
+        <meta name="dc.relation" content={LinkService.usageLink()} />
         <meta name="robots" content="index, follow" />
         <meta
           name="googlebot"
@@ -27,8 +28,8 @@ export default function Usage() {
           name="bingbot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
-        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/usage`} />
-        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/usage`} />
+        <link rel="canonical" href={LinkService.usageLink()} />
+        <meta property="og:url" content={LinkService.usageLink()} />
         <meta property="og:title" content="Usage - QuiPtaping" />
         <meta
           property="og:description"

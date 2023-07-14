@@ -8,7 +8,7 @@ import UserService from '@/services/user.service';
 import MailService from '@/services/mail.service';
 
 type Response = {
-  data: string | IUser;
+  data: string | IUser | IUser[];
 }
 
 export default async function handler(
@@ -21,18 +21,36 @@ export default async function handler(
     await dbConnect();
 
     if (method === httpMethods.get) {
-      const verify = await HashHandlerService.verifyToken(req.headers.authorization);
-      if (!verify) {
-        res.status(401).json({ data: 'Invalid access token' });
-        return;
-      }
+      const { userEmail } = req.query as Record<string, string>;
+      let data: IUser | IUser[];
 
-      const user = await User.findOne({ email: verify.email });
-      if (!user) {
-        res.status(404).json({ data: 'User not found' });
-        return;
+      if (userEmail) {
+        const verify = await HashHandlerService.verifyAdminToken(req.headers.authorization);
+        if (!verify) {
+          res.status(401).json({ data: 'Invalid access token' });
+          return;
+        }
+
+        const users = await User.find({
+          email: { $regex: new RegExp(userEmail as string, 'ig') },
+        });
+        data = (users || []).map(UserService.fromServer);
+      } else {
+        const verify = await HashHandlerService.verifyToken(req.headers.authorization);
+        if (!verify) {
+          res.status(401).json({ data: 'Invalid access token' });
+          return;
+        }
+
+        data = UserService.fromServer(
+          await User.findOne({ email: verify.email }),
+        );
+        if (!data) {
+          res.status(404).json({ data: 'User not found' });
+          return;
+        }
       }
-      res.status(200).json({ data: UserService.fromServer(user) });
+      res.status(200).json({ data });
     } else if (method === httpMethods.post) {
       const { email, name, password } = req.body;
       const validation = UserService.validate({ email, name, password });

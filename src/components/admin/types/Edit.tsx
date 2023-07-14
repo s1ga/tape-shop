@@ -1,6 +1,5 @@
 import Loader from '@/components/Loader';
 import { Type } from '@/interfaces/type';
-import getDomain from '@/utils/getDomain';
 import { Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
@@ -8,6 +7,7 @@ import {
   Toolbar, required, useRecordContext, useRedirect,
 } from 'react-admin';
 import { Category } from '@/interfaces/category';
+import LinkService from '@/services/link.service';
 import SegmentsInput from './SegmentsInput';
 
 export default function TypesEdit() {
@@ -16,7 +16,7 @@ export default function TypesEdit() {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`${getDomain()}/api/categories`)
+    fetch(LinkService.apiCategoriesLink())
       .then(async (res: Response) => {
         const { data } = await res.json();
         if (!res.ok) {

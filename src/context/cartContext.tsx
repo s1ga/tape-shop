@@ -4,16 +4,21 @@ import { CartContextProps, Cart, CartItem, isCartItem } from '@/interfaces/cart'
 import { Product, ProductItemPreview } from '@/interfaces/product/product';
 import CartService from '@/services/cart.service';
 import ToastService from '@/services/toast.service';
-import { ReactNode, createContext, useContext, useEffect, useRef, useState } from 'react';
+import { ReactNode, createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from '@/styles/modules/Home.module.scss';
+import LocalStorageService from '@/services/storage.service';
+import { AppliedCoupon } from '@/interfaces/coupon';
+import CouponsService from '@/services/coupons.service';
 
 const defaultCartContext: CartContextProps = {
   cart: CartService.initialCartState,
   addItems: () => { },
   removeItem: () => { },
   removeAllItem: () => { },
+  applyCoupon: () => true,
+  resetCoupon: () => { },
 };
 
 const enum CartActions {
@@ -29,46 +34,67 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<Cart>(CartService.initialCartState);
   const action = useRef<CartActions>();
 
-  const checkAvailability = (items: ProductItemPreview | CartItem) => {
-    let id: string;
-    let newTotal: number;
-    let availability: Product['availability'];
-    if (isCartItem(items)) {
-      newTotal = items.total;
-      availability = items.info.availability;
-      id = items.info._id;
-    } else {
-      newTotal = 1;
-      availability = items.availability;
-      id = items._id;
-    }
-
-    if (availability === null || availability === undefined) {
-      return true;
-    }
-    const currentTotal = cart.items.find((i: CartItem) => i.info._id === id)?.total || 0;
-    return currentTotal + newTotal <= availability;
-  };
-
-  const addItems = (items: ProductItemPreview | CartItem) => {
-    if (!checkAvailability(items)) {
-      ToastService.error(
-        'You cannot add that amount to the cart — total amount will be more than we have in stock.',
-      );
-      return;
-    }
-    setCart((state: Cart) => CartService.addItems(items, state));
-    action.current = CartActions.Add;
-  };
-  const removeItem = (item: ProductItemPreview) => {
-    setCart((state: Cart) => CartService.removeItem(item, state));
-    action.current = CartActions.Remove;
-  };
-
-  const removeAllItem = (item: ProductItemPreview) => {
-    setCart((state: Cart) => CartService.removeAllItem(item, state));
-    action.current = CartActions.Remove;
-  };
+  const addItems = useCallback(
+    (items: ProductItemPreview | CartItem) => {
+      if (!CartService.checkAvailability(items, cart)) {
+        ToastService.error(
+          'You cannot add that amount to the cart — total amount will be more than we have in stock.',
+        );
+        return;
+      }
+      setCart((state: Cart) => CartService.addItems(items, state));
+      action.current = CartActions.Add;
+    },
+    [],
+  );
+  const removeItem = useCallback(
+    (item: ProductItemPreview) => {
+      setCart((state: Cart) => CartService.removeItem(item, state));
+      action.current = CartActions.Remove;
+    },
+    [],
+  );
+  const removeAllItem = useCallback(
+    (item: ProductItemPreview) => {
+      setCart((state: Cart) => CartService.removeAllItem(item, state));
+      action.current = CartActions.Remove;
+    },
+    [],
+  );
+  const applyCoupon = useCallback(
+    (coupon: AppliedCoupon) => {
+      let answer: boolean | string = true;
+      setCart((state: Cart) => {
+        const result = CartService.applyCoupon(state, coupon);
+        if (typeof result === 'string') {
+          answer = result;
+          CouponsService.removeFromStorage();
+          ToastService.error(result);
+          const newState = CartService.resetCoupon(state);
+          CartService.saveInStorage(newState);
+          return newState;
+        }
+        answer = true;
+        CouponsService.saveInStorage(coupon);
+        CartService.saveInStorage(result);
+        return result;
+      });
+      action.current = undefined;
+      return answer;
+    },
+    [],
+  );
+  const resetCoupon = useCallback(
+    () => {
+      setCart((state: Cart) => {
+        CouponsService.removeFromStorage();
+        const result = CartService.resetCoupon(state);
+        CartService.saveInStorage(result);
+        return result;
+      });
+    },
+    [],
+  );
 
   useEffect(() => {
     const handler = (e: StorageEvent) => {
@@ -97,12 +123,19 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       toasterText = 'Item has been removed from cart';
     }
 
+    const coupon = CouponsService.getFromStorage();
+    if (coupon) {
+      applyCoupon(coupon);
+    }
+
     CartService.saveInStorage(cart);
-    ToastService.success(toasterText);
+    if (toasterText) {
+      ToastService.success(toasterText);
+    }
   }, [cart]);
 
   return (
-    <CartContext.Provider value={{ cart, addItems, removeItem, removeAllItem }}>
+    <CartContext.Provider value={{ cart, resetCoupon, addItems, removeItem, removeAllItem, applyCoupon }}>
       {children}
       <ToastContainer className={styles.toasterContainer} />
     </CartContext.Provider>

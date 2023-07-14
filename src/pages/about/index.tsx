@@ -5,6 +5,7 @@ import dbConnect from '@/utils/db';
 import TypeService from '@/services/type.service';
 import { Type } from '@/interfaces/type';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
+import LinkService from '@/services/link.service';
 
 export async function getServerSideProps() {
   await dbConnect();
@@ -33,9 +34,9 @@ export default function About({ types }: { types: Type[] }) {
           professionals focuses on the construction, maintenance and renovation sectors
           and for the do-it-yourselfer."
         />
-        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/about`} />
-        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/about`} />
-        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/about`} />
+        <meta name="dc.relation" content={LinkService.aboutLink()} />
+        <link rel="canonical" href={LinkService.aboutLink()} />
+        <meta property="og:url" content={LinkService.aboutLink()} />
         <meta property="og:title" content="About QuiP - QuiPtaping" />
         <meta
           property="og:description"

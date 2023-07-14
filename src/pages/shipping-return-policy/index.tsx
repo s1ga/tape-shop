@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import styles from '@/styles/modules/Policy.module.scss';
+import LinkService from '@/services/link.service';
 
 export default function ShippingReturnPolicy() {
   return (
@@ -17,7 +18,7 @@ export default function ShippingReturnPolicy() {
           content="When you want to return something from QuiPtaping.
           It is useful to check our return conditions in advance."
         />
-        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/shipping-return-policy`} />
+        <meta name="dc.relation" content={LinkService.returnPolicyLink()} />
         <meta name="robots" content="index, follow" />
         <meta
           name="googlebot"
@@ -27,8 +28,8 @@ export default function ShippingReturnPolicy() {
           name="bingbot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
-        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/shipping-return-policy`} />
-        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/shipping-return-policy`} />
+        <link rel="canonical" href={LinkService.returnPolicyLink()} />
+        <meta property="og:url" content={LinkService.returnPolicyLink()} />
         <meta property="og:title" content="Shipping & Return Policy - QuiPtaping" />
         <meta
           property="og:description"

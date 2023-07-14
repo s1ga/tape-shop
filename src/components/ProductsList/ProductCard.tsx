@@ -3,6 +3,7 @@ import Image from 'next/image';
 import styles from '@/styles/modules/Webshop.module.scss';
 import { MouseEvent } from 'react';
 import { ProductItemPreview } from '@/interfaces/product/product';
+import { formatPrice } from '@/utils/helpers';
 import Rate from '../Rate';
 
 export default function ProductCard(
@@ -23,7 +24,7 @@ export default function ProductCard(
         <span className={styles.productCaption}>{categoryName}</span>
         <h3 className={styles.productTitle}>{product.name}</h3>
         <Rate isStatic={true} max={5} rating={product.rate} />
-        <span className={`${styles.productPrice} bold`}>$ {product.price}</span>
+        <span className={`${styles.productPrice} bold`}>$ {formatPrice(product.price)}</span>
         <button
           className={styles.productBtn}
           onClick={(e: MouseEvent) => onAddToCart(e, product)}>

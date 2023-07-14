@@ -1,13 +1,20 @@
 import { faBasketShopping, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from '@/styles/modules/CartItem.module.scss';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCartContext } from '@/context/cartContext';
 import { Cart, CartItem as ICartItem } from '@/interfaces/cart';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { formatPrice, roundPrice } from '@/utils/helpers';
+import { AppliedCoupon } from '@/interfaces/coupon';
+import LinkService from '@/services/link.service';
+import httpMethods from '@/constants/httpMethods';
+import { ServerData } from '@/interfaces/serverData';
+import ToastService from '@/services/toast.service';
+import CouponsService from '@/services/coupons.service';
+import UserService from '@/services/user.service';
 import Drawer from './Drawer';
 import AmountHandler from './AmountHandler';
 
@@ -20,8 +27,46 @@ type CartDrawerProps = {
 
 export default function CartItem() {
   const [isDrawerOpened, setIsDrawerOpened] = useState(false);
-  const { cart, addItems, removeItem, removeAllItem } = useCartContext();
+  const { cart, addItems, removeItem, removeAllItem, applyCoupon, resetCoupon } = useCartContext();
   const router = useRouter();
+  const toastRef = useRef<number | string>();
+
+  useEffect(() => {
+    const coupon = CouponsService.getFromStorage();
+    if (coupon?.code) {
+      // setIsLoading(true);
+      fetch(LinkService.apiApplyCouponLink(), {
+        method: httpMethods.post,
+        body: JSON.stringify({ code: coupon.code }),
+        headers: {
+          'Content-Type': 'Application/json',
+          Authorization: UserService.getUserToken(),
+        },
+      })
+        .then(async (res: Response) => {
+          const { data }: ServerData<AppliedCoupon | string> = await res.json();
+          if (!res.ok) {
+            throw new Error(data as string);
+          }
+          const result = applyCoupon(data as AppliedCoupon);
+          if (typeof result === 'string') {
+            throw new Error(result);
+          }
+          if (!ToastService.isActive(toastRef.current)) {
+            toastRef.current = ToastService.success(
+              `${(data as AppliedCoupon).name} has been applied successfully`,
+            );
+          }
+        })
+        .catch((err: Error) => {
+          resetCoupon();
+          if (!ToastService.isActive(toastRef.current)) {
+            toastRef.current = ToastService.error(err.message);
+          }
+        });
+      // .finally(() => setIsLoading(false));
+    }
+  }, [applyCoupon, resetCoupon]);
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -37,7 +82,7 @@ export default function CartItem() {
   return (
     <>
       <button className={styles.cart} onClick={() => setIsDrawerOpened(true)}>
-        <span className={styles.cartTotal}>$ {cart.totalPrice.toFixed(2)}</span>
+        <span className={styles.cartTotal}>$ {formatPrice(cart.totalPrice)}</span>
         <span className={styles.cartBasket}>
           <FontAwesomeIcon className={styles.cartIcon} icon={faBasketShopping} size="xs" />
           <span className={styles.cartAmount}>{cart.totalAmount}</span>

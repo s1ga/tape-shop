@@ -23,6 +23,7 @@ export default class ProductService {
       description: fields.description as string,
       characteristics: fields.characteristics,
       images: fields.images,
+      weight: fields.weight,
     };
     if (fields.related) {
       obj.related = fields.related;
@@ -52,6 +53,13 @@ export default class ProductService {
         return result;
       }
       obj.name = fields.name as string;
+    }
+    if (fields.weight) {
+      const result = validator.isValidWeight(+fields.weight);
+      if (typeof result === 'string') {
+        return result;
+      }
+      obj.weight = +fields.weight;
     }
     if (fields.price) {
       const result = validator.isValidPrice(+fields.price);
@@ -151,7 +159,7 @@ export default class ProductService {
     return obj;
   }
 
-  public static async toServer(fields: PreparedProductItem): Promise<NewProductItem> {
+  public static toServer(fields: PreparedProductItem): NewProductItem {
     return ({
       ...fields,
       dateAdded: new Date().toISOString(),
@@ -176,6 +184,7 @@ export default class ProductService {
       availability: o.availability,
       features: o.features,
       demo: o.demo,
+      weight: o.weight,
       additionalInformation: o.additionalInformation,
       categories: o.categories.map((id: Types.ObjectId) => id.toString()),
       productType: o.productType.map((id: Types.ObjectId) => id.toString()),
@@ -204,6 +213,7 @@ export default class ProductService {
       availability: o.availability,
       features: o.features,
       demo: o.demo,
+      weight: o.weight,
       additionalInformation: o.additionalInformation,
       categories: o.categories.map(CategoryService.fromServer),
       productType: o.productType.map(TypeService.fromServer),
@@ -227,6 +237,7 @@ export default class ProductService {
       categories: o.categories,
       dateAdded: o.dateAdded,
       availability: o.availability,
+      weight: o.weight,
     });
 
     if (Array.isArray(products)) {

@@ -4,13 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faEnvelope, faHome, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { FormEvent, useState } from 'react';
 import ContactFeedbackService from '@/services/contactFeedback.service';
-import getDomain from '@/utils/getDomain';
 import httpMethods from '@/constants/httpMethods';
 import ToastService from '@/services/toast.service';
 import { ServerData } from '@/interfaces/serverData';
 import Loader from '@/components/Loader';
+import LinkService from '@/services/link.service';
 
-const CONTACT_URL = `${getDomain()}/api/contact-feedback`;
+const CONTACT_URL = LinkService.apiContactLink();
 
 export default function Contact() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -63,7 +63,7 @@ export default function Contact() {
            We develop and market applications for tape.
            Our products are marketed in Europe, North America, Canada, Mexico, Australia and New Zealand."
         />
-        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/contact`} />
+        <meta name="dc.relation" content={LinkService.contactLink()} />
         <meta name="robots" content="index, follow" />
         <meta
           name="googlebot"
@@ -73,8 +73,8 @@ export default function Contact() {
           name="bingbot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
-        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/contact`} />
-        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/contact`} />
+        <link rel="canonical" href={LinkService.contactLink()} />
+        <meta property="og:url" content={LinkService.contactLink()} />
         <meta property="og:title" content="Contact - QuiPtaping" />
         <meta
           property="og:description"

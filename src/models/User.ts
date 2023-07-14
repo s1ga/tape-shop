@@ -31,6 +31,10 @@ const UserSchema = new Schema<FullUser>({
     type: Boolean,
     default: false,
   },
+  appliedCoupons: [{
+    id: String,
+    amount: Number,
+  }],
 });
 
 const User = models.User || model('User', UserSchema);

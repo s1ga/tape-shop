@@ -3,16 +3,15 @@ import httpMethods from '@/constants/httpMethods';
 import Link from 'next/link';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import styles from '@/styles/modules/Account.module.scss';
-import getDomain from '@/utils/getDomain';
 import { ServerData } from '@/interfaces/serverData';
-import LocalStorageService from '@/services/storage.service';
-import storageKeys from '@/constants/storageKeys';
 import ToastService from '@/services/toast.service';
 import { useRouter } from 'next/router';
+import LinkService from '@/services/link.service';
+import UserService from '@/services/user.service';
 import Loader from './Loader';
 
-const LOGIN_URL = `${getDomain()}/api/user/login`;
-const VERIFY_URL = `${getDomain()}/api/user/verify`;
+const LOGIN_URL = LinkService.apiUserLoginLink();
+const VERIFY_URL = LinkService.apiUserVerifyLink();
 
 export default function Login({ onLogin }: { onLogin: CallableFunction }) {
   const [loading, setLoading] = useState<boolean>(false);
@@ -68,7 +67,7 @@ export default function Login({ onLogin }: { onLogin: CallableFunction }) {
         throw new Error(data as string);
       }
 
-      LocalStorageService.set<string>(storageKeys.Auth, data);
+      UserService.setUserToken(data);
       onLogin();
     } catch (error: any) {
       console.error(error);

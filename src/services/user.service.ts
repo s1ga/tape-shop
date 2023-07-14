@@ -1,8 +1,22 @@
 import { PASSWORD_REGEX } from '@/constants/regex';
 import { NewUser, User } from '@/interfaces/user';
 import { isValidEmail, isValidString } from '@/utils/validTypes';
+import storageKeys from '@/constants/storageKeys';
+import LocalStorageService from './storage.service';
 
 export default class UserService {
+  public static getUserToken(): string {
+    return LocalStorageService.get<string>(storageKeys.Auth) || '';
+  }
+
+  public static setUserToken(token: string): void {
+    LocalStorageService.set<string>(storageKeys.Auth, token);
+  }
+
+  public static deleteUserToken(): void {
+    LocalStorageService.delete(storageKeys.Auth);
+  }
+
   public static newUser(body: any): NewUser {
     return ({
       name: body.name,
@@ -22,8 +36,8 @@ export default class UserService {
 
   public static fromServer(user: any): User {
     return ({
-      _id: user._id.toString(),
-      id: user._id.toString(),
+      _id: user._id?.toString(),
+      id: user._id?.toString(),
       email: user.email,
       name: user.name,
       confirmed: user.confirmed,

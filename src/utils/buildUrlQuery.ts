@@ -1,6 +1,7 @@
 import { GetListParams } from 'react-admin';
 
 export default function buildUrlQuery(params: GetListParams): string {
+  console.log(params);
   const query = new URLSearchParams();
   if (params.pagination.page) {
     query.set('page', params.pagination.page.toString());
@@ -28,6 +29,9 @@ export default function buildUrlQuery(params: GetListParams): string {
   }
   if (['true', 'false'].includes(params.filter.approved)) {
     query.set('approved', params.filter.approved);
+  }
+  if (['true', 'false'].includes(params.filter.isActive)) {
+    query.set('isActive', params.filter.isActive);
   }
   if (params.filter.name) {
     query.set('name', params.filter.name);
@@ -62,8 +66,14 @@ export default function buildUrlQuery(params: GetListParams): string {
   if (params.filter.categories?.length) {
     query.set('categories', JSON.stringify(params.filter.categories));
   }
+  if (params.filter.appliedProducts?.length) {
+    query.set('appliedProducts', JSON.stringify(params.filter.appliedProducts));
+  }
   if (params.filter.productId) {
     query.set('productId', params.filter.productId);
+  }
+  if (params.filter.email) {
+    query.set('email', params.filter.email);
   }
   if (params.filter.rating?.length) {
     query.set('rating', JSON.stringify(params.filter.rating));

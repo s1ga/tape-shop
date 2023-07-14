@@ -16,8 +16,12 @@ export default class ToastService {
     return toast.success(text, { ...this.defaultOptions, ...options });
   }
 
+  public static warn(text: string, option: ToastOptions = {}): number | string {
+    return toast.warn(text, { ...this.defaultOptions, autoClose: 3000, ...option });
+  }
+
   public static error(text: string, options: ToastOptions = {}): number | string {
-    return toast.error(text, { ...this.defaultOptions, ...options, autoClose: 4000 });
+    return toast.error(text, { ...this.defaultOptions, autoClose: 4000, ...options });
   }
 
   public static isActive(id: string | number = ''): boolean {

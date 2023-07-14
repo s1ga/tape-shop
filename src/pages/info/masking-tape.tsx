@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import { TapeDescription, tapesDescription } from '@/constants/tapes-descriptions';
+import LinkService from '@/services/link.service';
 
 export const getServerSideProps = async () => {
   await dbConnect();
@@ -46,7 +47,7 @@ export default function MaskingTape({ products }: { products: ProductItemPreview
           content="QuiPtaping has suitable masking tape for every surface.
           This way, you have the best adhesion depending on the surface to be processed."
         />
-        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/info/masking-tape`} />
+        <meta name="dc.relation" content={LinkService.maskingTapeLink()} />
         <meta name="robots" content="index, follow" />
         <meta
           name="googlebot"
@@ -56,8 +57,8 @@ export default function MaskingTape({ products }: { products: ProductItemPreview
           name="bingbot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
-        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/info/masking-tape`} />
-        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/info/masking-tape`} />
+        <link rel="canonical" href={LinkService.maskingTapeLink()} />
+        <meta property="og:url" content={LinkService.maskingTapeLink()} />
         <meta property="og:title" content="Masking tape - QuiPtaping" />
         <meta
           property="og:description"

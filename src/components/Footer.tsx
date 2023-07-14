@@ -13,9 +13,10 @@ export default function Footer() {
   const wrapperFunction = (children: ReactNode) => (
     <div className={styles.footerLinksContainer}>{children}</div>
   );
-  const handleResize = () => setIsTablet(ScreenUtils.isTablet());
 
   useEffect(() => {
+    const handleResize = () => setIsTablet(ScreenUtils.isTablet());
+
     setIsTablet(ScreenUtils.isTablet());
     window.addEventListener('resize', handleResize);
     return () => {

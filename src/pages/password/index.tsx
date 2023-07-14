@@ -2,16 +2,16 @@ import Head from 'next/head';
 import styles from '@/styles/modules/Account.module.scss';
 import httpMethods from '@/constants/httpMethods';
 import { FormEvent, useEffect, useRef, useState } from 'react';
-import getDomain from '@/utils/getDomain';
 import { useRouter } from 'next/router';
 import Loader from '@/components/Loader';
 import ToastService from '@/services/toast.service';
 import { ServerData } from '@/interfaces/serverData';
 import { PASSWORD_REGEX } from '@/constants/regex';
 import { CONFIRM_PASSWORD_MESSAGE, PASSWORD_MESSAGE } from '@/constants/messages';
+import LinkService from '@/services/link.service';
 
-const RESET_URL = `${getDomain()}/api/user/reset`;
-const PASSWORD_URL = `${getDomain()}/api/user/password`;
+const RESET_URL = LinkService.apiUserResetLink();
+const PASSWORD_URL = LinkService.apiUserPasswordLink();
 
 export default function NewPassword() {
   const [validationMessage, setValidationMessage] = useState<string>('');
@@ -105,9 +105,9 @@ export default function NewPassword() {
       <Head>
         <title>Reset password - QuiPtaping</title>
         <meta name="dc.title" content="Reset password - QuiPtaping" />
-        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/reset`} />
+        <meta name="dc.relation" content={LinkService.resetLink()} />
         <meta name="robots" content="follow, noindex" />
-        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/reset`} />
+        <meta property="og:url" content={LinkService.resetLink()} />
         <meta property="og:title" content="Reset password - QuiPtaping" />
         <meta name="twitter:title" content="Reset password - QuiPtaping" />
       </Head>

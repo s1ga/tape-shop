@@ -17,6 +17,7 @@ export default class ProductValidator {
       this.isValidFeatures, this.isValidDemo, this.isValidAdditionalInfo, this.isValidAvailability,
       this.isValidCharacteristics, this.isValidRelatedProducts, this.isValidImages, this.isValidDescription,
       this.isValidSku, this.isValidproductType, this.isValidCategories, this.isValidPrice, this.isValidName,
+      this.isValidWeight,
     ];
     for (let i = 0; i < allValidations.length; i += 1) {
       const result = allValidations[i].call(this);
@@ -49,8 +50,15 @@ export default class ProductValidator {
   }
 
   public isValidPrice(price?: number): boolean | string {
-    if (!isValidNumber(price || this.body.price)) {
+    if (!isValidNumber(price || this.body.price) || +(price || this.body.price) <= 0) {
       return 'Price is required number field';
+    }
+    return true;
+  }
+
+  public isValidWeight(weight?: number): boolean | string {
+    if (!isValidNumber(weight || this.body.weight) || +(weight || this.body.weight) <= 0) {
+      return 'Weight is required positive number';
     }
     return true;
   }

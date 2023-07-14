@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Sorting from '@/components/ProductsSorting/ProductsSorting';
 import Head from 'next/head';
 import { Category } from '@/interfaces/category';
+import LinkService from '@/services/link.service';
 import ProductsList from './ProductsList/ProductsList';
 
 interface Props {
@@ -37,11 +38,11 @@ export default function CategoryList({ products, category, typeId, typeName }: P
           && <>
             <link
               rel="canonical"
-              href={`${process.env.NEXT_PUBLIC_DOMAIN}/types/${typeId}/category/${category._id}`}
+              href={LinkService.typeCategoryLink(typeId, category._id)}
             />
             <meta
               property="og:url"
-              content={`${process.env.NEXT_PUBLIC_DOMAIN}/types/${typeId}/category/${category._id}`}
+              content={LinkService.typeCategoryLink(typeId, category._id)}
             />
           </>
         }
@@ -49,11 +50,11 @@ export default function CategoryList({ products, category, typeId, typeName }: P
           && <>
             <link
               rel="canonical"
-              href={`${process.env.NEXT_PUBLIC_DOMAIN}/categories/${category._id}`}
+              href={LinkService.categoryLink(category._id)}
             />
             <meta
               property="og:url"
-              content={`${process.env.NEXT_PUBLIC_DOMAIN}/categories/${category._id}`}
+              content={LinkService.categoryLink(category._id)}
             />
           </>
         }

@@ -56,7 +56,7 @@ export default async function handler(
       candidate.hash = hash;
       candidate.hashExp = Date.now() + (MIN_IN_H * SEC_IN_MIN * MS_IN_SEC);
       await candidate.save();
-      await MailService.reset(email, hash);
+      MailService.reset(email, hash);
       res.status(200).json({ data: 'Email with reset link has been sent' });
     } else {
       console.warn(`There is no such handler for HTTP method: ${method}`);

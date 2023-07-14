@@ -3,11 +3,11 @@ import styles from '@/styles/modules/Review.module.scss';
 import { useEffect, useState } from 'react';
 import Loader from '@/components/Loader';
 import httpMethods from '@/constants/httpMethods';
-import getDomain from '@/utils/getDomain';
 import { ServerData } from '@/interfaces/serverData';
 import ToastService from '@/services/toast.service';
 import LocalStorageService from '@/services/storage.service';
 import storageKeys from '@/constants/storageKeys';
+import LinkService from '@/services/link.service';
 import ReviewForm from './ReviewForm';
 import ReviewCard from './ReviewCard';
 
@@ -17,7 +17,7 @@ type Props = {
   productName: string;
 }
 
-const REVIEW_URL = `${getDomain()}/api/reviews`;
+const REVIEW_URL = LinkService.apiReviewsLink();
 
 export default function Reviews({ fetchedReviews, productName, productId }: Props) {
   const [reviews, setReviews] = useState<Review[]>([]);

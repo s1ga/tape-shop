@@ -1,3 +1,4 @@
+import LinkService from '@/services/link.service';
 import styles from '@/styles/modules/UserInstructions.module.scss';
 import Head from 'next/head';
 
@@ -27,7 +28,7 @@ export default function FrequentlyAskedQuestions({ isStandalone = true }: { isSt
             time without glue residue. Very nice if you have spent many hours masking and preparing.
             Good tape pays for itself quickly."
           />
-          <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/frequently-asked-questions`} />
+          <meta name="dc.relation" content={LinkService.faqLink()} />
           <meta name="robots" content="index, follow" />
           <meta
             name="googlebot"
@@ -37,8 +38,8 @@ export default function FrequentlyAskedQuestions({ isStandalone = true }: { isSt
             name="bingbot"
             content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
           />
-          <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/frequently-asked-questions`} />
-          <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/frequently-asked-questions`} />
+          <link rel="canonical" href={LinkService.faqLink()} />
+          <meta property="og:url" content={LinkService.faqLink()} />
           <meta property="og:title" content="Frequently Asked Questions - QuiPtaping" />
           <meta
             property="og:description"

@@ -12,6 +12,7 @@ import ProductService from '@/services/product.service';
 import dbConnect from '@/utils/db';
 import ReviewService from '@/services/review.service';
 import { isValidObjectId } from 'mongoose';
+import LinkService from '@/services/link.service';
 import ProductHeader from '../../components/Product/ProductHeader';
 
 const Reviews = dynamic(
@@ -71,7 +72,7 @@ export default function ProductPage(
           name="dc.description"
           content={product.description}
         />
-        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/product/${product._id}`} />
+        <meta name="dc.relation" content={LinkService.productLink(product._id)} />
         <meta name="robots" content="index, follow" />
         <meta
           name="googlebot"
@@ -81,8 +82,8 @@ export default function ProductPage(
           name="bingbot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
-        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/product/${product._id}`} />
-        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/product/${product._id}`} />
+        <link rel="canonical" href={LinkService.productLink(product._id)} />
+        <meta property="og:url" content={LinkService.productLink(product._id)} />
         <meta property="og:type" content="og:product" />
         <meta property="og:title" content={`${product.name} - QuiPtaping`} />
         <meta

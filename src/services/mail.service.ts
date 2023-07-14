@@ -1,4 +1,5 @@
 import { Transporter, createTransport } from 'nodemailer';
+import LinkService from './link.service';
 
 export default class MailService {
   private static transport: Transporter;
@@ -29,7 +30,7 @@ export default class MailService {
           <tr>
             <td>
               Your account has been created. To proceed using it, please verify your account using this
-              <a href="${process.env.NEXT_PUBLIC_DOMAIN}/account?hash=${hash}">link</a>.
+              <a href="${LinkService.mailVerifyLink(hash)}">link</a>.
             </td>
           </tr>
         </table>
@@ -51,7 +52,7 @@ export default class MailService {
           </tr>
           <tr>
             <td>
-              <a href="${process.env.NEXT_PUBLIC_DOMAIN}/password?hash=${hash}">Reset password</a>.
+              <a href="${LinkService.mailResetLink(hash)}">Reset password</a>.
             </td>
           </tr>
         </table>

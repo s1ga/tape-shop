@@ -7,6 +7,7 @@ import TypeService from '@/services/type.service';
 import { Type } from '@/interfaces/type';
 import { Category } from '@/interfaces/category';
 import ProductService from '@/services/product.service';
+import LinkService from '@/services/link.service';
 
 export const getServerSideProps = async ({ params }: { params: { type: string } }) => {
   await dbConnect();
@@ -48,8 +49,8 @@ export default function Page({ type, counts }: { type: Type, counts: Record<stri
           name="bingbot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
-        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/types/${type.id}`} />
-        <meta property="canonical" content={`${process.env.NEXT_PUBLIC_DOMAIN}/types/${type.id}`} />
+        <link rel="canonical" href={LinkService.typesLink(type.id)} />
+        <meta property="canonical" content={LinkService.typesLink(type.id)} />
         <meta property="og:type" content="object" />
         <meta property="og:title" content={`${type.name} - QuiPtaping`} />
         <meta

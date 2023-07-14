@@ -1,7 +1,8 @@
 import Account from '@/components/Account';
 import Login from '@/components/Login';
 import storageKeys from '@/constants/storageKeys';
-import LocalStorageService from '@/services/storage.service';
+import LinkService from '@/services/link.service';
+import UserService from '@/services/user.service';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 
@@ -15,7 +16,7 @@ export default function AccountPage() {
       }
     };
     window.addEventListener('storage', handler);
-    setHasToken(!!(LocalStorageService.get<string>(storageKeys.Auth) || ''));
+    setHasToken(!!UserService.getUserToken());
 
     return () => {
       window.removeEventListener('storage', handler);
@@ -27,8 +28,8 @@ export default function AccountPage() {
       <Head>
         <title>My account - QuiPtaping</title>
         <meta name="dc.title" content="My account - QuiPtaping" />
-        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/account`} />
-        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/account`} />
+        <meta name="dc.relation" content={LinkService.accountLink()} />
+        <meta property="og:url" content={LinkService.accountLink()} />
         <meta property="og:title" content="My account - QuiPtaping" />
         <meta name="twitter:title" content="My account - QuiPtaping" />
         <meta name="robots" content="follow, noindex" />

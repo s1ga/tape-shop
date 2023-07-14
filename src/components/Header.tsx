@@ -10,8 +10,8 @@ import { MouseEvent, ReactNode, useEffect, useState } from 'react';
 import useElementOnScreen from '@/hooks/elementOnScreen';
 import { useRouter } from 'next/router';
 import { ProductTypeCard } from '@/interfaces/productTypeCard';
-import CartItem from './CartItem';
 import ConditionalWrapper from './ConditionalWrapper';
+import CartItem from './CartItem';
 
 type ProductsDropdownProps = {
   isOpened: boolean;
@@ -86,7 +86,7 @@ export default function Header({ types = [] }: { types: ProductTypeCard[] }) {
             alt="QuiPtaping logo"
             width={200}
             height={70}
-            loading="lazy"
+            priority
             decoding="async"
           />
         </Link>

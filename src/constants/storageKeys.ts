@@ -4,6 +4,8 @@ const storageKeys = {
   Auth: 'auth',
   AdminAuth: 'adminAuth',
   PendingReviews: 'pendingReviews',
+  ShippingDestination: 'shippingDestination',
+  Coupon: 'coupon',
 };
 
 export default storageKeys;

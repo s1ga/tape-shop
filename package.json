@@ -26,6 +26,7 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.1.1",
     "next": "13.3.4",
+    "node-fetch": "^3.3.1",
     "nodemailer": "^6.9.3",
     "react": "18.2.0",
     "react-admin": "^4.11.0",

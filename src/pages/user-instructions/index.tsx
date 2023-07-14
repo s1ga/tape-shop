@@ -1,5 +1,6 @@
 import TapeInsctructions from '@/components/TapeInstructions';
 import FrequentlyAskedQuestions from '@/pages/frequently-asked-questions';
+import LinkService from '@/services/link.service';
 import styles from '@/styles/modules/UserInstructions.module.scss';
 import Head from 'next/head';
 
@@ -23,7 +24,7 @@ export default function UserInstructions() {
           some skills and practice to mask properly. Finally, when you remove the tape … the result is
           not what you had in mind: straight painting lines."
         />
-        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/user-instructions`} />
+        <meta name="dc.relation" content={LinkService.instructionsLink()} />
         <meta name="robots" content="index, follow" />
         <meta
           name="googlebot"
@@ -33,8 +34,8 @@ export default function UserInstructions() {
           name="bingbot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
-        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/user-instructions`} />
-        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/user-instructions`} />
+        <link rel="canonical" href={LinkService.instructionsLink()} />
+        <meta property="og:url" content={LinkService.instructionsLink()} />
         <meta property="og:title" content="User instructions - QuiPtaping" />
         <meta
           property="og:description"

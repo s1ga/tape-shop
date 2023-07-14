@@ -9,6 +9,7 @@ import ProductService from '@/services/product.service';
 import { Product, ProductItemPreview } from '@/interfaces/product/product';
 import dbConnect from '@/utils/db';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
+import LinkService from '@/services/link.service';
 
 export const getServerSideProps = async () => {
   await dbConnect();
@@ -44,7 +45,7 @@ export default function TapeDispenser({ products }: { products: ProductItemPrevi
           content="Applying tape with the QuiP Masking Tape Dispenser enables you to work fast and precise!
           You want to achieve straight and sharp painting lines."
         />
-        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/info/tape-dispensers`} />
+        <meta name="dc.relation" content={LinkService.dispensersLink()} />
         <meta name="robots" content="index, follow" />
         <meta
           name="googlebot"
@@ -54,8 +55,8 @@ export default function TapeDispenser({ products }: { products: ProductItemPrevi
           name="bingbot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
-        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/info/tape-dispensers`} />
-        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/info/tape-dispensers`} />
+        <link rel="canonical" href={LinkService.dispensersLink()} />
+        <meta property="og:url" content={LinkService.dispensersLink()} />
         <meta property="og:title" content="Quip Masking Tape Dispenser - QuiPtaping" />
         <meta
           property="og:description"

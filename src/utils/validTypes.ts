@@ -18,7 +18,7 @@ export function isValidImage(image: string) {
 }
 
 export function isValidNumber(number: number) {
-  if (!number || typeof number !== 'number' || Number.isNaN(number)) {
+  if (number === null || typeof number !== 'number' || Number.isNaN(number)) {
     return false;
   }
 
@@ -35,4 +35,9 @@ export function isValidEmail(email: string) {
 
 export function isBoolean(value: any): value is boolean {
   return typeof value === 'boolean';
+}
+
+export function isValidDate(value: any) {
+  const date = new Date(value);
+  return value instanceof Date || (date instanceof Date && !Number.isNaN(+date));
 }

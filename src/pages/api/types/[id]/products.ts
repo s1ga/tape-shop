@@ -23,6 +23,7 @@ export default async function handler(
     if (method === httpMethods.get) {
       if (!isValidObjectId(id)) {
         res.status(400).json({ data: 'Provide valid id for product type' });
+        return;
       }
 
       const products = await Product.find({ productType: new Types.ObjectId(id as string) });

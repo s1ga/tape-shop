@@ -11,6 +11,7 @@ import { equalsPrimitiveArrays } from '@/utils/helpers';
 import adminResourceMap from '@/constants/admin-resources';
 import buildUrlQuery from '@/utils/buildUrlQuery';
 import decodeBaseImage from '@/utils/getBaseImage';
+import CouponsService from '@/services/coupons.service';
 
 const BASE_URL = `${getDomain()}/api`;
 
@@ -74,6 +75,7 @@ const updateMutation = async (resource: string, params: UpdateParams<any>) => {
       const body: Record<string, any> = {};
       body.name = data.name;
       body.price = data.price;
+      body.weight = Math.round(data.weight);
       body.sku = data.sku;
       body.availability = data.availability;
       body.description = data.description;
@@ -106,6 +108,15 @@ const updateMutation = async (resource: string, params: UpdateParams<any>) => {
       request.headers.set('Content-Type', 'Application/json');
       return fetch(request).then(thenFunc);
     }
+    case adminResourceMap.coupons: {
+      let body = params.data;
+      if (params.meta?.edit) {
+        body = CouponsService.toServer(body);
+      }
+      const request = setRequest(JSON.stringify(body));
+      request.headers.set('Content-Type', 'Application/json');
+      return fetch(request).then(thenFunc);
+    }
     default:
       console.warn(`No handler for resource ${resource}`);
       return Promise.reject();
@@ -132,6 +143,21 @@ const updateManyMutation = async (resource: string, params: UpdateManyParams) =>
       });
     }
     case adminResourceMap.reviews: {
+      const update = (id: string | number) => fetch(new Request(`${BASE_URL}/${resource}/${id}`, {
+        method: httpMethods.patch,
+        body: JSON.stringify(params.data),
+        headers: new Headers({
+          Authorization: token,
+          'Content-Type': 'Application/json',
+        }),
+      })).then(thenFunc);
+      return Promise.resolve({
+        data: await Promise.all(
+          params.ids.map(update),
+        ),
+      });
+    }
+    case adminResourceMap.coupons: {
       const update = (id: string | number) => fetch(new Request(`${BASE_URL}/${resource}/${id}`, {
         method: httpMethods.patch,
         body: JSON.stringify(params.data),
@@ -185,6 +211,7 @@ const createMutation = async (resource: string, params: CreateParams) => {
       }
       body.name = data.name;
       body.price = data.price;
+      body.weight = Math.round(data.weight);
       body.sku = data.sku;
       body.availability = data.availability;
       body.description = data.description;
@@ -205,6 +232,11 @@ const createMutation = async (resource: string, params: CreateParams) => {
       request.headers.set('Content-Type', 'Application/json');
       return fetch(request).then(thenFunc);
     }
+    case adminResourceMap.coupons: {
+      const request = setRequest(JSON.stringify(CouponsService.toServer(params.data)));
+      request.headers.set('Content-Type', 'application/json');
+      return fetch(request).then(thenFunc);
+    }
     default:
       console.warn(`No handler for resource ${resource}`);
       return Promise.reject();
@@ -213,7 +245,7 @@ const createMutation = async (resource: string, params: CreateParams) => {
 
 const getOneMutation = (resource: string, params: GetOneParams<any>) => {
   const headers = new Headers();
-  if (resource === adminResourceMap.reviews) {
+  if ([adminResourceMap.reviews, adminResourceMap.coupons, adminResourceMap.feedback].includes(resource)) {
     headers.set('Authorization', LocalStorageService.get<string>(storageKeys.AdminAuth) || '');
   }
   return fetch(`${BASE_URL}/${resource}/${params.id}`, { headers })
@@ -248,10 +280,13 @@ const getOneMutation = (resource: string, params: GetOneParams<any>) => {
 const dataProvider: DataProvider = {
   getList: (resource, params) => {
     const headers = new Headers();
-    if (resource === adminResourceMap.reviews) {
+    if ([
+      adminResourceMap.reviews, adminResourceMap.coupons, adminResourceMap.feedback, adminResourceMap.users,
+    ].includes(resource)) {
       headers.set('Authorization', LocalStorageService.get<string>(storageKeys.AdminAuth) || '');
     }
-    return fetch(`${BASE_URL}/${resource}?${buildUrlQuery(params)}`, {
+    const path = adminResourceMap.users === resource ? `${resource}/all` : resource;
+    return fetch(`${BASE_URL}/${path}?${buildUrlQuery(params)}`, {
       headers,
     }).then(thenFunc);
   },

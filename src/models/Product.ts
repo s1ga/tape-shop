@@ -6,6 +6,7 @@ import Type from './Type';
 const ProductSchema = new Schema<ProductItem>({
   name: { type: String, required: true },
   price: { type: Number, required: true },
+  weight: { type: Number, required: true },
   rate: { type: Number, default: 0 },
   dateAdded: { type: String, required: true },
   categories: [{ type: Schema.Types.ObjectId, ref: Category }],

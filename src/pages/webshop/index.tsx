@@ -6,6 +6,7 @@ import ProductsList from '@/components/ProductsList/ProductsList';
 import ProductService from '@/services/product.service';
 import { Product, ProductItemPreview } from '@/interfaces/product/product';
 import dbConnect from '@/utils/db';
+import LinkService from '@/services/link.service';
 
 export const getServerSideProps = async () => {
   await dbConnect();
@@ -41,7 +42,7 @@ export default function Webshop({ products }: { products: ProductItemPreview[] }
           name="dc.description"
           content="Our products"
         />
-        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/webshop`} />
+        <meta name="dc.relation" content={LinkService.webshopLink()} />
         <meta name="robots" content="index, follow" />
         <meta
           name="googlebot"
@@ -51,8 +52,8 @@ export default function Webshop({ products }: { products: ProductItemPreview[] }
           name="bingbot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
-        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/webshop`} />
-        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/webshop`} />
+        <link rel="canonical" href={LinkService.webshopLink()} />
+        <meta property="og:url" content={LinkService.webshopLink()} />
         <meta property="og:title" content="Shop - QuiPtaping" />
         <meta
           property="og:description"

@@ -8,6 +8,7 @@ import Head from 'next/head';
 import styles from '@/styles/modules/TypesPage.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import LinkService from '@/services/link.service';
 
 export const getServerSideProps = async () => {
   await dbConnect();
@@ -43,7 +44,7 @@ export default function Systainer({ products }: { products: ProductItemPreview[]
           content="The QuiP Systainer with foam inlay for storage of Masking Dispenser and tape
           helps you to work organised, safe and efficient can be delivered in different versions."
         />
-        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/info/systainer`} />
+        <meta name="dc.relation" content={LinkService.systainerLink()} />
         <meta name="robots" content="index, follow" />
         <meta
           name="googlebot"
@@ -53,8 +54,8 @@ export default function Systainer({ products }: { products: ProductItemPreview[]
           name="bingbot"
           content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
         />
-        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_DOMAIN}/info/systainer`} />
-        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/info/systainer`} />
+        <link rel="canonical" href={LinkService.systainerLink()} />
+        <meta property="og:url" content={LinkService.systainerLink()} />
         <meta property="og:title" content="QuiP Systainer - QuiPtaping" />
         <meta
           property="og:description"

@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { AppliedCoupon } from './coupon';
 import { ProductItemPreview } from './product/product';
 
 export interface CartContextProps {
@@ -6,12 +7,15 @@ export interface CartContextProps {
   addItems: (items: ProductItemPreview | CartItem) => void;
   removeItem: (item: ProductItemPreview) => void;
   removeAllItem: (item: ProductItemPreview) => void;
+  applyCoupon: (coupon: AppliedCoupon) => string | boolean;
+  resetCoupon: () => void;
 }
 
 export interface Cart {
   totalAmount: number;
   totalPrice: number;
   items: CartItem[];
+  appliedCouponPrice?: number;
 }
 
 export interface CartItem {

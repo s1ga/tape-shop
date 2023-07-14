@@ -44,7 +44,7 @@ $notes-mobile-height: 66px;
   height: $header-height;
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 999;
   padding-top: $base-space-size-medium;
   padding-bottom: $base-space-size-medium;
   background-color: $color-background-header;
@@ -105,7 +105,7 @@ $notes-mobile-height: 66px;
   position: absolute;
   top: calc($header-height + $notes-height);
   width: 100%;
-  z-index: 999;
+  z-index: 998;
 }
 
 .headerProductsFixed {
@@ -197,7 +197,7 @@ $notes-mobile-height: 66px;
   position: absolute;
   top: calc($header-mobile-height + $notes-mobile-height);
   width: 100%;
-  z-index: 999;
+  z-index: 998;
 
   width: 100%;
   background-color: $color-white;

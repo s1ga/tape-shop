@@ -1,14 +1,14 @@
 import Head from 'next/head';
 import styles from '@/styles/modules/Account.module.scss';
 import httpMethods from '@/constants/httpMethods';
-import getDomain from '@/utils/getDomain';
 import { FormEvent, useState } from 'react';
 import { ServerData } from '@/interfaces/serverData';
 import ToastService from '@/services/toast.service';
 import Loader from '@/components/Loader';
 import { useRouter } from 'next/router';
+import LinkService from '@/services/link.service';
 
-const RESET_URL = `${getDomain()}/api/user/reset`;
+const RESET_URL = LinkService.apiUserResetLink();
 
 export default function Reset() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -46,8 +46,8 @@ export default function Reset() {
       <Head>
         <title>Reset password - QuiPtaping</title>
         <meta name="dc.title" content="Reset password - QuiPtaping" />
-        <meta name="dc.relation" content={`${process.env.NEXT_PUBLIC_DOMAIN}/reset`} />
-        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_DOMAIN}/reset`} />
+        <meta name="dc.relation" content={LinkService.resetLink()} />
+        <meta property="og:url" content={LinkService.resetLink()} />
         <meta property="og:title" content="Reset password - QuiPtaping" />
         <meta name="twitter:title" content="Reset password - QuiPtaping" />
         <meta name="robots" content="follow, noindex" />

@@ -26,7 +26,7 @@ export default function ReivewsList() {
 
   const handleClose = useCallback(() => {
     router.push(`/admin#/${adminResourceMap.reviews}`);
-  }, []);
+  }, [router]);
 
   const handleRowClick = (id: number | string, resource: string): false => {
     router.push(`/admin#/${resource}/${id}`);

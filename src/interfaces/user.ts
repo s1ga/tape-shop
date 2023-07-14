@@ -11,7 +11,13 @@ export type FullUser = User & {
   password: string;
   hash: string;
   hashExp: string;
+  appliedCoupons: {
+    id: string;
+    amount: number;
+  }[];
 };
 
-export type NewUser = Omit<FullUser, '_id' | 'id' | 'hash' | 'hashExp' | 'confirmed' | 'isAdmin'>
+export type NewUser = Omit<
+  FullUser, '_id' | 'id' | 'hash' | 'hashExp' | 'confirmed' | 'isAdmin' | 'appliedCoupons'
+>
   & { hash?: string };

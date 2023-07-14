@@ -10,11 +10,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Type } from '@/interfaces/type';
 import { ServerData } from '@/interfaces/serverData';
 import Loader from '@/components/Loader';
-import getDomain from '@/utils/getDomain';
 import { useRouter } from 'next/router';
 import ToastService from '@/services/toast.service';
+import LinkService from '@/services/link.service';
 
-const DOMAIN = getDomain();
 const HIDE_MENU_PATHS = ['/admin'];
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -24,14 +23,14 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`${DOMAIN}/api/types`)
+    fetch(LinkService.apiTypesLink())
       .then((res: Response) => res.json())
       .then((data: ServerData<Type[]>) => {
         const types = data.data;
         const cards: ProductTypeCard[] = [];
         types.forEach(async (t: Type) => {
           const products: ServerData<unknown[]> = await (
-            await fetch(`${DOMAIN}/api/types/${t._id}/products`)
+            await fetch(LinkService.apiTypesProductsLink(t._id))
           ).json();
           cards.push({
             id: t.id,

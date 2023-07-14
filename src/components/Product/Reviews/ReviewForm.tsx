@@ -1,9 +1,9 @@
 import Rate from '@/components/Rate';
 import { FormEvent, useState } from 'react';
 import styles from '@/styles/modules/Review.module.scss';
-import getDomain from '@/utils/getDomain';
+import LinkService from '@/services/link.service';
 
-const CREATE_REVIEW_URL = `${getDomain()}/api/reviews`;
+const CREATE_REVIEW_URL = LinkService.apiReviewsLink();
 
 type Props = {
   productName: string;

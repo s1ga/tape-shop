@@ -1,7 +1,9 @@
 import { createTheme } from '@mui/material/styles';
 import { Admin, Resource, defaultTheme } from 'react-admin';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookmark, faCartShopping, faComment, faMessage, faTag } from '@fortawesome/free-solid-svg-icons';
+import {
+  faBookmark, faCartShopping, faComment, faGift, faMessage, faTag,
+} from '@fortawesome/free-solid-svg-icons';
 import adminResourceMap from '@/constants/admin-resources';
 import authProvider from '@/context/adminAuthProvider';
 import dataProvider from '@/context/adminDataProvider';
@@ -11,6 +13,7 @@ import types from './types';
 import feedbacks from './feedbacks';
 import products from './products';
 import reviews from './reviews';
+import coupons from './coupons';
 
 const resourceIcons = {
   products: () => <FontAwesomeIcon icon={faCartShopping} />,
@@ -18,6 +21,7 @@ const resourceIcons = {
   types: () => <FontAwesomeIcon icon={faTag} />,
   contactFeedbacks: () => <FontAwesomeIcon icon={faMessage} />,
   reviews: () => <FontAwesomeIcon icon={faComment} />,
+  coupons: () => <FontAwesomeIcon icon={faGift} />,
 };
 
 const theme = createTheme(
@@ -52,6 +56,7 @@ export default function AdminPage() {
         <Resource name={adminResourceMap.types} {...types} icon={resourceIcons.types} />
         <Resource name={adminResourceMap.feedback} {...feedbacks} icon={resourceIcons.contactFeedbacks} />
         <Resource name={adminResourceMap.reviews} {...reviews} icon={resourceIcons.reviews} />
+        <Resource name={adminResourceMap.coupons} {...coupons} icon={resourceIcons.coupons} />
       </Admin>
     </>
   );

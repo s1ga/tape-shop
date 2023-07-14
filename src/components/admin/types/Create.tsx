@@ -2,7 +2,7 @@ import { Button } from '@mui/material';
 import { Create, SaveButton, SimpleForm, TextInput, Toolbar, required, useRedirect } from 'react-admin';
 import Loader from '@/components/Loader';
 import { useEffect, useState } from 'react';
-import getDomain from '@/utils/getDomain';
+import LinkService from '@/services/link.service';
 import SegmentsInput from './SegmentsInput';
 
 export default function TypesCreate() {
@@ -11,7 +11,7 @@ export default function TypesCreate() {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`${getDomain()}/api/categories`)
+    fetch(LinkService.apiCategoriesLink())
       .then(async (res: Response) => {
         const { data } = await res.json();
         if (!res.ok) {

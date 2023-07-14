@@ -16,7 +16,7 @@ const req: any[] = [required()];
 const reqWithMinLength = [...req, minLength(3, 'Should be at least 3 characters')];
 const nonZeroValidation = (value: number) => {
   if (value <= 0) {
-    return 'Price should be greater than 0';
+    return 'Value should be greater than 0';
   }
   return undefined;
 };
@@ -88,7 +88,7 @@ export default function ProductForm({ children }: { children: ReactElement }) {
               <TextInput source="name" fullWidth validate={reqWithMinLength} />
             </Grid>
             <Grid item xs={0} sm={6} />
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={3}>
               <TextInput source="sku" fullWidth validate={reqWithMinLength} />
             </Grid>
             <Grid item xs={12} sm={3}>
@@ -99,6 +99,14 @@ export default function ProductForm({ children }: { children: ReactElement }) {
                 InputProps={{
                   startAdornment: <InputAdornment position="start">$</InputAdornment>,
                 }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <NumberInput
+                label="Weight, g"
+                source="weight"
+                validate={req.concat(nonZeroValidation)}
+                fullWidth
               />
             </Grid>
             <Grid
@@ -121,6 +129,7 @@ export default function ProductForm({ children }: { children: ReactElement }) {
                 source="description"
                 validate={reqWithMinLength}
                 multiline
+                rows={5}
                 fullWidth
               />
             </Grid>

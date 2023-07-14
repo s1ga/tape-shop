@@ -117,7 +117,7 @@ export default async function handler(
       }
 
       const newProduct = await Product.create(
-        await ProductService.toServer(preparedFields),
+        ProductService.toServer(preparedFields),
       );
       res.status(201).json({ data: ProductService.fromServer(newProduct) as ProductItem });
     } else {

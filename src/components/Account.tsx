@@ -1,28 +1,37 @@
 import { useEffect, useState } from 'react';
-import getDomain from '@/utils/getDomain';
-import LocalStorageService from '@/services/storage.service';
-import storageKeys from '@/constants/storageKeys';
 import ToastService from '@/services/toast.service';
 import { User } from '@/interfaces/user';
 import { ServerData } from '@/interfaces/serverData';
 import styles from '@/styles/modules/Account.module.scss';
+import LinkService from '@/services/link.service';
+import statusCodes from '@/constants/statusCodes';
+import UserService from '@/services/user.service';
 import Loader from './Loader';
 
-const USER_URL = `${getDomain()}/api/user`;
+const USER_URL = LinkService.apiUserLink();
 
 export default function Account({ onLogout }: { onLogout: CallableFunction }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [user, setUser] = useState<User>();
 
+  const logout = () => {
+    UserService.deleteUserToken();
+    onLogout();
+  };
+
   useEffect(() => {
     setLoading(true);
     fetch(USER_URL, {
       headers: {
-        Authorization: LocalStorageService.get<string>(storageKeys.Auth) || '',
+        Authorization: UserService.getUserToken(),
       },
     })
       .then(async (res: Response) => {
         const { data }: ServerData<User | string> = await res.json();
+        if (res.status === statusCodes.Unauthorized) {
+          logout();
+          return;
+        }
         if (!res.ok) {
           throw new Error(data as string);
         }
@@ -38,11 +47,6 @@ export default function Account({ onLogout }: { onLogout: CallableFunction }) {
   if (loading) {
     return <Loader />;
   }
-
-  const logout = () => {
-    LocalStorageService.delete(storageKeys.Auth);
-    onLogout();
-  };
 
   return (
     <section>
