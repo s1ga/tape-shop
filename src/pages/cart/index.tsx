@@ -60,15 +60,9 @@ export default function Cart() {
   const [addressForm, setAddressForm] = useState<ShippingDestination>();
   const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
   const initialAddress = useRef<ShippingDestination>();
-  const didMountRef = useRef(false);
   const toastRef = useRef<number | string>();
 
   useEffect(() => {
-    if (!didMountRef.current) {
-      didMountRef.current = true;
-      return undefined;
-    }
-
     setIsTablet(ScreenUtils.isTablet());
     const handleResize = () => setIsTablet(ScreenUtils.isTablet());
     window.addEventListener('resize', handleResize);
@@ -522,7 +516,7 @@ function CartTotal({ cart, fetchShipping, onSelect, selectedRate,
     setAddress(form);
   };
 
-  const reset = (e: FormEvent) => {
+  const reset = () => {
     setCurrentAddress('');
     onReset();
   };
