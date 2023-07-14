@@ -1,7 +1,7 @@
 import { faBasketShopping, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from '@/styles/modules/CartItem.module.scss';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useCartContext } from '@/context/cartContext';
 import { Cart, CartItem as ICartItem } from '@/interfaces/cart';
 import Link from 'next/link';
@@ -25,11 +25,13 @@ type CartDrawerProps = {
   removeAllItem: CallableFunction;
 }
 
+const COUPON_TOAST_SUCCESS = 'initial-coupon-success';
+const COUPON_TOAST_ERROR = 'initial-coupon-error';
+
 export default function CartItem() {
   const [isDrawerOpened, setIsDrawerOpened] = useState(false);
   const { cart, addItems, removeItem, removeAllItem, applyCoupon, resetCoupon } = useCartContext();
   const router = useRouter();
-  const toastRef = useRef<number | string>();
 
   useEffect(() => {
     const coupon = CouponsService.getFromStorage();
@@ -48,21 +50,23 @@ export default function CartItem() {
           if (!res.ok) {
             throw new Error(data as string);
           }
+
           const result = applyCoupon(data as AppliedCoupon);
-          if (typeof result === 'string') {
-            throw new Error(result);
-          }
-          if (!ToastService.isActive(toastRef.current)) {
-            toastRef.current = ToastService.success(
+          // if (typeof result === 'string') {
+          //   throw new Error(result);
+          // } else
+          if (result) {
+            ToastService.success(
               `${(data as AppliedCoupon).name} has been applied successfully`,
+              { toastId: COUPON_TOAST_SUCCESS },
             );
           }
         })
         .catch((err: Error) => {
           resetCoupon();
-          if (!ToastService.isActive(toastRef.current)) {
-            toastRef.current = ToastService.error(err.message);
-          }
+          ToastService.error(err.message, {
+            toastId: COUPON_TOAST_ERROR,
+          });
         });
       // .finally(() => setIsLoading(false));
     }

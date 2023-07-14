@@ -9,6 +9,8 @@ import { useRouter } from 'next/router';
 import LinkService from '@/services/link.service';
 
 const RESET_URL = LinkService.apiUserResetLink();
+const RESET_TOAST_SUCCESS = 'reset-success';
+const RESET_TOAST_ERROR = 'reset-error';
 
 export default function Reset() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -32,10 +34,15 @@ export default function Reset() {
         throw new Error(data);
       }
 
-      ToastService.success(data, { autoClose: 4000 });
+      ToastService.success(data, {
+        autoClose: 4000,
+        toastId: RESET_TOAST_SUCCESS,
+      });
     } catch (error: any) {
       console.error(error);
-      ToastService.error(error.message as string);
+      ToastService.error(error.message as string, {
+        toastId: RESET_TOAST_ERROR,
+      });
     } finally {
       setLoading(false);
     }

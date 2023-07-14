@@ -9,6 +9,7 @@ import UserService from '@/services/user.service';
 import Loader from './Loader';
 
 const USER_URL = LinkService.apiUserLink();
+const ERROR_TOAST_ID = 'fetch-user-error';
 
 export default function Account({ onLogout }: { onLogout: CallableFunction }) {
   const [loading, setLoading] = useState<boolean>(false);
@@ -39,7 +40,9 @@ export default function Account({ onLogout }: { onLogout: CallableFunction }) {
       })
       .catch((error: any) => {
         console.error(error);
-        ToastService.error(error.message as string);
+        ToastService.error(error.message as string, {
+          toastId: ERROR_TOAST_ID,
+        });
       })
       .finally(() => setLoading(false));
   }, []);

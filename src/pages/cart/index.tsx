@@ -51,6 +51,9 @@ type CartTotalProps = {
   getCouponText: () => string;
 }
 
+const COUPOUN_APPLY_TOAST_SUCCESS = 'coupon-apply-success';
+const COUPOUN_APPLY_TOAST_ERROR = 'coupon-apply-error';
+
 export default function Cart() {
   const { cart, removeAllItem, removeItem, addItems, applyCoupon, resetCoupon } = useCartContext();
   const [isTablet, setIsTablet] = useState(false);
@@ -178,19 +181,24 @@ export default function Cart() {
         }
 
         const result = applyCoupon(data as AppliedCoupon);
-        if (typeof result === 'string') {
-          throw new Error(result);
+        // if (typeof result === 'string') {
+        //   throw new Error(result);
+        // }
+        if (!result) {
+          clearCoupon();
+          return;
         }
         setAppliedCoupon(data as AppliedCoupon);
         ToastService.success(
           `${(data as AppliedCoupon).name} has been applied successfully`,
+          { toastId: COUPOUN_APPLY_TOAST_SUCCESS },
         );
       })
       .catch((err: Error) => {
         clearCoupon();
-        if (!ToastService.isActive(toastRef.current)) {
-          toastRef.current = ToastService.error(err.message);
-        }
+        ToastService.error(err.message, {
+          toastId: COUPOUN_APPLY_TOAST_ERROR,
+        });
       })
       .finally(() => setIsLoading(false));
   };

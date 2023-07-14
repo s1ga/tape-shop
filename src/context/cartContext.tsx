@@ -1,16 +1,18 @@
 /* eslint-disable no-unused-vars */
 import storageKeys from '@/constants/storageKeys';
 import { CartContextProps, Cart, CartItem, isCartItem } from '@/interfaces/cart';
-import { Product, ProductItemPreview } from '@/interfaces/product/product';
+import { ProductItemPreview } from '@/interfaces/product/product';
 import CartService from '@/services/cart.service';
 import ToastService from '@/services/toast.service';
 import { ReactNode, createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from '@/styles/modules/Home.module.scss';
-import LocalStorageService from '@/services/storage.service';
 import { AppliedCoupon } from '@/interfaces/coupon';
 import CouponsService from '@/services/coupons.service';
+
+const COUPON_APPLY_CONTEXT_ERROR = 'coupon-context-error';
+const OUT_OF_STOCK_TOAST = 'out-of-stack';
 
 const defaultCartContext: CartContextProps = {
   cart: CartService.initialCartState,
@@ -39,6 +41,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       if (!CartService.checkAvailability(items, cart)) {
         ToastService.error(
           'You cannot add that amount to the cart — total amount will be more than we have in stock.',
+          { toastId: OUT_OF_STOCK_TOAST },
         );
         return;
       }
@@ -63,24 +66,24 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   );
   const applyCoupon = useCallback(
     (coupon: AppliedCoupon) => {
-      let answer: boolean | string = true;
+      let success: boolean = false;
       setCart((state: Cart) => {
         const result = CartService.applyCoupon(state, coupon);
         if (typeof result === 'string') {
-          answer = result;
+          success = false;
           CouponsService.removeFromStorage();
-          ToastService.error(result);
+          ToastService.error(result, { toastId: COUPON_APPLY_CONTEXT_ERROR });
           const newState = CartService.resetCoupon(state);
           CartService.saveInStorage(newState);
           return newState;
         }
-        answer = true;
+        success = true;
         CouponsService.saveInStorage(coupon);
         CartService.saveInStorage(result);
         return result;
       });
       action.current = undefined;
-      return answer;
+      return success;
     },
     [],
   );
@@ -135,9 +138,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   }, [cart]);
 
   return (
-    <CartContext.Provider value={{ cart, resetCoupon, addItems, removeItem, removeAllItem, applyCoupon }}>
-      {children}
+    <>
+      <CartContext.Provider value={{ cart, resetCoupon, addItems, removeItem, removeAllItem, applyCoupon }}>
+        {children}
+      </CartContext.Provider>
       <ToastContainer className={styles.toasterContainer} />
-    </CartContext.Provider>
+    </>
   );
 };

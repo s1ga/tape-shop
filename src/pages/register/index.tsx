@@ -13,6 +13,7 @@ import { CONFIRM_PASSWORD_MESSAGE, PASSWORD_MESSAGE } from '@/constants/messages
 import LinkService from '@/services/link.service';
 
 const REGISTER_URL = LinkService.apiUserLink();
+const REGISTER_TOAST_ERROR = 'register-error';
 
 export default function Register() {
   const [user, setUser] = useState<User>();
@@ -94,7 +95,9 @@ function Step1({ setLoading, onSuccess }: { setLoading: CallableFunction, onSucc
       onSuccess(data);
     } catch (error: any) {
       console.error(error);
-      ToastService.error(error.message as string);
+      ToastService.error(error.message as string, {
+        toastId: REGISTER_TOAST_ERROR,
+      });
     } finally {
       setLoading(false);
     }
