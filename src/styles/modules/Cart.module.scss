@@ -57,7 +57,7 @@
   display: flex;
   align-items: center;
   column-gap: $base-space-size-middle-plus;
-  margin-bottom: $base-space-size-tiny;
+  margin-bottom: $base-space-size-small;
 }
 
 .cartTableInput {
@@ -128,6 +128,7 @@
 .cartTableActionLink {
   display: inline-block;
   width: fit-content;
+  margin: 0;
 }
 
 .cartTableCouponCaption {
@@ -169,7 +170,7 @@
   display: none;
 }
 
-.cartTotalLabel {
+.cartTotalLabel.cartTotalLabel {
   margin-left: -#{$base-space-size-small};
   margin-right: 0;
   flex-direction: row;
@@ -250,7 +251,7 @@
     width: 100%;
   }
 
-  .cartTotalLabel {
+  .cartTotalLabel.cartTotalLabel {
     margin-left: 0;
     margin-right: -#{$base-space-size-small};
     flex-direction: row-reverse;
@@ -265,8 +266,8 @@
   }
 
   .cartTotalShippingAddressMobile {
-    width: 110%;
-    margin-left: -10%;
+    width: 100%;
+    // margin-left: -10%;
   }
 }
 
