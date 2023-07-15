@@ -22,7 +22,7 @@ export default function CouponsCreate() {
   const transform = (coupon: Coupon) => {
     const newCoupon = { ...coupon };
     newCoupon.appliedProducts = appliedProducts || [];
-    newCoupon.userIds = (appliedUsers || []).map((u: User) => u._id);
+    newCoupon.userIds = appliedUsers || [];
     return newCoupon;
   };
 

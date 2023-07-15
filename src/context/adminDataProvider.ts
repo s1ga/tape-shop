@@ -12,6 +12,7 @@ import adminResourceMap from '@/constants/admin-resources';
 import buildUrlQuery from '@/utils/buildUrlQuery';
 import decodeBaseImage from '@/utils/getBaseImage';
 import CouponsService from '@/services/coupons.service';
+import { User } from '@/interfaces/user';
 
 const BASE_URL = `${getDomain()}/api`;
 
@@ -110,6 +111,7 @@ const updateMutation = async (resource: string, params: UpdateParams<any>) => {
     }
     case adminResourceMap.coupons: {
       let body = params.data;
+      body.userIds = body.userIds.map((u: User) => u._id);
       if (params.meta?.edit) {
         body = CouponsService.toServer(body);
       }
@@ -233,7 +235,9 @@ const createMutation = async (resource: string, params: CreateParams) => {
       return fetch(request).then(thenFunc);
     }
     case adminResourceMap.coupons: {
-      const request = setRequest(JSON.stringify(CouponsService.toServer(params.data)));
+      const body = { ...params.data };
+      body.userIds = body.userIds.map((u: User) => u._id);
+      const request = setRequest(JSON.stringify(CouponsService.toServer(body)));
       request.headers.set('Content-Type', 'application/json');
       return fetch(request).then(thenFunc);
     }

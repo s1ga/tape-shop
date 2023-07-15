@@ -281,7 +281,6 @@ export default function CouponForm({ children, onApplyProducts, onApplyUser }: P
         <Grid container columnSpacing={2}>
           <Grid item xs={12} sm={4} sx={{ display: 'flex', alignItems: 'center', columnGap: '8px' }}>
             <SelectInput
-              validate={req}
               source="appliedProducts"
               choices={appliedProductsChoose}
               format={(value: CouponChoose) => {
@@ -342,7 +341,7 @@ export default function CouponForm({ children, onApplyProducts, onApplyUser }: P
               value={userValue}
               noOptionsText="No users"
               getOptionLabel={(option: User) => option.email}
-              isOptionEqualToValue={(option: User, value: User) => option.id === value.id}
+              isOptionEqualToValue={(option: User, value: User) => option._id === value._id}
               onChange={(_: unknown, newValue = []) => {
                 setUserOptions([...newValue, ...userOptions]);
                 setUserValue(newValue);
