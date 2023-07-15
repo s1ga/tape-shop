@@ -51,7 +51,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <meta charSet="UTF-8" />
         <link rel="icon" href="/images/favicon.png" />
         {!HIDE_MENU_PATHS.includes(pathname)

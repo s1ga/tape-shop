@@ -61,6 +61,7 @@
 }
 
 .productHeaderActionBtn {
+  color: inherit;
   font-size: 20px;
   line-height: 0;
   padding: $base-space-size-medium;
@@ -235,6 +236,7 @@
   }
 
   .productHeaderActionBtn {
+    font-size: 18px;
     padding: $base-space-size-middle-plus;
   }
 

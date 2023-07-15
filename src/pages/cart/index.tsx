@@ -181,9 +181,6 @@ export default function Cart() {
         }
 
         const result = applyCoupon(data as AppliedCoupon);
-        // if (typeof result === 'string') {
-        //   throw new Error(result);
-        // }
         if (!result) {
           clearCoupon();
           return;
