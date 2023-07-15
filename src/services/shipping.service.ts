@@ -1,5 +1,5 @@
 import { CartItem } from '@/interfaces/cart';
-import { ShippingDestination, ShippingRatesRequest } from '@/interfaces/shippingRates';
+import { ShippingDestination, ShippingRate, ShippingRatesRequest } from '@/interfaces/shippingRates';
 import storageKeys from '@/constants/storageKeys';
 import LocalStorageService from './storage.service';
 
@@ -32,6 +32,18 @@ export default class ShippingService {
         weight: (item.total * item.info.weight) / 1000,
       })),
     };
+  }
+
+  public static getShippingRateFromStorage(): ShippingRate | null {
+    return LocalStorageService.get<ShippingRate>(storageKeys.ShippingRate);
+  }
+
+  public static saveShippingRateInStorage(rate: ShippingRate): void {
+    LocalStorageService.set<ShippingRate>(storageKeys.ShippingRate, rate);
+  }
+
+  public static deleteShippingRateFromStorage(): void {
+    LocalStorageService.delete(storageKeys.ShippingRate);
   }
 
   public static getDestinationFromStorage(): ShippingDestination | null {

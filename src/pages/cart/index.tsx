@@ -103,9 +103,16 @@ export default function Cart() {
     fetchShipping();
   }, [cart.totalAmount]);
 
+  useEffect(() => {
+    if (selectedRate) {
+      ShippingService.saveShippingRateInStorage(selectedRate);
+    }
+  }, [selectedRate]);
+
   const reset = () => {
     initialAddress.current = undefined;
     ShippingService.deleteDestinationFromStorage();
+    ShippingService.deleteShippingRateFromStorage();
     setShippingRates(undefined);
     setSelectedRate(undefined);
     setAddressForm(undefined);
@@ -134,7 +141,9 @@ export default function Cart() {
           throw new Error(data.errors[0]?.details);
         }
 
-        setSelectedRate(data.rates[0]);
+        const savedRate = ShippingService.getShippingRateFromStorage();
+        const found = data.rates.find((r: ShippingRate) => r.service_code === savedRate?.service_code);
+        setSelectedRate(found ?? data.rates[0]);
         setShippingRates(data.rates);
       })
       .catch((error: Error) => {
