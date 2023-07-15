@@ -66,7 +66,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   );
   const applyCoupon = useCallback(
     (coupon: AppliedCoupon) => {
-      let success: boolean = false;
+      let success: boolean | string = 'skip';
       setCart((state: Cart) => {
         const result = CartService.applyCoupon(state, coupon);
         if (typeof result === 'string') {

@@ -75,6 +75,10 @@ export default function Cart() {
       initialAddress.current = address;
       setAddressForm(address);
     }
+    const coupon = CouponsService.getFromStorage();
+    if (coupon?.code) {
+      applyCouponCode(coupon.code);
+    }
 
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -181,6 +185,7 @@ export default function Cart() {
         }
 
         const result = applyCoupon(data as AppliedCoupon);
+        if (typeof result === 'string') return;
         if (!result) {
           clearCoupon();
           return;

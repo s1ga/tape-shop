@@ -8,13 +8,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { formatPrice, roundPrice } from '@/utils/helpers';
-import { AppliedCoupon } from '@/interfaces/coupon';
-import LinkService from '@/services/link.service';
-import httpMethods from '@/constants/httpMethods';
-import { ServerData } from '@/interfaces/serverData';
-import ToastService from '@/services/toast.service';
-import CouponsService from '@/services/coupons.service';
-import UserService from '@/services/user.service';
 import Drawer from './Drawer';
 import AmountHandler from './AmountHandler';
 
@@ -25,52 +18,10 @@ type CartDrawerProps = {
   removeAllItem: CallableFunction;
 }
 
-const COUPON_TOAST_SUCCESS = 'initial-coupon-success';
-const COUPON_TOAST_ERROR = 'initial-coupon-error';
-
 export default function CartItem() {
   const [isDrawerOpened, setIsDrawerOpened] = useState(false);
-  const { cart, addItems, removeItem, removeAllItem, applyCoupon, resetCoupon } = useCartContext();
+  const { cart, addItems, removeItem, removeAllItem } = useCartContext();
   const router = useRouter();
-
-  useEffect(() => {
-    const coupon = CouponsService.getFromStorage();
-    if (coupon?.code) {
-      // setIsLoading(true);
-      fetch(LinkService.apiApplyCouponLink(), {
-        method: httpMethods.post,
-        body: JSON.stringify({ code: coupon.code }),
-        headers: {
-          'Content-Type': 'Application/json',
-          Authorization: UserService.getUserToken(),
-        },
-      })
-        .then(async (res: Response) => {
-          const { data }: ServerData<AppliedCoupon | string> = await res.json();
-          if (!res.ok) {
-            throw new Error(data as string);
-          }
-
-          const result = applyCoupon(data as AppliedCoupon);
-          // if (typeof result === 'string') {
-          //   throw new Error(result);
-          // } else
-          if (result) {
-            ToastService.success(
-              `${(data as AppliedCoupon).name} has been applied successfully`,
-              { toastId: COUPON_TOAST_SUCCESS },
-            );
-          }
-        })
-        .catch((err: Error) => {
-          resetCoupon();
-          ToastService.error(err.message, {
-            toastId: COUPON_TOAST_ERROR,
-          });
-        });
-      // .finally(() => setIsLoading(false));
-    }
-  }, [applyCoupon, resetCoupon]);
 
   useEffect(() => {
     const handleRouteChange = () => {
