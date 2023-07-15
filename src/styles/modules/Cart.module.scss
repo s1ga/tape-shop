@@ -57,7 +57,7 @@
   display: flex;
   align-items: center;
   column-gap: $base-space-size-middle-plus;
-  margin-bottom: $base-space-size-small;
+  margin-bottom: $base-space-size-middle;
 }
 
 .cartTableInput {
@@ -134,6 +134,7 @@
 .cartTableCouponCaption {
   text-align: left;
   font-size: calc(100% - 1px);
+  line-height: 20px;
 }
 
 .cartTotalForm {
@@ -280,10 +281,6 @@
 
   .cartTableInput {
     max-width: 140px;
-  }
-
-  .cartTableAction {
-    margin-bottom: $base-space-size-small;
   }
 
   .cartTotal {
