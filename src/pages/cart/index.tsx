@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import Head from 'next/head';
-import styles from '@/styles/modules/Cart.module.scss';
 import { useCartContext } from '@/context/cartContext';
 import { CartItem, Cart as ICart } from '@/interfaces/cart';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -28,6 +27,7 @@ import { AppliedCoupon } from '@/interfaces/coupon';
 import UserService from '@/services/user.service';
 import CouponsService from '@/services/coupons.service';
 import couponType from '@/constants/coupon';
+import styles from '@/styles/modules/Cart.module.scss';
 
 type CartTableProps = {
   isTablet: boolean;
