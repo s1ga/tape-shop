@@ -45,27 +45,28 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         );
         return;
       }
-      setCart((state: Cart) => CartService.addItems(items, state));
       action.current = CartActions.Add;
+      setCart((state: Cart) => CartService.addItems(items, state));
     },
     [],
   );
   const removeItem = useCallback(
     (item: ProductItemPreview) => {
-      setCart((state: Cart) => CartService.removeItem(item, state));
       action.current = CartActions.Remove;
+      setCart((state: Cart) => CartService.removeItem(item, state));
     },
     [],
   );
   const removeAllItem = useCallback(
     (item: ProductItemPreview) => {
-      setCart((state: Cart) => CartService.removeAllItem(item, state));
       action.current = CartActions.Remove;
+      setCart((state: Cart) => CartService.removeAllItem(item, state));
     },
     [],
   );
   const applyCoupon = useCallback(
     (coupon: AppliedCoupon) => {
+      action.current = undefined;
       let success: boolean | string = 'skip';
       setCart((state: Cart) => {
         const result = CartService.applyCoupon(state, coupon);
@@ -82,7 +83,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         CartService.saveInStorage(result);
         return result;
       });
-      action.current = undefined;
       return success;
     },
     [],

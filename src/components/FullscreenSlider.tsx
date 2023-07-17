@@ -3,11 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { MouseEvent, useEffect, useRef, useState } from 'react';
 import styles from '@/styles/modules/Thumbnails.module.scss';
 import Image from 'next/image';
+import keyboardKeys from '@/constants/keys';
 
 const GAP = 32;
 
 // TODO: add draggable slider in v2.0
-// TODO: fix on Mozila
 export default function FullscreenSlider(
   { images, onClose }: { images: string[], onClose: CallableFunction },
 ) {
@@ -28,33 +28,58 @@ export default function FullscreenSlider(
       });
   };
 
-  const screenChangeListener = () => {
-    setIsFullscreen(!!document.fullscreenElement);
-  };
-
-  const onArrowClick = (e: MouseEvent, idx: number) => {
+  const onArrowClick = (e: MouseEvent, action: string) => {
     e.preventDefault();
     e.stopPropagation();
+    slideImages(action);
+  };
 
-    let nextIdx: number = idx;
-    if (idx < 0) {
-      nextIdx = images.length - 1;
-    } else if (idx >= images.length) {
-      nextIdx = 0;
-    } else {
-      nextIdx = idx;
-    }
-    setActiveIdx(nextIdx);
+  const slideImages = (action: string) => {
+    setActiveIdx((state: number) => {
+      let idx: number = state;
+      if (action === keyboardKeys.ArrowLeft) {
+        idx -= 1;
+      } else if (action === keyboardKeys.ArrowRight) {
+        idx += 1;
+      } else {
+        console.warn(`Unknown slider action: ${action}`);
+        return state;
+      }
 
-    const position = -(nextIdx * (sliderRef.current!.getBoundingClientRect().width + GAP));
-    sliderRef.current!.style.transform = `translateX(${position}px)`;
+      let nextIdx: number = idx;
+      if (idx < 0) {
+        nextIdx = images.length - 1;
+      } else if (idx >= images.length) {
+        nextIdx = 0;
+      } else {
+        nextIdx = idx;
+      }
+
+      const position = -(nextIdx * (sliderRef.current!.getBoundingClientRect().width + GAP));
+      sliderRef.current!.style.transform = `translateX(${position}px)`;
+
+      return nextIdx;
+    });
   };
 
   useEffect(() => {
     const el = containerRef.current!;
-
+    const screenChangeListener = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
     el.addEventListener('fullscreenchange', screenChangeListener);
+
+    const arrowClickHandler = (e: KeyboardEvent) => {
+      if ([keyboardKeys.ArrowLeft, keyboardKeys.ArrowRight].includes(e.key)) {
+        slideImages(e.key);
+      } else if (e.key === keyboardKeys.Escape) {
+        onClose();
+      }
+    };
+    document.addEventListener('keydown', arrowClickHandler);
+
     return () => {
+      document.removeEventListener('keydown', arrowClickHandler);
       el.removeEventListener('fullscreenchange', screenChangeListener);
     };
   }, []);
@@ -83,7 +108,10 @@ export default function FullscreenSlider(
         </div>
 
         <div className={styles.fullscreenSliderBody} onClick={() => onClose()}>
-          <div className={styles.fullscreenSliderSwitch} onClick={(e) => onArrowClick(e, activeIdx - 1)}>
+          <div
+            className={styles.fullscreenSliderSwitch}
+            onClick={(e) => onArrowClick(e, keyboardKeys.ArrowLeft)}
+          >
             <FontAwesomeIcon
               className={styles.fullscreenSliderIcon}
               icon={faArrowLeft}
@@ -105,7 +133,10 @@ export default function FullscreenSlider(
               ))}
             </div>
           </div>
-          <div className={styles.fullscreenSliderSwitch} onClick={(e) => onArrowClick(e, activeIdx + 1)}>
+          <div
+            className={styles.fullscreenSliderSwitch}
+            onClick={(e) => onArrowClick(e, keyboardKeys.ArrowRight)}
+          >
             <FontAwesomeIcon
               className={styles.fullscreenSliderIcon}
               icon={faArrowRight}

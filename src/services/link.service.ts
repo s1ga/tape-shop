@@ -54,8 +54,8 @@ export default class LinkService {
     return this.generateLink('contact-feedback', true);
   }
 
-  public static apiOrderRatesLink(): string {
-    return this.generateLink('order/rates', true);
+  public static apiOrdersRatesLink(): string {
+    return this.generateLink('orders/rates', true);
   }
 
   public static apiApplyCouponLink(): string {

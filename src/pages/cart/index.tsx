@@ -130,7 +130,7 @@ export default function Cart() {
     }
 
     setIsLoading(true);
-    fetch(LinkService.apiOrderRatesLink(), {
+    fetch(LinkService.apiOrdersRatesLink(), {
       method: httpMethods.post,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(ShippingService.prepareRatesBody(addressForm!, cart.items)),
@@ -676,7 +676,7 @@ function CartTotal({ cart, fetchShipping, onSelect, selectedRate,
                   <AccordionDetails sx={{ padding: 0 }}>
                     <form
                       className={styles.cartTotalForm} method={httpMethods.post}
-                      action={LinkService.apiOrderRatesLink()} onSubmit={calculateShipping}
+                      action={LinkService.apiOrdersRatesLink()} onSubmit={calculateShipping}
                       onReset={reset}
                     >
                       <select

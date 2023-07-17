@@ -163,6 +163,7 @@ $slider-img: 640px;
   max-width: $slider-img;
   aspect-ratio: 1;
   height: auto;
+  flex: 1 0 100%;
 }
 
 .fullscreenSliderSwitch {
