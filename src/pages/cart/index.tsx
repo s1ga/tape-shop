@@ -92,16 +92,19 @@ export default function Cart() {
   }, [addressForm]);
 
   useEffect(() => {
-    setAppliedCoupon((state: AppliedCoupon | null) => {
-      const newCoupon = CouponsService.getFromStorage();
-      const areCouponsEquals = newCoupon === state || newCoupon?.code === state?.code;
-      return areCouponsEquals ? state : newCoupon;
-    });
+    if (appliedCoupon) {
+      applyCoupon(appliedCoupon);
+    }
     if ((shippingRates?.length || 0) <= 0) {
       return;
     }
     fetchShipping();
   }, [cart.totalAmount]);
+
+  useEffect(() => {
+    const coupon = CouponsService.getFromStorage();
+    setAppliedCoupon((state: AppliedCoupon | null) => (coupon ? state : null));
+  }, [cart.appliedCouponPrice]);
 
   useEffect(() => {
     if (selectedRate) {

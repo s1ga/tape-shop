@@ -38,15 +38,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const addItems = useCallback(
     (items: ProductItemPreview | CartItem) => {
-      if (!CartService.checkAvailability(items, cart)) {
-        ToastService.error(
-          'You cannot add that amount to the cart — total amount will be more than we have in stock.',
-          { toastId: OUT_OF_STOCK_TOAST },
-        );
-        return;
-      }
       action.current = CartActions.Add;
-      setCart((state: Cart) => CartService.addItems(items, state));
+      setCart((state: Cart) => {
+        if (!CartService.checkAvailability(items, state)) {
+          ToastService.error(
+            'You cannot add that amount to the cart — total amount will be more than we have in stock.',
+            { toastId: OUT_OF_STOCK_TOAST },
+          );
+          return state;
+        }
+
+        return CartService.addItems(items, state);
+      });
     },
     [],
   );
@@ -124,11 +127,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       toasterText = 'Item has been added to cart';
     } else if (action.current === CartActions.Remove) {
       toasterText = 'Item has been removed from cart';
-    }
-
-    const coupon = CouponsService.getFromStorage();
-    if (coupon) {
-      applyCoupon(coupon);
     }
 
     CartService.saveInStorage(cart);

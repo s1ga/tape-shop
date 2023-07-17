@@ -45,10 +45,10 @@ export default function Reviews({ fetchedReviews, productName, productId }: Prop
     const savedReviews = LocalStorageService.get<Review[]>(storageKeys.PendingReviews) || [];
     const remained = savedReviews.filter((r: Review) => {
       const found = fetchedReviews.find((f: Review) => f._id === r._id);
-      return !found?.isChecked;
+      return found && !found?.isChecked && r.productId === productId;
     });
     LocalStorageService.set(storageKeys.PendingReviews, remained);
-    setReviews([...remained.filter((r: Review) => r.productId === productId), ...approved]);
+    setReviews([...remained, ...approved]);
   }, [fetchedReviews, productId]);
 
   const addReview = async (fields: Record<string, string>) => {
