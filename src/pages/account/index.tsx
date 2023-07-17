@@ -12,7 +12,8 @@ export default function AccountPage() {
   useEffect(() => {
     const handler = (e: StorageEvent) => {
       if (e.key === storageKeys.Auth) {
-        setHasToken(!!JSON.parse(e.newValue || JSON.stringify('')));
+        const stringifiedValue = e.newValue || JSON.stringify('');
+        setHasToken(!!JSON.parse(stringifiedValue));
       }
     };
     window.addEventListener('storage', handler);

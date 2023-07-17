@@ -1,7 +1,9 @@
 import Rate from '@/components/Rate';
-import { FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import styles from '@/styles/modules/Review.module.scss';
 import LinkService from '@/services/link.service';
+import LocalStorageService from '@/services/storage.service';
+import storageKeys from '@/constants/storageKeys';
 
 const CREATE_REVIEW_URL = LinkService.apiReviewsLink();
 
@@ -12,13 +14,28 @@ type Props = {
   onAddReview: (fields: Record<string, string>) => Promise<void>;
 }
 
+type ReviewUser = {
+  name: string;
+  email: string;
+}
+
 export default function ReviewForm({ productName, isFirstReview, onAddReview }: Props) {
   const [rating, setRating] = useState<number>(0);
   const [validateMessage, setValidateMessage] = useState<string>('');
+  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [savedUser, setSavedUser] = useState<ReviewUser | null>(null);
+
+  useEffect(() => {
+    const user = LocalStorageService.get(storageKeys.ReviewUser);
+    if (user) {
+      setSavedUser(user as ReviewUser);
+      setIsChecked(true);
+    }
+  }, []);
 
   const isValidRating = () => {
     if (rating === 0) {
-      setValidateMessage('Rating is required and should be greather than 0');
+      setValidateMessage('Please, select your rating');
       return false;
     }
     return true;
@@ -39,10 +56,14 @@ export default function ReviewForm({ productName, isFirstReview, onAddReview }: 
     const message = form.get('review')?.toString() || '';
     const name = form.get('name')?.toString() || '';
     const email = form.get('email')?.toString() || '';
-    const checkbox = form.get('checkbox');
 
-    if (checkbox) {
-      // TODO: handle savinng information in review form
+    if (isChecked) {
+      const user: ReviewUser = { name, email };
+      setSavedUser(user);
+      LocalStorageService.set(storageKeys.ReviewUser, user);
+    } else {
+      setSavedUser(null);
+      LocalStorageService.delete(storageKeys.ReviewUser);
     }
     await onAddReview({ message, name, email, rating: rating.toString() });
   };
@@ -78,12 +99,18 @@ export default function ReviewForm({ productName, isFirstReview, onAddReview }: 
         <div className={styles.reviewFormBlock}>
           <div className={styles.reviewFormItem}>
             <label className={`${styles.reviewFormLabel} bold`} htmlFor="name">Name *</label>
-            <input className={styles.reviewFormInput} type="text" id="name" name="name" required />
+            <input
+              defaultValue={savedUser?.name || ''}
+              className={styles.reviewFormInput}
+              type="text" id="name" name="name"
+              required
+            />
           </div>
 
           <div className={styles.reviewFormItem}>
             <label className={`${styles.reviewFormLabel} bold`} htmlFor="email">Email *</label>
             <input
+              defaultValue={savedUser?.email || ''}
               className={styles.reviewFormInput}
               type="email" inputMode="email"
               id="email" name="email" required
@@ -92,7 +119,12 @@ export default function ReviewForm({ productName, isFirstReview, onAddReview }: 
         </div>
 
         <div className={`${styles.reviewFormCheckboxBlock} ${styles.reviewFormItem}`}>
-          <input className={styles.reviewFormCheckbox} type="checkbox" id='checkbox' name='checkbox' />
+          <input
+            checked={isChecked}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setIsChecked(e.target.checked)}
+            className={styles.reviewFormCheckbox}
+            type="checkbox" id='checkbox' name='checkbox'
+          />
           <label htmlFor="checkbox">
             Save my name, email, and website in this browser for the next time I comment.
           </label>
