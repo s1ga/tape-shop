@@ -1,4 +1,5 @@
 import { ONLY_SPACES, PRICE_FORMATTER } from '@/constants/regex';
+import { Types } from 'mongoose';
 
 const FRACTION_DIGITS = 2;
 
@@ -30,4 +31,18 @@ export function randomElem(arr: unknown[] | string) {
 
 export function capitalize(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function generateId(): string {
+  return new Types.ObjectId().toString();
+}
+
+export function isBrowser(): boolean {
+  return typeof window !== 'undefined' && typeof window.document !== 'undefined';
+}
+
+export function isNode(): boolean {
+  return typeof process !== 'undefined'
+    && process.versions != null
+    && process.versions.node != null;
 }

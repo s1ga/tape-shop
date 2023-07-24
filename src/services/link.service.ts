@@ -62,6 +62,18 @@ export default class LinkService {
     return this.generateLink('coupons/apply', true);
   }
 
+  public static apiCartLink(id: string): string {
+    return this.generateLink(`cart/${id}`, true);
+  }
+
+  public static apiMergeCartLink(id: string): string {
+    return this.generateLink(`cart/${id}/merge`, true);
+  }
+
+  public static apiCreateCartLink(): string {
+    return this.generateLink('cart', true);
+  }
+
   public static aboutLink(): string {
     return this.generateLink('about');
   }

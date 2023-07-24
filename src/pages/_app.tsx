@@ -13,6 +13,7 @@ import Loader from '@/components/Loader';
 import { useRouter } from 'next/router';
 import ToastService from '@/services/toast.service';
 import LinkService from '@/services/link.service';
+import Backdrop from '@mui/material/Backdrop';
 
 const HIDE_MENU_PATHS = ['/admin'];
 
@@ -81,7 +82,6 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <CartProvider>
         <div className="content">
-          {isLoading && <Loader />}
           {!isLoading
             && <>
               {!HIDE_MENU_PATHS.includes(pathname) && <Header types={productTypes.current} />}
@@ -91,6 +91,12 @@ export default function App({ Component, pageProps }: AppProps) {
               {!HIDE_MENU_PATHS.includes(pathname) && <Footer />}
             </>
           }
+          <Backdrop
+            sx={{ zIndex: 1001 }}
+            open={isLoading}
+          >
+            <Loader key="backdrop-loader" customColor="#fff" />
+          </Backdrop>
         </div>
 
         <style jsx>{`

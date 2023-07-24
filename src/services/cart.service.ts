@@ -1,55 +1,151 @@
-import { Cart, CartItem, isCartItem } from '@/interfaces/cart';
+import {
+  Cart, CartItem, NewServerCart, ServerCartItem, isCartItem, isServerCartItem,
+} from '@/interfaces/cart';
 import { Product, ProductItemPreview } from '@/interfaces/product/product';
-import storageKeys from '@/constants/storageKeys';
 import { formatPrice, roundPrice } from '@/utils/helpers';
 import { AppliedCoupon } from '@/interfaces/coupon';
 import couponType from '@/constants/coupon';
-import LocalStorageService from './storage.service';
+import { isValidNumber, isValidString } from '@/utils/validTypes';
+import { isShippingDestination } from '@/interfaces/shippingRates';
+import ShippingService from './shipping.service';
 
 export default class CartService {
-  private static appliedCouponError: boolean = false;
-
-  public static readonly initialCartState: Cart = {
+  public static readonly initialCartState: Partial<Cart> = {
+    userId: '',
+    shippingDestination: null,
     totalAmount: 0,
     totalPrice: 0,
     items: [],
   };
 
-  public static addItems(item: ProductItemPreview | CartItem, currentState: Cart): Cart {
-    let cartItem: CartItem;
-    if (!isCartItem(item)) {
-      cartItem = {
-        info: item,
-        total: 1,
-      };
-    } else {
-      cartItem = item;
-    }
+  public static fromServer(obj: any): Cart {
+    const mapItems = (o: any) => (!o.info ? null : {
+      total: o.total,
+      info: {
+        _id: o.info._id.toString(),
+        id: o.info._id.toString(),
+        name: o.info.name,
+        rate: Math.round(o.info.rate || 0),
+        images: o.info.images,
+        price: o.info.price,
+        categories: (o.info.categories || []).map((o: any) => ({
+          _id: o._id.toString(),
+          id: o._id.toString(),
+          name: o.name,
+          imageUrl: o.imageUrl,
+        })),
+        dateAdded: o.info.dateAdded,
+        availability: o.info.availability,
+        weight: o.info.weight,
+      },
+    });
 
+    return ({
+      _id: obj._id.toString(),
+      id: obj._id.toString(),
+      userId: obj.userId.toString(),
+      coupon: obj.coupon,
+      shippingDestination: ShippingService.destinationFromServer(obj.shippingDestination),
+      totalAmount: obj.totalAmount,
+      totalPrice: obj.totalPrice,
+      items: (obj.items || []).map(mapItems),
+      appliedCouponPrice: obj.appliedCouponPrice || 0,
+    });
+  }
+
+  public static toServer(obj: any): NewServerCart {
+    return ({
+      userId: obj.userId,
+      coupon: obj.coupon || null,
+      shippingDestination: obj.shippingDestination || null,
+      totalAmount: obj.totalAmount,
+      totalPrice: obj.totalPrice,
+      items: obj.items || [],
+      appliedCouponPrice: obj.appliedCouponPrice || 0,
+    });
+  }
+
+  public static validate(fields: NewServerCart): boolean | string {
+    // if (fields.coupon && !isValidString(fields.coupon)) {
+    //   return 'Provide valid id of coupon';
+    // }
+    if (!isValidNumber(fields.totalAmount) || fields.totalAmount < 0) {
+      return 'Provide non-negative number for total amount';
+    }
+    if (!isValidNumber(fields.totalPrice) || fields.totalPrice < 0) {
+      return 'Provide non-negative number for total price';
+    }
+    if (fields.appliedCouponPrice
+      && (!isValidNumber(fields.appliedCouponPrice) || fields.appliedCouponPrice < 0)) {
+      return 'Provide non-negative number for coupon sale';
+    }
+    if (!Array.isArray(fields.items) || (fields.items.length && !fields.items.every(isServerCartItem))) {
+      return 'Provide valid cart items';
+    }
+    if (fields.shippingDestination && !isShippingDestination(fields.shippingDestination)) {
+      return 'Provide valid shipping destination';
+    }
+    return true;
+  }
+
+  public static mergeCarts(newCart: Cart, oldCart: Cart): Cart {
+    let cart: Cart = {
+      ...newCart,
+      items: [...newCart.items],
+    };
+    oldCart.items.forEach((i: CartItem) => {
+      cart = this.addItems(i, cart);
+    });
+    cart.coupon = oldCart.coupon || cart.coupon;
+    cart.shippingDestination = oldCart.shippingDestination || cart.shippingDestination;
+    return cart;
+  }
+
+  public static refresh(cart: Cart): Cart {
+    let totalAmount: number = 0;
+    let totalPrice: number = 0;
+    const newItems = cart.items.filter((i: CartItem) => {
+      if (!i?.info || !i?.total) return false;
+      totalAmount += i.total;
+      totalPrice = roundPrice(totalPrice + roundPrice(i.total * i.info.price));
+      return true;
+    });
     return {
-      ...currentState,
-      totalAmount: currentState.totalAmount + cartItem.total,
-      totalPrice: roundPrice(currentState.totalPrice + roundPrice(cartItem.total * cartItem.info.price)),
-      items: this.addToCart(cartItem, currentState.items),
+      ...cart,
+      totalAmount,
+      totalPrice,
+      items: newItems,
     };
   }
 
-  public static removeItem(item: ProductItemPreview, currentState: Cart): Cart {
+  public static addItems(item: CartItem, currentState: Cart): Cart {
+    return {
+      ...currentState,
+      totalAmount: currentState.totalAmount + item.total,
+      totalPrice: roundPrice(currentState.totalPrice + roundPrice(item.total * item.info.price)),
+      items: this.addToCart(item, currentState.items),
+    };
+  }
+
+  public static removeItem(id: string, currentState: Cart): Cart {
+    const item = currentState.items.find((i: CartItem) => i.info._id === id);
+    if (!item) return currentState;
     return {
       ...currentState,
       totalAmount: currentState.totalAmount - 1,
-      totalPrice: roundPrice(currentState.totalPrice - item.price),
-      items: this.removeFromCart(item, currentState.items),
+      totalPrice: roundPrice(currentState.totalPrice - item.info.price),
+      items: this.removeFromCart(id, currentState.items),
     };
   }
 
-  public static removeAllItem(item: ProductItemPreview, currentState: Cart): Cart {
-    const itm = currentState.items.find((i: CartItem) => i.info._id === item._id)!;
+  public static removeAllItem(id: string, currentState: Cart): Cart {
+    const itm = currentState.items.find((i: CartItem) => i.info._id === id);
+    if (!itm) return currentState;
     return {
       ...currentState,
       totalAmount: currentState.totalAmount - itm.total,
       totalPrice: roundPrice(currentState.totalPrice - roundPrice(itm.total * itm.info.price)),
-      items: currentState.items.filter((i: CartItem) => i.info._id !== item._id),
+      items: currentState.items.filter((i: CartItem) => i.info._id !== id),
     };
   }
 
@@ -72,17 +168,13 @@ export default class CartService {
     };
   }
 
-  public static saveInStorage(cart: Cart) {
-    LocalStorageService.set<Cart>(storageKeys.Cart, cart);
-  }
-
-  public static getFromStorage(): Cart {
-    return LocalStorageService.get<Cart>(storageKeys.Cart) || this.initialCartState;
-  }
-
   public static applyCoupon(cart: Cart, coupon: AppliedCoupon): Cart | string {
     if (!cart || cart.totalAmount === 0) {
-      return cart;
+      return {
+        ...cart,
+        appliedCouponPrice: 0,
+        coupon: null,
+      };
     }
 
     const itemsToApplyCoupon = coupon.appliedProducts.length
@@ -94,7 +186,6 @@ export default class CartService {
       return `Required minimum total of cart for current coupon is $${formatPrice(coupon.requiredCartTotal)}`;
     }
 
-    this.appliedCouponError = false;
     const sumWithDiscountOfAppliedProducts = itemsToApplyCoupon.reduce((acc: number, curr: CartItem) => {
       const newPrice = roundPrice(
         coupon.type === couponType.Flat
@@ -158,41 +249,49 @@ export default class CartService {
     };
   }
 
-  public static checkAvailability(items: ProductItemPreview | CartItem, cart: Cart): boolean {
-    let id: string;
-    let newTotal: number;
-    let availability: Product['availability'];
-    if (isCartItem(items)) {
-      newTotal = items.total;
-      availability = items.info.availability;
-      id = items.info._id;
-    } else {
-      newTotal = 1;
-      availability = items.availability;
-      id = items._id;
-    }
-
+  public static checkAvailability(items: CartItem, cart: Cart): boolean {
+    const { availability } = items.info;
     if (availability === null || availability === undefined) {
       return true;
     }
-    const currentTotal = cart.items.find((i: CartItem) => i.info._id === id)?.total || 0;
-    return currentTotal + newTotal <= availability;
+    const currentTotal = cart.items
+      .find((i: CartItem) => i.info._id.toString() === items.info._id.toString())?.total || 0;
+    return currentTotal + items.total <= availability;
   }
 
-  private static removeFromCart(item: ProductItemPreview, array: CartItem[]): CartItem[] {
+  public static toCartItem(item: ProductItemPreview | CartItem): CartItem {
+    let cartItem: CartItem = item as CartItem;
+    if (!isCartItem(item)) {
+      cartItem = {
+        info: item,
+        total: 1,
+      };
+    }
+    return cartItem;
+  }
+
+  public static toServerCartItem(item: CartItem): ServerCartItem {
+    return {
+      total: item.total,
+      info: item.info._id,
+    };
+  }
+
+  private static removeFromCart(id: string, array: CartItem[]): CartItem[] {
     const cart = [...array];
-    const idx = cart.findIndex((i: CartItem) => i.info._id === item._id);
+    const idx = cart.findIndex((i: CartItem) => i.info._id.toString() === id.toString());
     if (idx < 0) {
-      console.error('Provided item don are not presented on cart');
+      console.error('Provided item are not presented on cart');
       return cart;
     }
 
-    if (cart[idx].total === 1) {
-      cart.splice(idx, 1);
+    const { total } = cart[idx];
+    if (total === 1) {
+      cart.splice(idx, total);
     } else {
       cart[idx] = {
         ...cart[idx],
-        total: cart[idx].total - 1,
+        total: total - 1,
       };
     }
 
@@ -201,7 +300,7 @@ export default class CartService {
 
   private static addToCart(item: CartItem, array: CartItem[]): CartItem[] {
     const cart = [...array];
-    const idx = cart.findIndex((c: CartItem) => c.info._id === item.info._id);
+    const idx = cart.findIndex((c: CartItem) => c.info._id.toString() === item.info._id.toString());
 
     if (idx >= 0) {
       cart[idx] = {

@@ -26,7 +26,7 @@ export function isValidNumber(number: number) {
 }
 
 export function isValidObject(o: any) {
-  return o !== null && typeof o === 'object';
+  return o != null && typeof o === 'object';
 }
 
 export function isValidEmail(email: string) {

@@ -18,7 +18,7 @@ export default class HashHandlerService {
     return new Promise((res, rej) => {
       sign(
         { id, email, isAdmin },
-        process.env.JWT_SECRET_KEY as string,
+        process.env.SECRET_KEY as string,
         { expiresIn: isAdmin ? process.env.JWT_EXPIRES_ADMIN : process.env.JWT_EXPIRES },
         (err, token) => {
           if (err) {
@@ -44,7 +44,7 @@ export default class HashHandlerService {
         return;
       }
 
-      verify(token, process.env.JWT_SECRET_KEY as string, (err, decoded) => {
+      verify(token, process.env.SECRET_KEY as string, (err, decoded) => {
         if (err) {
           res(false);
         } else {
@@ -67,7 +67,7 @@ export default class HashHandlerService {
         return;
       }
 
-      verify(token, process.env.JWT_SECRET_KEY as string, (err, decoded) => {
+      verify(token, process.env.SECRET_KEY as string, (err, decoded) => {
         if (err) {
           res(false);
         } else {

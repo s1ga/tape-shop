@@ -8,12 +8,14 @@ import ToastService from '@/services/toast.service';
 import { useRouter } from 'next/router';
 import LinkService from '@/services/link.service';
 import UserService from '@/services/user.service';
+import { useCartContext } from '@/context/cartContext';
 import Loader from './Loader';
 
 const LOGIN_URL = LinkService.apiUserLoginLink();
 const VERIFY_URL = LinkService.apiUserVerifyLink();
 
 export default function Login({ onLogin }: { onLogin: CallableFunction }) {
+  const { deleteCartFromDb, saveCartToMerge } = useCartContext();
   const [loading, setLoading] = useState<boolean>(false);
   const toast = useRef<number | string>();
   const router = useRouter();
@@ -47,6 +49,12 @@ export default function Login({ onLogin }: { onLogin: CallableFunction }) {
       });
   }, []);
 
+  const removeSession = () => {
+    saveCartToMerge();
+    deleteCartFromDb(UserService.getSession());
+    UserService.deleteSession();
+  };
+
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -67,6 +75,7 @@ export default function Login({ onLogin }: { onLogin: CallableFunction }) {
         throw new Error(data as string);
       }
 
+      removeSession();
       UserService.setUserToken(data);
       onLogin();
     } catch (error: any) {

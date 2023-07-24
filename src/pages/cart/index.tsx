@@ -7,27 +7,26 @@ import { faCircleInfo, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import Image from 'next/image';
 import AmountHandler from '@/components/AmountHandler';
-import { formatPrice, roundPrice } from '@/utils/helpers';
-import { ChangeEvent, FormEvent, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { formatPrice, generateId, roundPrice } from '@/utils/helpers';
+import { ChangeEvent, FormEvent, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ToastService from '@/services/toast.service';
 import ScreenUtils from '@/utils/screen';
 import httpMethods from '@/constants/httpMethods';
 import {
-  Accordion, AccordionDetails, AccordionSummary, Backdrop,
+  Accordion, AccordionDetails, AccordionSummary,
   FormControl, FormControlLabel, Radio, RadioGroup, Tooltip,
 } from '@mui/material';
 import LinkService from '@/services/link.service';
-import { ShippingRate, ShippingDestination, ShippingRatesResponse } from '@/interfaces/shippingRates';
+import { ShippingRate, ShippingDestination } from '@/interfaces/shippingRates';
 import ShippingService from '@/services/shipping.service';
 import CurrentCountry from '@/services/country.service';
-import Loader from '@/components/Loader';
 import ConditionalWrapper from '@/components/ConditionalWrapper';
 import { ServerData } from '@/interfaces/serverData';
 import { AppliedCoupon } from '@/interfaces/coupon';
 import UserService from '@/services/user.service';
-import CouponsService from '@/services/coupons.service';
 import couponType from '@/constants/coupon';
 import styles from '@/styles/modules/Cart.module.scss';
+import deepEqual from '@/utils/deepEqual';
 
 type CartTableProps = {
   isTablet: boolean;
@@ -42,9 +41,9 @@ type CartTableProps = {
 type CartTotalProps = {
   isTablet: boolean;
   cart: ICart;
-  shippingRates: ShippingRate[] | undefined;
+  shippingRates: ShippingRate[] | null;
   selectedRate: ShippingRate | undefined;
-  defaultAddress: ShippingDestination | undefined;
+  defaultAddress: ShippingDestination | null;
   fetchShipping: (form: FormData) => void;
   onSelect: (rate: ShippingRate) => void;
   onReset: CallableFunction;
@@ -55,29 +54,22 @@ const COUPOUN_APPLY_TOAST_SUCCESS = 'coupon-apply-success';
 const COUPOUN_APPLY_TOAST_ERROR = 'coupon-apply-error';
 
 export default function Cart() {
-  const { cart, removeAllItem, removeItem, addItems, applyCoupon, resetCoupon } = useCartContext();
+  const { cart, removeItems, addItems, applyCoupon, applyShipping, setLoading } = useCartContext();
   const [isTablet, setIsTablet] = useState(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [shippingRates, setShippingRates] = useState<ShippingRate[]>();
+  const [shippingRates, setShippingRates] = useState<ShippingRate[] | null>(null);
   const [selectedRate, setSelectedRate] = useState<ShippingRate>();
-  const [addressForm, setAddressForm] = useState<ShippingDestination>();
+  const [addressForm, setAddressForm] = useState<ShippingDestination | null>();
   const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
-  const initialAddress = useRef<ShippingDestination>();
-  const toastRef = useRef<number | string>();
+  const initialAddress = useRef<ShippingDestination | null>(null);
 
   useEffect(() => {
     setIsTablet(ScreenUtils.isTablet());
     const handleResize = () => setIsTablet(ScreenUtils.isTablet());
     window.addEventListener('resize', handleResize);
 
-    const address = ShippingService.getDestinationFromStorage();
-    if (address) {
-      initialAddress.current = address;
-      setAddressForm(address);
-    }
-    const coupon = CouponsService.getFromStorage();
-    if (coupon?.code) {
-      applyCouponCode(coupon.code);
+    const rate = ShippingService.getShippingRateFromStorage();
+    if (rate) {
+      setSelectedRate(rate);
     }
 
     return () => {
@@ -86,25 +78,36 @@ export default function Cart() {
   }, []);
 
   useEffect(() => {
-    if (addressForm) {
-      fetchShipping();
-    }
-  }, [addressForm]);
+    setAppliedCoupon(cart.coupon || null);
+  }, [cart.coupon]);
 
   useEffect(() => {
-    if (appliedCoupon) {
-      applyCoupon(appliedCoupon);
+    if (cart.totalAmount < 0) {
+      reset();
+      return;
+    }
+    if (cart.coupon?.code) {
+      applyCouponCode(cart.coupon.code);
     }
     if ((shippingRates?.length || 0) <= 0) {
       return;
     }
-    fetchShipping();
+    applyShipping(cart.items, addressForm!).then(setShippingRates);
   }, [cart.totalAmount]);
 
   useEffect(() => {
-    const coupon = CouponsService.getFromStorage();
-    setAppliedCoupon((state: AppliedCoupon | null) => (coupon ? state : null));
-  }, [cart.appliedCouponPrice]);
+    // only for initializing cart and to prevent effect loop
+    const { shippingDestination } = cart;
+    if (!deepEqual(shippingDestination, addressForm)) {
+      initialAddress.current = shippingDestination;
+      setAddressForm(shippingDestination);
+    }
+  }, [cart.shippingDestination]);
+
+  useEffect(() => {
+    if (addressForm === undefined) return; // To prevent changing cart on BE on first render
+    applyShipping(cart.items, addressForm).then(setShippingRates);
+  }, [addressForm]);
 
   useEffect(() => {
     if (selectedRate) {
@@ -112,113 +115,86 @@ export default function Cart() {
     }
   }, [selectedRate]);
 
-  const reset = () => {
-    initialAddress.current = undefined;
-    ShippingService.deleteDestinationFromStorage();
-    ShippingService.deleteShippingRateFromStorage();
-    setShippingRates(undefined);
-    setSelectedRate(undefined);
-    setAddressForm(undefined);
-  };
-
-  const changeAddress = (f: FormData) => {
-    const destination = ShippingService.prepareDestination(f);
-    setAddressForm(destination);
-    ShippingService.saveDestinationInStorage(destination);
-  };
-
-  const fetchShipping = () => {
-    if (!cart || cart.totalAmount === 0) {
-      return;
-    }
-
-    setIsLoading(true);
-    fetch(LinkService.apiOrdersRatesLink(), {
-      method: httpMethods.post,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(ShippingService.prepareRatesBody(addressForm!, cart.items)),
-    })
-      .then(async (res: Response) => {
-        const data: ShippingRatesResponse = await res.json();
-        if (!data.success) {
-          throw new Error(data.errors[0]?.details);
-        }
-
-        const savedRate = ShippingService.getShippingRateFromStorage();
-        const found = data.rates.find((r: ShippingRate) => r.service_code === savedRate?.service_code);
-        setSelectedRate(found ?? data.rates[0]);
-        setShippingRates(data.rates);
-      })
-      .catch((error: Error) => {
-        ToastService.error(error.message);
-      })
-      .finally(() => {
-        setIsLoading(false);
+  useEffect(() => {
+    if (shippingRates?.length) {
+      setSelectedRate((state: ShippingRate | undefined) => {
+        const found = shippingRates?.find((r: ShippingRate) => r.service_code === state?.service_code);
+        return found ?? shippingRates[0];
       });
-  };
-
-  const changeProductAmount = (item: CartItem, amount: number, isDelete?: boolean): void => {
-    if (isDelete || amount === 0) {
-      removeItem(item.info);
-    } else {
-      addItems(item.info);
     }
+  }, [shippingRates]);
+
+  const reset = () => {
+    initialAddress.current = null;
+    ShippingService.deleteShippingRateFromStorage();
+    setShippingRates(null);
+    setSelectedRate(undefined);
+    setAddressForm(null);
   };
 
-  const clearCoupon = () => {
-    resetCoupon();
+  const changeAddress = (destinationForm: FormData) => {
+    setAddressForm(ShippingService.prepareDestination(destinationForm));
+  };
+
+  const changeProductAmount = (item: CartItem, amount: number, isDelete?: boolean): Promise<boolean> => {
+    const func = (isDelete || amount === 0) ? removeItems : addItems;
+    return func(item.info);
+  };
+
+  const clearCoupon = async () => {
     setAppliedCoupon(null);
+    await applyCoupon(null);
   };
 
-  const applyCouponCode = (code: string) => {
-    if (!code) return;
-    if (code === appliedCoupon?.code) {
-      if (!ToastService.isActive(toastRef.current)) {
-        toastRef.current = ToastService.warn(
-          'This coupon is already applied',
-        );
+  const applyCouponCode = async (code: string): Promise<string> => {
+    let name: string = '';
+    if (!code) return name;
+
+    try {
+      setLoading(true);
+      const res = await fetch(LinkService.apiApplyCouponLink(), {
+        method: httpMethods.post,
+        body: JSON.stringify({ code }),
+        headers: {
+          'Content-Type': 'Application/json',
+          Authorization: UserService.getUserToken(),
+        },
+      });
+      const { data }: ServerData<AppliedCoupon | string> = await res.json();
+      if (!res.ok) {
+        throw new Error(data as string);
       }
-      return;
+      const result = await applyCoupon(data as AppliedCoupon);
+      if (typeof result === 'string') return name;
+      if (!result) {
+        clearCoupon();
+        return name;
+      }
+      setAppliedCoupon(data as AppliedCoupon);
+      name = (data as AppliedCoupon).name;
+    } catch (err: any) {
+      setLoading(false);
+      clearCoupon();
+      ToastService.error(err.message, {
+        toastId: COUPOUN_APPLY_TOAST_ERROR,
+      });
     }
 
-    setIsLoading(true);
-    fetch(LinkService.apiApplyCouponLink(), {
-      method: httpMethods.post,
-      body: JSON.stringify({ code }),
-      headers: {
-        'Content-Type': 'Application/json',
-        Authorization: UserService.getUserToken(),
-      },
-    })
-      .then(async (res: Response) => {
-        const { data }: ServerData<AppliedCoupon | string> = await res.json();
-        if (!res.ok) {
-          throw new Error(data as string);
-        }
-
-        const result = applyCoupon(data as AppliedCoupon);
-        if (typeof result === 'string') return;
-        if (!result) {
-          clearCoupon();
-          return;
-        }
-        setAppliedCoupon(data as AppliedCoupon);
-        ToastService.success(
-          `${(data as AppliedCoupon).name} has been applied successfully`,
-          { toastId: COUPOUN_APPLY_TOAST_SUCCESS },
-        );
-      })
-      .catch((err: Error) => {
-        clearCoupon();
-        ToastService.error(err.message, {
-          toastId: COUPOUN_APPLY_TOAST_ERROR,
-        });
-      })
-      .finally(() => setIsLoading(false));
+    return name;
   };
 
-  const removeCoupon = () => {
-    clearCoupon();
+  const onApplyCouponCode = async (code: string) => {
+    const name = await applyCouponCode(code);
+    if (name) {
+      ToastService.success(
+        `${name} has been applied successfully`,
+        { toastId: COUPOUN_APPLY_TOAST_SUCCESS },
+      );
+    }
+  };
+
+  const removeCoupon = async () => {
+    await clearCoupon();
     ToastService.success('Coupon has been removed successfully');
   };
 
@@ -276,9 +252,9 @@ export default function Cart() {
           cart={cart}
           appliedCoupon={appliedCoupon}
           removeCoupon={removeCoupon}
-          removeAllItem={removeAllItem}
+          removeAllItem={removeItems}
           changeProductAmount={changeProductAmount}
-          onCouponApplied={applyCouponCode}
+          onCouponApplied={onApplyCouponCode}
         />
         {!!cart.totalAmount
           && <CartTotal
@@ -293,13 +269,6 @@ export default function Cart() {
             getCouponText={getCouponText}
           />
         }
-
-        <Backdrop
-          sx={{ zIndex: 1001 }}
-          open={isLoading}
-        >
-          <Loader customColor="#fff" />
-        </Backdrop>
       </section>
     </>
   );
@@ -325,7 +294,7 @@ function CartTable(
                 <td style={{ justifyContent: 'flex-end' }}>
                   <FontAwesomeIcon
                     className={styles.cartTableIcon}
-                    onClick={() => removeAllItem(c.info)}
+                    onClick={() => removeAllItem(c.info, true)}
                     icon={faCircleXmark} size="xl"
                   />
                 </td>
@@ -428,7 +397,7 @@ function CartTable(
               <td>
                 <FontAwesomeIcon
                   className={styles.cartTableIcon}
-                  onClick={() => removeAllItem(c.info)}
+                  onClick={() => removeAllItem(c.info, true)}
                   icon={faCircleXmark} size="xl"
                 />
               </td>
@@ -550,11 +519,11 @@ function CartTotal({ cart, fetchShipping, onSelect, selectedRate,
     );
   };
 
-  const calculateTotal = useCallback(() => {
+  const calculateTotal = useMemo(() => {
     const shippingRate = selectedRate?.total_price || 0;
     const couponTotal = cart.appliedCouponPrice || 0;
     return roundPrice(cart.totalPrice + shippingRate - couponTotal);
-  }, [cart, selectedRate]);
+  }, [cart.appliedCouponPrice, cart.totalPrice, selectedRate?.total_price]);
 
   return (
     <div className={styles.cartTotal}>
@@ -615,7 +584,7 @@ function CartTotal({ cart, fetchShipping, onSelect, selectedRate,
                     && <>
                       <FormControl>
                         <RadioGroup
-                          value={selectedRate?.service_code}
+                          value={selectedRate?.service_code || ''}
                           onChange={setCurrentRate}
                         >
                           {shippingRates?.map((rate: ShippingRate) => (
@@ -726,7 +695,7 @@ function CartTotal({ cart, fetchShipping, onSelect, selectedRate,
             <th className={`${styles.cartTotalHeading} bold`}>Total: </th>
             <td>
               <span className={`${styles.cartTotalCaption} bold`}>Total:</span>
-              <span>$ {formatPrice(calculateTotal())}</span>
+              <span>$ {formatPrice(calculateTotal)}</span>
             </td>
           </tr>
           <tr>

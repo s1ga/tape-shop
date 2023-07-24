@@ -14,6 +14,7 @@ export default class LocalStorageService {
   public static set<T>(key: string, value: T) {
     if (value == null) {
       this.delete(key);
+      return;
     }
 
     const valueToSet = this.getCompatibleValueToSet<T>(value);

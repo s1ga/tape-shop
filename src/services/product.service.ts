@@ -228,7 +228,7 @@ export default class ProductService {
 
   public static toPreview(products: IProduct | IProduct[]): ProductItemPreview | ProductItemPreview[] {
     const mapObject = (o: IProduct): ProductItemPreview => ({
-      _id: o._id,
+      _id: o._id.toString(),
       id: o._id.toString(),
       name: o.name,
       rate: Math.round(o.rate || 0),

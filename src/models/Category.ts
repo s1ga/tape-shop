@@ -1,7 +1,7 @@
 import { Category as ICategory } from '@/interfaces/category';
 import { Schema, model, models } from 'mongoose';
 
-const CategorySchema = new Schema<ICategory>({
+export const CategorySchema = new Schema<ICategory>({
   name: { type: String, required: true },
   imageUrl: { type: String, required: true },
 });

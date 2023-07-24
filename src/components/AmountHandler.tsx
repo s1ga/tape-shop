@@ -14,16 +14,20 @@ type Props = {
   initialValue?: number;
   miniView?: boolean;
   availability?: Product['availability'];
-  onChange: (amount: number, isDeleteAction?: boolean) => void;
+  onChange: (amount: number, isDeleteAction?: boolean) => Promise<boolean>;
 }
 
 const MAX_NUMBER = 99;
 
-export default function AmountHandler(
-  { onChange = () => { }, readonly = false, initialValue = 1, availability, miniView }: Props,
-) {
+export default function AmountHandler({
+  onChange = () => Promise.resolve(true),
+  readonly = false,
+  initialValue = 1,
+  availability, miniView,
+}: Props) {
   const [amount, setAmount] = useState<number>(1);
   const isDeleteRef = useRef<boolean>();
+  const oldAmountValue = useRef<number>(1);
 
   useEffect(() => {
     isDeleteRef.current = undefined;
@@ -34,8 +38,14 @@ export default function AmountHandler(
     if (isDeleteRef.current === undefined) {
       return;
     }
-    onChange(amount, isDeleteRef.current);
-  }, [amount, onChange]);
+    onChange(amount, isDeleteRef.current)
+      .then((res: boolean) => {
+        if (!res) {
+          isDeleteRef.current = undefined;
+          setAmount(oldAmountValue.current);
+        }
+      });
+  }, [amount]);
 
   const onInput = (e: FormEvent) => {
     if (isDeleteRef.current === undefined) {
@@ -60,6 +70,7 @@ export default function AmountHandler(
       case AmountActions.Add:
         setAmount((state: number) => {
           isDeleteRef.current = false;
+          oldAmountValue.current = state;
           let newValue: number = state + 1;
           if (availability && newValue > availability) {
             newValue = availability;
@@ -70,6 +81,7 @@ export default function AmountHandler(
       case AmountActions.Remove:
         setAmount((state: number) => {
           isDeleteRef.current = true;
+          oldAmountValue.current = state;
           return state > 0 ? state - 1 : 0;
         });
         break;

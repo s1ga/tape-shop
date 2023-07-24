@@ -17,6 +17,18 @@ export default class UserService {
     LocalStorageService.delete(storageKeys.Auth);
   }
 
+  public static getSession(): string {
+    return LocalStorageService.get<string>(storageKeys.SessionId) || '';
+  }
+
+  public static setSession(id: string): void {
+    LocalStorageService.set<string>(storageKeys.SessionId, id);
+  }
+
+  public static deleteSession(): void {
+    LocalStorageService.delete(storageKeys.SessionId);
+  }
+
   public static newUser(body: any): NewUser {
     return ({
       name: body.name,

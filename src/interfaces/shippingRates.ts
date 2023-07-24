@@ -1,3 +1,4 @@
+import { isValidString } from '@/utils/validTypes';
 import { ShippingError } from './shippingError';
 
 export interface ShippingRatesRequest {
@@ -32,4 +33,12 @@ export interface ShippingRate {
   service_name: string;
   service_code: string;
   total_price: number;
+}
+
+export function isShippingDestination(obj: any): obj is ShippingDestination {
+  const typed = obj as ShippingDestination;
+  return isValidString(typed.street) && isValidString(typed.city)
+    && isValidString(typed.post_code) && isValidString(typed.country_code)
+    && (typed.suburb ? typeof typed.suburb === 'string' : true)
+    && (typed.state ? typeof typed.state === 'string' : true);
 }

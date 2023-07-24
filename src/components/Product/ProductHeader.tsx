@@ -22,6 +22,7 @@ export default function ProductHeader({ product }: { product: Product }) {
 
   const onChangeAmount = (value: number) => {
     itemsAmount.current = value;
+    return Promise.resolve(true);
   };
 
   return (

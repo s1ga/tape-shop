@@ -13,14 +13,13 @@ import AmountHandler from './AmountHandler';
 
 type CartDrawerProps = {
   cart: Cart;
-  removeItem: CallableFunction;
+  removeItems: CallableFunction;
   addItems: CallableFunction;
-  removeAllItem: CallableFunction;
 }
 
 export default function CartItem() {
   const [isDrawerOpened, setIsDrawerOpened] = useState(false);
-  const { cart, addItems, removeItem, removeAllItem } = useCartContext();
+  const { cart, addItems, removeItems } = useCartContext();
   const router = useRouter();
 
   useEffect(() => {
@@ -48,21 +47,17 @@ export default function CartItem() {
         <DrawerCart
           cart={cart}
           addItems={addItems}
-          removeItem={removeItem}
-          removeAllItem={removeAllItem}
+          removeItems={removeItems}
         />
       </Drawer>
     </>
   );
 }
 
-function DrawerCart({ cart, removeItem, addItems, removeAllItem }: CartDrawerProps) {
-  const changeProductAmount = (item: ICartItem, amount: number, isDelete?: boolean): void => {
-    if (isDelete || amount === 0) {
-      removeItem(item.info);
-    } else {
-      addItems(item.info);
-    }
+function DrawerCart({ cart, removeItems, addItems }: CartDrawerProps) {
+  const changeProductAmount = (item: ICartItem, amount: number, isDelete?: boolean): Promise<boolean> => {
+    const func = (isDelete || amount === 0) ? removeItems : addItems;
+    return func(item.info);
   };
 
   if (cart.totalAmount < 1) {
@@ -99,7 +94,7 @@ function DrawerCart({ cart, removeItem, addItems, removeAllItem }: CartDrawerPro
               <p>$ {formatPrice(roundPrice(i.info.price * i.total))}</p>
               <FontAwesomeIcon
                 className={styles.cartDrawerCardIcon}
-                onClick={() => removeAllItem(i.info)}
+                onClick={() => removeItems(i.info, true)}
                 icon={faCircleXmark} size="lg"
               />
             </div>

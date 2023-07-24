@@ -8,6 +8,7 @@ const storageKeys = {
   ShippingRate: 'shippingRate',
   Coupon: 'coupon',
   ReviewUser: 'reviewUser',
+  SessionId: 'sessionId',
 };
 
 export default storageKeys;

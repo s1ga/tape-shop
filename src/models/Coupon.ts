@@ -2,7 +2,7 @@ import { Coupon as ICoupon } from '@/interfaces/coupon';
 import { Schema, model, models } from 'mongoose';
 import User from './User';
 
-const CouponSchema = new Schema<ICoupon>({
+export const CouponSchema = new Schema<ICoupon>({
   type: { type: String, required: true },
   startDate: { type: String, required: true },
   endDate: { type: String, required: true },
