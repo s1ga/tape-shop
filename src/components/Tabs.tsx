@@ -8,7 +8,7 @@ function TabsMemo({ tabs }: { tabs: Tab[] }) {
 
   return (
     <div>
-      <ul className={styles.tabs}>
+      <ul role="tablist" className={styles.tabs}>
         {tabs.map((t: Tab) => (
           <li
             role="tab"

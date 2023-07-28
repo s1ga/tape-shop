@@ -106,6 +106,8 @@ export default function AmountHandler({
         value={amount}
         max={availability ?? undefined}
         inputMode="numeric"
+        name="amount"
+        aria-label="Amount"
         onInput={onInput} />
       <button
         disabled={!!availability && amount >= availability}
