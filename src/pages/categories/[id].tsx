@@ -1,9 +1,9 @@
-import CategoryList from '@/components/Category';
 import { Product } from '@/interfaces/product/product';
 import CategoryService from '@/services/category.service';
 import ProductService from '@/services/product.service';
 import dbConnect from '@/utils/db';
 import { isValidObjectId } from 'mongoose';
+import dynamic from 'next/dynamic';
 
 export const getServerSideProps = async ({ params }: { params: { id: string } }) => {
   await dbConnect();
@@ -32,5 +32,5 @@ export const getServerSideProps = async ({ params }: { params: { id: string } })
   };
 };
 
-const Category = CategoryList;
+const Category = dynamic(() => import('@/components/Category').then((mod) => mod.default));
 export default Category;
