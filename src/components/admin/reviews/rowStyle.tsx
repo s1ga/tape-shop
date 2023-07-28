@@ -1,4 +1,4 @@
-import { useTheme } from '@mui/material/styles';
+import useTheme from '@mui/material/styles/useTheme';
 import { FullReview } from '@/interfaces/review';
 import { Identifier } from 'react-admin';
 

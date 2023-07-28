@@ -1,5 +1,5 @@
 import { Create, SaveButton, Toolbar, useRedirect } from 'react-admin';
-import { Button } from '@mui/material';
+import Button from '@mui/material/Button';
 import adminResourceMap from '@/constants/admin-resources';
 import { useCallback, useState } from 'react';
 import { User } from '@/interfaces/user';

@@ -1,7 +1,10 @@
 import { Product } from '@/interfaces/product/product';
-import {
-  useMediaQuery, useTheme, ImageList as MImageList, ImageListItem, Box, ImageListItemBar,
-} from '@mui/material';
+import MImageList from '@mui/material/ImageList';
+import ImageListItemBar from '@mui/material/ImageListItemBar';
+import Box from '@mui/material/Box';
+import ImageListItem from '@mui/material/ImageListItem';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import useTheme from '@mui/material/styles/useTheme';
 import Image from 'next/image';
 import { NumberField, useListContext, useRedirect } from 'react-admin';
 import adminResourceMap from '@/constants/admin-resources';

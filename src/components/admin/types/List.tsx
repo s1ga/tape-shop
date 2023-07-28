@@ -2,7 +2,8 @@ import Loader from '@/components/Loader';
 import itemsPerPage from '@/constants/perPage';
 import { Category } from '@/interfaces/category';
 import { Type } from '@/interfaces/type';
-import { Chip, Stack } from '@mui/material';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 import {
   CreateButton, Datagrid, ExportButton, FieldProps, InfiniteList,
   TextField, TopToolbar, useListContext, useRecordContext,

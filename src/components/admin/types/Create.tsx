@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import Button from '@mui/material/Button';
 import { Create, SaveButton, SimpleForm, TextInput, Toolbar, required, useRedirect } from 'react-admin';
 import Loader from '@/components/Loader';
 import { useEffect, useState } from 'react';

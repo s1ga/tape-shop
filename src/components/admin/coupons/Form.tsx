@@ -5,7 +5,11 @@ import coupons from '@/utils/generateCouponCode';
 import { capitalize } from '@/utils/helpers';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Autocomplete, Grid, TextField, Tooltip, debounce } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
+import debounce from '@mui/material/utils/debounce';
 import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   DateTimeInput, NumberInput, SelectInput, TabbedForm, TextInput,

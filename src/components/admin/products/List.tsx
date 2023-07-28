@@ -1,5 +1,7 @@
 import itemsPerPage from '@/constants/perPage';
-import { Box, Theme, useMediaQuery } from '@mui/material';
+import Box from '@mui/material/Box';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { Theme } from '@mui/material/styles/createTheme';
 import {
   CreateButton, ExportButton, FilterButton, FilterContext,
   FilterForm, ListBase, Pagination, SortButton, Title, TopToolbar,

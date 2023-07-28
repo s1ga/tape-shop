@@ -1,9 +1,12 @@
 import Loader from '@/components/Loader';
 import itemsPerPage from '@/constants/perPage';
 import { Category } from '@/interfaces/category';
-import {
-  Card, CardActions, CardContent, CardMedia, Grid, Typography,
-} from '@mui/material';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import {
   CreateButton, EditButton, ExportButton, InfiniteList, RecordContextProvider, TopToolbar, useListContext,
 } from 'react-admin';

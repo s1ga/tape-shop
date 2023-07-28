@@ -1,5 +1,6 @@
 import itemsPerPage from '@/constants/perPage';
-import { Box, Drawer } from '@mui/material';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   BulkDeleteWithConfirmButton, Button, Datagrid,

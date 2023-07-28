@@ -1,6 +1,6 @@
 import Loader from '@/components/Loader';
 import { Type } from '@/interfaces/type';
-import { Button } from '@mui/material';
+import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
 import {
   DeleteWithConfirmButton, Edit, SaveButton, SimpleForm, TextInput,

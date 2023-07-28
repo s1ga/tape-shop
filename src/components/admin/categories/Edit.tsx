@@ -1,6 +1,6 @@
 import imagesMimeTypes from '@/constants/mimeTypes';
 import { Category } from '@/interfaces/category';
-import { Button } from '@mui/material';
+import Button from '@mui/material/Button';
 import {
   DeleteWithConfirmButton, Edit, ImageField, ImageInput,
   SaveButton, SimpleForm, TextInput, Toolbar, required, useRecordContext, useRedirect,

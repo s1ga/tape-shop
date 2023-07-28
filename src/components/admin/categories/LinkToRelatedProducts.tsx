@@ -1,7 +1,7 @@
 import { Category } from '@/interfaces/category';
 import { faImages } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button } from '@mui/material';
+import Button from '@mui/material/Button';
 import { useRecordContext, useRedirect } from 'react-admin';
 import adminResourceMap from '@/constants/admin-resources';
 

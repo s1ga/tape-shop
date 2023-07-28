@@ -15,10 +15,14 @@ import {
 import ToastService from '@/services/toast.service';
 import ScreenUtils from '@/utils/screen';
 import httpMethods from '@/constants/httpMethods';
-import {
-  Accordion, AccordionDetails, AccordionSummary,
-  FormControl, FormControlLabel, Radio, RadioGroup, Tooltip,
-} from '@mui/material';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import Tooltip from '@mui/material/Tooltip';
 import LinkService from '@/services/link.service';
 import { ShippingRate, ShippingDestination } from '@/interfaces/shippingRates';
 import ShippingService from '@/services/shipping.service';

@@ -1,7 +1,7 @@
 /* eslint-disable no-var */
 /* eslint-disable no-unused-vars */
 import { DbConnection } from '@/interfaces/db';
-import mongoose from 'mongoose';
+import { connect } from 'mongoose';
 
 declare global {
   namespace globalThis {
@@ -29,7 +29,7 @@ export default async function dbConnect() {
   }
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGO_URI!);
+    cached.promise = connect(MONGO_URI!);
   }
 
   cached.connect = await cached.promise;

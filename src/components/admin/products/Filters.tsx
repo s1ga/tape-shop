@@ -1,7 +1,8 @@
 import { faChartSimple, faDollarSign, faTag } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Card, CardContent } from '@mui/material';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 import {
   FilterList, FilterListItem, FilterLiveSearch, SavedQueriesList, SearchInput, useGetList,
 } from 'react-admin';

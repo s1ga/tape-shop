@@ -1,17 +1,17 @@
 import SALT from '@/constants/salt';
-import bcrypt from 'bcrypt';
+import { genSalt, hash, compare } from 'bcrypt';
 import { JwtPayload, sign, verify } from 'jsonwebtoken';
 
 export default class HashHandlerService {
   private static tokenType: string = 'Bearer';
 
   public static async hashData(password: string): Promise<string> {
-    const salt = await bcrypt.genSalt(SALT);
-    return bcrypt.hash(password, salt);
+    const salt = await genSalt(SALT);
+    return hash(password, salt);
   }
 
   public static async compareHash(data: string, hashData: string): Promise<boolean> {
-    return bcrypt.compare(data, hashData);
+    return compare(data, hashData);
   }
 
   public static createToken(id: string, email: string, isAdmin: boolean): Promise<string> {

@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Box, Drawer } from '@mui/material';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
 import {
   BulkDeleteWithConfirmButton, Button, Datagrid, DateField, List,
   TextField, WithRecord, useGetList, useListContext, useNotify,

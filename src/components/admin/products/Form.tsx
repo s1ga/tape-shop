@@ -1,5 +1,7 @@
 import imagesMimeTypes from '@/constants/mimeTypes';
-import { Grid, InputAdornment, Tooltip } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import InputAdornment from '@mui/material/InputAdornment';
+import Tooltip from '@mui/material/Tooltip';
 import {
   ArrayInput, ImageField, ImageInput, Labeled,
   NumberInput, RecordContextProvider, ReferenceArrayInput,

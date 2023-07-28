@@ -1,6 +1,6 @@
 import adminResourceMap from '@/constants/admin-resources';
 import { Coupon } from '@/interfaces/coupon';
-import { Button } from '@mui/material';
+import Button from '@mui/material/Button';
 import {
   DeleteWithConfirmButton, Edit, SaveButton,
   Toolbar, TransformData, useRecordContext, useRedirect,

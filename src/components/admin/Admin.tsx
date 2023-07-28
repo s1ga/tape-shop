@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material/styles';
+import createTheme from '@mui/material/styles/createTheme';
 import { Admin, Resource, defaultTheme } from 'react-admin';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {

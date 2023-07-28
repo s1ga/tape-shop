@@ -1,7 +1,12 @@
 import { FullReview } from '@/interfaces/review';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Box, Grid, IconButton, Stack, Typography, Button } from '@mui/material';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import {
   DateField,
   DeleteWithConfirmButton, EditBase, EditProps, EmailField, Labeled, SaveButton,

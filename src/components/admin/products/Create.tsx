@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import Button from '@mui/material/Button';
 import { Create, SaveButton, Toolbar, useRedirect } from 'react-admin';
 import { NewProductItem } from '@/interfaces/product/product';
 import { ProductItemAdditional } from '@/interfaces/product/productAdditional';

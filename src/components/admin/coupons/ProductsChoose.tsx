@@ -4,7 +4,9 @@ import adminResourceMap from '@/constants/admin-resources';
 import { Category } from '@/interfaces/category';
 import { Product } from '@/interfaces/product/product';
 import { Type } from '@/interfaces/type';
-import { Box, Checkbox, FormControlLabel } from '@mui/material';
+import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { Fragment, useEffect, useState } from 'react';
 import { useGetList } from 'react-admin';
 
