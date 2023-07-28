@@ -1,14 +1,17 @@
 /* eslint-disable no-unused-vars */
 import Head from 'next/head';
 import { useCartContext } from '@/context/cartContext';
-import { CartItem, Cart as ICart } from '@/interfaces/cart';
+import { CartItem } from '@/interfaces/cart';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import Image from 'next/image';
 import AmountHandler from '@/components/AmountHandler';
-import { formatPrice, generateId, roundPrice } from '@/utils/helpers';
-import { ChangeEvent, FormEvent, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { formatPrice, roundPrice } from '@/utils/helpers';
+import {
+  ChangeEvent, FormEvent, ReactNode, memo,
+  useCallback, useEffect, useMemo, useRef, useState,
+} from 'react';
 import ToastService from '@/services/toast.service';
 import ScreenUtils from '@/utils/screen';
 import httpMethods from '@/constants/httpMethods';
@@ -30,8 +33,8 @@ import deepEqual from '@/utils/deepEqual';
 
 type CartTableProps = {
   isTablet: boolean;
-  cart: ICart;
-  appliedCoupon: AppliedCoupon | null;
+  items: CartItem[];
+  couponName?: string;
   removeCoupon: CallableFunction;
   removeAllItem: CallableFunction;
   changeProductAmount: CallableFunction;
@@ -40,18 +43,22 @@ type CartTableProps = {
 
 type CartTotalProps = {
   isTablet: boolean;
-  cart: ICart;
+  totalPrice: number;
+  appliedCouponPrice: number | undefined;
   shippingRates: ShippingRate[] | null;
   selectedRate: ShippingRate | undefined;
   defaultAddress: ShippingDestination | null;
   fetchShipping: (form: FormData) => void;
   onSelect: (rate: ShippingRate) => void;
   onReset: CallableFunction;
-  getCouponText: () => string;
+  couponText: string;
 }
 
 const COUPOUN_APPLY_TOAST_SUCCESS = 'coupon-apply-success';
 const COUPOUN_APPLY_TOAST_ERROR = 'coupon-apply-error';
+
+const CartTotalMemo = memo(CartTotal);
+const CartTableMemo = memo(CartTable);
 
 export default function Cart() {
   const { cart, removeItems, addItems, applyCoupon, applyShipping, setLoading } = useCartContext();
@@ -124,29 +131,31 @@ export default function Cart() {
     }
   }, [shippingRates]);
 
-  const reset = () => {
+  const reset = useCallback(() => {
     initialAddress.current = null;
     ShippingService.deleteShippingRateFromStorage();
     setShippingRates(null);
     setSelectedRate(undefined);
     setAddressForm(null);
-  };
+  }, []);
 
-  const changeAddress = (destinationForm: FormData) => {
+  const changeAddress = useCallback((destinationForm: FormData) => {
     setAddressForm(ShippingService.prepareDestination(destinationForm));
-  };
+  }, []);
 
-  const changeProductAmount = (item: CartItem, amount: number, isDelete?: boolean): Promise<boolean> => {
-    const func = (isDelete || amount === 0) ? removeItems : addItems;
-    return func(item.info);
-  };
-
-  const clearCoupon = async () => {
+  const changeProductAmount = useCallback(
+    (item: CartItem, amount: number, isDelete?: boolean): Promise<boolean> => {
+      const func = (isDelete || amount === 0) ? removeItems : addItems;
+      return func(item.info);
+    },
+    [removeItems, addItems],
+  );
+  const clearCoupon = useCallback(async () => {
     setAppliedCoupon(null);
     await applyCoupon(null);
-  };
+  }, [applyCoupon]);
 
-  const applyCouponCode = async (code: string): Promise<string> => {
+  const applyCouponCode = useCallback(async (code: string): Promise<string> => {
     let name: string = '';
     if (!code) return name;
 
@@ -181,9 +190,9 @@ export default function Cart() {
     }
 
     return name;
-  };
+  }, [applyCoupon, clearCoupon, setLoading]);
 
-  const onApplyCouponCode = async (code: string) => {
+  const onApplyCouponCode = useCallback(async (code: string) => {
     const name = await applyCouponCode(code);
     if (name) {
       ToastService.success(
@@ -191,14 +200,14 @@ export default function Cart() {
         { toastId: COUPOUN_APPLY_TOAST_SUCCESS },
       );
     }
-  };
+  }, [applyCouponCode]);
 
-  const removeCoupon = async () => {
+  const removeCoupon = useCallback(async () => {
     await clearCoupon();
     ToastService.success('Coupon has been removed successfully');
-  };
+  }, [clearCoupon]);
 
-  const getCouponText = useCallback(() => {
+  const couponText = useMemo(() => {
     const productsEnum: string[] = [];
     if (appliedCoupon?.appliedProducts.length) {
       appliedCoupon?.appliedProducts.forEach((id: string) => {
@@ -227,7 +236,7 @@ export default function Cart() {
     The Coupon discount applies to the following products: ${productsEnum.join(', ')}. ${discountExceededText}
     `;
     return text;
-  }, [cart, appliedCoupon]);
+  }, [cart.items, cart.appliedCouponPrice, appliedCoupon]);
 
   return (
     <>
@@ -247,26 +256,27 @@ export default function Cart() {
       <section className={`${styles.cart} container`}>
         <h1 className="title centered">Cart</h1>
 
-        <CartTable
+        <CartTableMemo
           isTablet={isTablet}
-          cart={cart}
-          appliedCoupon={appliedCoupon}
+          items={cart.items}
+          couponName={appliedCoupon?.name}
           removeCoupon={removeCoupon}
           removeAllItem={removeItems}
           changeProductAmount={changeProductAmount}
           onCouponApplied={onApplyCouponCode}
         />
         {!!cart.totalAmount
-          && <CartTotal
+          && <CartTotalMemo
             isTablet={isTablet}
             fetchShipping={changeAddress}
-            cart={cart}
+            appliedCouponPrice={cart.appliedCouponPrice}
+            totalPrice={cart.totalPrice}
             defaultAddress={initialAddress.current}
             shippingRates={shippingRates}
             selectedRate={selectedRate}
             onSelect={setSelectedRate}
             onReset={reset}
-            getCouponText={getCouponText}
+            couponText={couponText}
           />
         }
       </section>
@@ -275,12 +285,12 @@ export default function Cart() {
 }
 
 function CartTable(
-  { cart, appliedCoupon, removeCoupon, removeAllItem,
+  { items, couponName, removeCoupon, removeAllItem,
     changeProductAmount, onCouponApplied, isTablet }: CartTableProps,
 ) {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  if (cart.totalAmount === 0) {
+  if ((items?.length || 0) === 0) {
     return <div>Your cart is currently empty.</div>;
   }
 
@@ -289,7 +299,7 @@ function CartTable(
       <>
         <table className={styles.cartTable} cellSpacing={0}>
           <tbody>
-            {cart.items.map((c: CartItem) => (
+            {items.map((c: CartItem) => (
               <tr key={c.info._id}>
                 <td style={{ justifyContent: 'flex-end' }}>
                   <FontAwesomeIcon
@@ -358,8 +368,8 @@ function CartTable(
                     Apply coupon
                   </button>
                 </div>
-                {!!appliedCoupon && <div className={styles.cartTableCouponCaption}>
-                  {appliedCoupon.name} coupon has been applied.
+                {!!couponName && <div className={styles.cartTableCouponCaption}>
+                  {couponName} coupon has been applied.
                   You can <button
                     onClick={() => {
                       (inputRef.current as HTMLInputElement).value = '';
@@ -392,7 +402,7 @@ function CartTable(
           </tr>
         </thead>
         <tbody>
-          {cart.items.map((c: CartItem) => (
+          {items.map((c: CartItem) => (
             <tr key={c.info._id}>
               <td>
                 <FontAwesomeIcon
@@ -457,8 +467,8 @@ function CartTable(
                   Apply coupon
                 </button>
               </div>
-              {!!appliedCoupon && <div className={styles.cartTableCouponCaption}>
-                {appliedCoupon.name} coupon has been applied.
+              {!!couponName && <div className={styles.cartTableCouponCaption}>
+                {couponName} coupon has been applied.
                 You can <button
                   onClick={() => {
                     (inputRef.current as HTMLInputElement).value = '';
@@ -477,8 +487,8 @@ function CartTable(
   );
 }
 
-function CartTotal({ cart, fetchShipping, onSelect, selectedRate,
-  shippingRates, defaultAddress, isTablet, onReset, getCouponText }: CartTotalProps) {
+function CartTotal({ appliedCouponPrice, totalPrice, fetchShipping, onSelect, selectedRate,
+  shippingRates, defaultAddress, isTablet, onReset, couponText }: CartTotalProps) {
   const [currentAddress, setCurrentAddress] = useState<string>('');
 
   useEffect(() => {
@@ -521,9 +531,9 @@ function CartTotal({ cart, fetchShipping, onSelect, selectedRate,
 
   const calculateTotal = useMemo(() => {
     const shippingRate = selectedRate?.total_price || 0;
-    const couponTotal = cart.appliedCouponPrice || 0;
-    return roundPrice(cart.totalPrice + shippingRate - couponTotal);
-  }, [cart.appliedCouponPrice, cart.totalPrice, selectedRate?.total_price]);
+    const couponTotal = appliedCouponPrice || 0;
+    return roundPrice(totalPrice + shippingRate - couponTotal);
+  }, [appliedCouponPrice, totalPrice, selectedRate?.total_price]);
 
   return (
     <div className={styles.cartTotal}>
@@ -540,20 +550,20 @@ function CartTotal({ cart, fetchShipping, onSelect, selectedRate,
             <th className={`${styles.cartTotalHeading} bold`}>Subtotal: </th>
             <td>
               <span className={`${styles.cartTotalCaption} bold`}>Subtotal:</span>
-              <span>$ {formatPrice(roundPrice(cart.totalPrice))}</span>
+              <span>$ {formatPrice(roundPrice(totalPrice))}</span>
             </td>
           </tr>
-          {!!cart.appliedCouponPrice
+          {!!appliedCouponPrice
             && <tr>
               <th className={`${styles.cartTotalHeading} bold`}>Coupon sale: </th>
               <td>
                 <span className={`${styles.cartTotalCaption} bold`}>Coupon sale:</span>
                 <div>
-                  <span>$ {formatPrice(cart.appliedCouponPrice)}</span>
+                  <span>$ {formatPrice(appliedCouponPrice)}</span>
                   <Tooltip
                     arrow={true}
                     disableInteractive={true}
-                    title={getCouponText()}
+                    title={couponText}
                     placement="top"
                   >
                     <FontAwesomeIcon

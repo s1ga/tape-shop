@@ -82,15 +82,11 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <CartProvider>
         <div className="content">
-          {!isLoading
-            && <>
-              {!HIDE_MENU_PATHS.includes(pathname) && <Header types={productTypes.current} />}
-              <main className="main">
-                <Component {...pageProps} />
-              </main>
-              {!HIDE_MENU_PATHS.includes(pathname) && <Footer />}
-            </>
-          }
+          {!HIDE_MENU_PATHS.includes(pathname) && <Header types={productTypes.current} />}
+          <main className="main">
+            <Component {...pageProps} />
+          </main>
+          {!HIDE_MENU_PATHS.includes(pathname) && <Footer />}
           <Backdrop
             sx={{ zIndex: 1001 }}
             open={isLoading}

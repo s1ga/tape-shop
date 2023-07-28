@@ -4,9 +4,7 @@ const storageKeys = {
   Auth: 'auth',
   AdminAuth: 'adminAuth',
   PendingReviews: 'pendingReviews',
-  ShippingDestination: 'shippingDestination',
   ShippingRate: 'shippingRate',
-  Coupon: 'coupon',
   ReviewUser: 'reviewUser',
   SessionId: 'sessionId',
 };

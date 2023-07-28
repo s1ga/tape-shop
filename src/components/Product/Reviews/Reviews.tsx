@@ -1,6 +1,6 @@
 import { PreparedReview, Review } from '@/interfaces/review';
 import styles from '@/styles/modules/Review.module.scss';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Loader from '@/components/Loader';
 import httpMethods from '@/constants/httpMethods';
 import { ServerData } from '@/interfaces/serverData';
@@ -15,11 +15,12 @@ type Props = {
   fetchedReviews: Review[];
   productId: string;
   productName: string;
+  onReviewAdded: CallableFunction;
 }
 
 const REVIEW_URL = LinkService.apiReviewsLink();
 
-export default function Reviews({ fetchedReviews, productName, productId }: Props) {
+export default function Reviews({ fetchedReviews, productName, productId, onReviewAdded }: Props) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -38,7 +39,7 @@ export default function Reviews({ fetchedReviews, productName, productId }: Prop
     return () => {
       window.removeEventListener('storage', handler);
     };
-  }, []);
+  }, [productId]);
 
   useEffect(() => {
     const approved = fetchedReviews.filter((r: Review) => r.isApproved && r.isChecked);
@@ -51,7 +52,7 @@ export default function Reviews({ fetchedReviews, productName, productId }: Prop
     setReviews([...remained, ...approved]);
   }, [fetchedReviews, productId]);
 
-  const addReview = async (fields: Record<string, string>) => {
+  const addReview = useCallback(async (fields: Record<string, string>) => {
     const body: Partial<PreparedReview> = {
       rating: +fields.rating,
       text: fields.message,
@@ -80,13 +81,14 @@ export default function Reviews({ fetchedReviews, productName, productId }: Prop
         [data, ...(LocalStorageService.get<unknown[]>(storageKeys.PendingReviews) || [])],
       );
       setReviews((state: Review[]) => [data as Review, ...state]);
+      onReviewAdded(data);
     } catch (error: any) {
       console.error(error.message);
       ToastService.error(error.message as string);
     } finally {
       setLoading(false);
     }
-  };
+  }, [productId, onReviewAdded]);
 
   if (loading) {
     return <Loader />;

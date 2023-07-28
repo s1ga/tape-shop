@@ -22,9 +22,7 @@ export async function getServerSideProps() {
 export default function Home({ types }: { types: Type[] }) {
   useEffect(() => {
     const el = document.querySelector('.lty-playbtn') as HTMLButtonElement;
-    if (el) {
-      el.click();
-    }
+    el?.click();
   }, []);
 
   return (

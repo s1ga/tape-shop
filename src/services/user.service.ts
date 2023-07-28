@@ -1,6 +1,4 @@
-import { PASSWORD_REGEX } from '@/constants/regex';
 import { NewUser, User } from '@/interfaces/user';
-import { isValidEmail, isValidString } from '@/utils/validTypes';
 import storageKeys from '@/constants/storageKeys';
 import LocalStorageService from './storage.service';
 
@@ -55,19 +53,5 @@ export default class UserService {
       confirmed: user.confirmed,
       isAdmin: user.isAdmin,
     });
-  }
-
-  public static validate(user: NewUser): boolean | string {
-    if (!isValidString(user.name) || user.name.length < 2) {
-      return 'Name should be minimum 2 characters';
-    }
-    if (!PASSWORD_REGEX.test(user.password)) {
-      return `Password should be minimum 8 characters, 
-      contains digits, 1 lowercase and 1 uppercase letters.`;
-    }
-    if (!isValidEmail(user.email)) {
-      return 'Provide valid email';
-    }
-    return true;
   }
 }

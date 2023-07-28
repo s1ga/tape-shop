@@ -1,5 +1,5 @@
 import Rate from '@/components/Rate';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, memo, useEffect, useState } from 'react';
 import styles from '@/styles/modules/Review.module.scss';
 import LinkService from '@/services/link.service';
 import LocalStorageService from '@/services/storage.service';
@@ -19,7 +19,7 @@ type ReviewUser = {
   email: string;
 }
 
-export default function ReviewForm({ productName, isFirstReview, onAddReview }: Props) {
+function ReviewForm({ productName, isFirstReview, onAddReview }: Props) {
   const [rating, setRating] = useState<number>(0);
   const [validateMessage, setValidateMessage] = useState<string>('');
   const [isChecked, setIsChecked] = useState<boolean>(false);
@@ -137,3 +137,6 @@ export default function ReviewForm({ productName, isFirstReview, onAddReview }: 
     </section>
   );
 }
+
+const ReviewFormMemo = memo(ReviewForm);
+export default ReviewFormMemo;

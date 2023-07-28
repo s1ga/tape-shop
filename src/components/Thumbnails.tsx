@@ -2,10 +2,13 @@ import styles from '@/styles/modules/Thumbnails.module.scss';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
-import { MouseEvent, useRef, useState } from 'react';
+import { MouseEvent, memo, useRef, useState } from 'react';
 import FullscreenSlider from './FullscreenSlider';
 
-export default function Thumbnails({ images }: { images: string[] }) {
+const Thumbnails = memo(ThumbnailsMemo);
+export default Thumbnails;
+
+function ThumbnailsMemo({ images }: { images: string[] }) {
   const imgSliderRef = useRef<HTMLDivElement>(null);
   const [selected, setSelected] = useState<number>(0);
   const [isSliderOpened, setIsSliderOpened] = useState<boolean>(false);

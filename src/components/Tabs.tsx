@@ -1,9 +1,10 @@
 import { Tab } from '@/interfaces/tabs';
 import styles from '@/styles/modules/Tabs.module.scss';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 
-export default function Tabs({ tabs }: { tabs: Tab[] }) {
+function TabsMemo({ tabs }: { tabs: Tab[] }) {
   const [activeTab, setActiveTab] = useState<string>(tabs[0].id);
+  const currentTab = tabs.find((t: Tab) => t.id === activeTab) || tabs[0];
 
   return (
     <div>
@@ -20,14 +21,11 @@ export default function Tabs({ tabs }: { tabs: Tab[] }) {
       </ul>
 
       <div className={styles.tabContent}>
-        {tabs.map((t: Tab) => (
-          <div
-            key={t.id}
-            className={`${styles.tabContentItem} ${t.id === activeTab ? styles.tabContentItemActive : ''}`}>
-            {t.content()}
-          </div>
-        ))}
+        {currentTab.content()}
       </div>
     </div>
   );
 }
+
+const Tabs = memo(TabsMemo);
+export default Tabs;

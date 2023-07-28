@@ -5,13 +5,29 @@ import { Product } from '@/interfaces/product/product';
 import CartService from '@/services/cart.service';
 import styles from '@/styles/modules/Product.module.scss';
 import Link from 'next/link';
-import { useRef } from 'react';
+import { FunctionComponent, memo, useRef } from 'react';
+import { CartContextProps } from '@/interfaces/cart';
 import AmountHandler from '../AmountHandler';
 
-export default function ProductHeader({ product }: { product: Product }) {
-  const itemsAmount = useRef<number>(1);
-  const { addItems } = useCartContext();
+interface Props {
+  product: Product;
+}
 
+interface PropsWithContext extends Props {
+  addItems: CartContextProps['addItems'];
+}
+
+const withContext = (Component: FunctionComponent<PropsWithContext>) => {
+  const ComponentMemo = memo(Component);
+  // eslint-disable-next-line react/display-name
+  return (props: Props) => {
+    const { addItems } = useCartContext();
+    return <ComponentMemo {...props} addItems={addItems} />;
+  };
+};
+
+const ProductHeader = withContext(({ product, addItems }: PropsWithContext) => {
+  const itemsAmount = useRef<number>(1);
   const onCartAdd = () => {
     if (itemsAmount.current <= 0) {
       return;
@@ -63,4 +79,6 @@ export default function ProductHeader({ product }: { product: Product }) {
       </div>
     </div>
   );
-}
+});
+
+export default ProductHeader;

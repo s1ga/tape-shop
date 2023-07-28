@@ -8,6 +8,7 @@ import sortingValue from '@/constants/sortingValues';
 import { Query, SortOrder } from 'mongoose';
 import itemsPerPage from '@/constants/perPage';
 import HashHandlerService from '@/services/hash.service';
+import ContactFeedbackValidator from '@/validation/contactFeedback.validator';
 
 type Response = {
   data: string | IContactFeedback | IContactFeedback[];
@@ -84,7 +85,8 @@ export default async function handler(
       });
     } else if (method === httpMethods.post) {
       const fields = ContactFeedbackService.prepareFields(req.body);
-      const result = ContactFeedbackService.validate(fields);
+      const validator = new ContactFeedbackValidator(fields);
+      const result = validator.isAllValid();
 
       if (typeof result === 'string') {
         res.status(400).json({ data: result });

@@ -1,4 +1,6 @@
+const DEFAULT_COLOR = '#339900';
 export default function Loader({ customColor }: { customColor?: string }) {
+  const color = customColor ?? DEFAULT_COLOR;
   return (
     <>
       <style jsx>{`
@@ -25,7 +27,7 @@ export default function Loader({ customColor }: { customColor?: string }) {
             width: 7px;
             height: 7px;
             border-radius: 50%;
-            background: ${customColor ?? '#339900'};
+            background: ${color};
             margin: -4px 0 0 -4px;
           }
           .lds-roller div:nth-child(1) {

@@ -2,9 +2,10 @@ import styles from '@/styles/modules/ProductsCards.module.scss';
 import Link from 'next/link';
 import { ProductTypeCard } from '@/interfaces/productTypeCard';
 import { Type } from '@/interfaces/type';
+import { memo } from 'react';
 import getCardsText from './cards';
 
-export default function ProductsCards(
+function ProductsCardsMemo(
   { isHomePage = false, types }: { isHomePage?: boolean, types: Type[] },
 ) {
   const getCards = (): ProductTypeCard[] => {
@@ -52,3 +53,6 @@ export default function ProductsCards(
     </section>
   );
 }
+
+const ProductsCards = memo(ProductsCardsMemo);
+export default ProductsCards;

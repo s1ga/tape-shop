@@ -1,7 +1,6 @@
 import { NewReview, PreparedReview, Review as IReview, FullReview } from '@/interfaces/review';
 import Review from '@/models/Review';
-import { isValidEmail, isValidNumber, isValidString } from '@/utils/validTypes';
-import { Types, isValidObjectId } from 'mongoose';
+import { Types } from 'mongoose';
 
 export default class ReviewService {
   public static fromServer(item: any | any[]): IReview | IReview[] {
@@ -33,25 +32,6 @@ export default class ReviewService {
       return item.map(mapObject);
     }
     return mapObject(item);
-  }
-
-  public static validate(fields: PreparedReview): boolean | string {
-    if (!isValidObjectId(fields.productId)) {
-      return 'Provide valid product ID';
-    }
-    if (!isValidNumber(+fields.rating)) {
-      return 'Rating is required and should be number';
-    }
-    if (!isValidString(fields.text)) {
-      return 'Text required and should be string';
-    }
-    if (!isValidString(fields.name)) {
-      return 'Name is required and should be string';
-    }
-    if (!isValidEmail(fields.email)) {
-      return 'Email is required and should be valid';
-    }
-    return true;
   }
 
   public static prepareFields(body: any): PreparedReview {

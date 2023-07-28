@@ -8,7 +8,7 @@ import { isValidObjectId } from 'mongoose';
 export default class ProductValidator {
   private readonly body: any;
 
-  constructor(body: any) {
+  constructor(body: any = {}) {
     this.body = body;
   }
 

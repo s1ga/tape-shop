@@ -2,23 +2,9 @@ import { AppliedCoupon, Coupon, CouponType, NewCoupon } from '@/interfaces/coupo
 import coupons from '@/utils/generateCouponCode';
 import CouponValidator from '@/validation/coupon.validator';
 import { FullUser, User } from '@/interfaces/user';
-import storageKeys from '@/constants/storageKeys';
 import UserService from './user.service';
-import LocalStorageService from './storage.service';
 
 export default class CouponsService {
-  public static saveInStorage(coupon: AppliedCoupon): void {
-    LocalStorageService.set<AppliedCoupon>(storageKeys.Coupon, coupon);
-  }
-
-  public static getFromStorage(): AppliedCoupon | null {
-    return LocalStorageService.get<AppliedCoupon>(storageKeys.Coupon);
-  }
-
-  public static removeFromStorage(): void {
-    LocalStorageService.delete(storageKeys.Coupon);
-  }
-
   public static fromServer(body: any | any[]): Coupon | Coupon[] {
     const mapObject = (o: any) => ({
       _id: o._id.toString(),

@@ -46,18 +46,6 @@ export default class ShippingService {
     LocalStorageService.delete(storageKeys.ShippingRate);
   }
 
-  public static getDestinationFromStorage(): ShippingDestination | null {
-    return LocalStorageService.get<ShippingDestination>(storageKeys.ShippingDestination);
-  }
-
-  public static saveDestinationInStorage(destination: ShippingDestination): void {
-    LocalStorageService.set<ShippingDestination>(storageKeys.ShippingDestination, destination);
-  }
-
-  public static deleteDestinationFromStorage(): void {
-    LocalStorageService.delete(storageKeys.ShippingDestination);
-  }
-
   public static destinationFromServer(obj: any): ShippingDestination | null {
     if (!obj) return null;
     const destination: ShippingDestination = {
@@ -73,14 +61,5 @@ export default class ShippingService {
       destination.state = obj.state;
     }
     return destination;
-  }
-
-  public static rateFromServer(obj: any): ShippingRate | null {
-    if (!obj) return null;
-    return ({
-      service_name: obj.service_name,
-      service_code: obj.service_code,
-      total_price: obj.total_price,
-    });
   }
 }

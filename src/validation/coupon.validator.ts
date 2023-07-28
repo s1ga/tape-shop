@@ -9,7 +9,7 @@ export default class CouponValidator {
   private type: CouponType;
   private readonly nameLength: number = 3;
 
-  constructor(body: any) {
+  constructor(body: any = {}) {
     this.body = body;
     this.type = this.body?.type;
   }

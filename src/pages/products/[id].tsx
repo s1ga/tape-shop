@@ -13,7 +13,8 @@ import dbConnect from '@/utils/db';
 import ReviewService from '@/services/review.service';
 import { isValidObjectId } from 'mongoose';
 import LinkService from '@/services/link.service';
-import ProductHeader from '../../components/Product/ProductHeader';
+import { useCallback, useMemo } from 'react';
+import ProductHeader from '@/components/Product/ProductHeader';
 
 const Reviews = dynamic(
   () => import('@/components/Product/Reviews/Reviews'),
@@ -55,7 +56,11 @@ export default function ProductPage(
   { product, relatedProducts, reviews }:
     { product: Product, relatedProducts: ProductItemPreview[], reviews: Review[] },
 ) {
-  const tabs: Tab[] = generateTabs(product, reviews);
+  const onReviewAdded = useCallback((r: Review) => reviews.push(r), [reviews]);
+  const tabs: Tab[] = useMemo(
+    () => generateTabs(product, reviews, onReviewAdded),
+    [product, reviews, onReviewAdded],
+  );
 
   return (
     <>
@@ -130,10 +135,10 @@ export default function ProductPage(
   );
 }
 
-function generateTabs(product: Product, reviews: Review[]) {
+function generateTabs(product: Product, reviews: Review[], onReviewAdded: CallableFunction) {
   const approved = reviews.filter((r: Review) => r.isApproved && r.isChecked);
-  const tabs: Tab[] = [];
 
+  const tabs: Tab[] = [];
   tabs.push({
     id: 'descriptionTab',
     text: 'Description',
@@ -155,8 +160,8 @@ function generateTabs(product: Product, reviews: Review[]) {
       fetchedReviews={reviews}
       productId={product._id}
       productName={product.name}
+      onReviewAdded={onReviewAdded}
     />,
   });
-
   return tabs;
 }

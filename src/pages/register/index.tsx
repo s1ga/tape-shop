@@ -32,25 +32,17 @@ export default function Register() {
       </Head>
       <div className={`${styles.wrapper} container`}>
         {loading && <Loader />}
-        {(!loading && !user) && <Step1 setLoading={setLoading} onSuccess={(user: User) => setUser(user)} />}
-        {(!loading && user)
-          && <>
-            <h1 className="title">Verify account</h1>
-            <div>
-              Your account has been created. We have sent you an email with verification link.
-            </div>
-            <p>
-              Click on link to confirm your account and proceed with&nbsp;
-              <Link className={styles.verifyLink} href="/account">Log in</Link>.
-            </p>
-          </>
-        }
+        {(!loading && !user)
+          && <CreateAccount setLoading={setLoading} onSuccess={setUser} />}
+        {(!loading && user) && <VerifyAccount />}
       </div>
     </>
   );
 }
 
-function Step1({ setLoading, onSuccess }: { setLoading: CallableFunction, onSuccess: CallableFunction }) {
+function CreateAccount(
+  { setLoading, onSuccess }: { setLoading: CallableFunction, onSuccess: CallableFunction },
+) {
   const [validationMessage, setValidationMessage] = useState<string>('');
   const [confirmValidationMessage, setConfirmValidationMessage] = useState<string>('');
 
@@ -154,6 +146,21 @@ function Step1({ setLoading, onSuccess }: { setLoading: CallableFunction, onSucc
           <Link className={styles.link} href="/account">Log in</Link>
         </div>
       </div>
+    </>
+  );
+}
+
+function VerifyAccount() {
+  return (
+    <>
+      <h1 className="title">Verify account</h1>
+      <div>
+        Your account has been created. We have sent you an email with verification link.
+      </div>
+      <p>
+        Click on link to confirm your account and proceed with&nbsp;
+        <Link className={styles.verifyLink} href="/account">Log in</Link>.
+      </p>
     </>
   );
 }

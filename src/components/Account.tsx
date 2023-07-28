@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ToastService from '@/services/toast.service';
 import { User } from '@/interfaces/user';
 import { ServerData } from '@/interfaces/serverData';
@@ -35,7 +35,7 @@ export default function Account({ onLogout }: { onLogout: CallableFunction }) {
     getSessionCart();
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setLoading(true);
     fetch(USER_URL, {
       headers: {

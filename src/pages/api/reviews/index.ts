@@ -9,6 +9,7 @@ import Product from '@/models/Product';
 import sortingValue from '@/constants/sortingValues';
 import itemsPerPage from '@/constants/perPage';
 import HashHandlerService from '@/services/hash.service';
+import ReviewValidator from '@/validation/review.validator';
 
 type Response = {
   data: string | IReview | FullReview[];
@@ -97,7 +98,8 @@ export default async function handler(
       });
     } else if (method === httpMethods.post) {
       const fields = ReviewService.prepareFields(req.body);
-      const result = ReviewService.validate(fields);
+      const validator = new ReviewValidator(fields);
+      const result = validator.isAllValid();
 
       if (typeof result === 'string') {
         res.status(400).json({ data: result });

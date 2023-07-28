@@ -1,7 +1,7 @@
 import { faBasketShopping, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from '@/styles/modules/CartItem.module.scss';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useCartContext } from '@/context/cartContext';
 import { Cart, CartItem as ICartItem } from '@/interfaces/cart';
 import Link from 'next/link';
@@ -17,7 +17,7 @@ type CartDrawerProps = {
   addItems: CallableFunction;
 }
 
-export default function CartItem() {
+function CartItemMemo() {
   const [isDrawerOpened, setIsDrawerOpened] = useState(false);
   const { cart, addItems, removeItems } = useCartContext();
   const router = useRouter();
@@ -53,6 +53,9 @@ export default function CartItem() {
     </>
   );
 }
+
+const CartItem = memo(CartItemMemo);
+export default CartItem;
 
 function DrawerCart({ cart, removeItems, addItems }: CartDrawerProps) {
   const changeProductAmount = (item: ICartItem, amount: number, isDelete?: boolean): Promise<boolean> => {

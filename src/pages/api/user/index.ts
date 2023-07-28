@@ -6,6 +6,7 @@ import { User as IUser } from '@/interfaces/user';
 import HashHandlerService from '@/services/hash.service';
 import UserService from '@/services/user.service';
 import MailService from '@/services/mail.service';
+import UserValidator from '@/validation/user.validator';
 
 type Response = {
   data: string | IUser | IUser[];
@@ -53,7 +54,8 @@ export default async function handler(
       res.status(200).json({ data });
     } else if (method === httpMethods.post) {
       const { email, name, password } = req.body;
-      const validation = UserService.validate({ email, name, password });
+      const validator = new UserValidator({ email, name, password });
+      const validation = validator.isAllValid();
       if (typeof validation === 'string') {
         res.status(400).json({ data: validation });
         return;

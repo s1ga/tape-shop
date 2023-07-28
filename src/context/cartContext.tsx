@@ -10,7 +10,6 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from '@/styles/modules/Home.module.scss';
 import { AppliedCoupon } from '@/interfaces/coupon';
-import CouponsService from '@/services/coupons.service';
 import LinkService from '@/services/link.service';
 import httpMethods from '@/constants/httpMethods';
 import UserService from '@/services/user.service';
@@ -247,8 +246,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       cart: {
         ...customCart,
         items: (customCart.items || []).map(CartService.toServerCartItem),
-        coupon: CouponsService.getFromStorage()?._id,
-        shippingDestination: ShippingService.getDestinationFromStorage(),
       },
       userId: cipherText,
       iv,

@@ -1,6 +1,6 @@
 import { ProductItemPreview } from '@/interfaces/product/product';
 import styles from '@/styles/modules/Type.module.scss';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import Sorting from '@/components/ProductsSorting/ProductsSorting';
 import Head from 'next/head';
 import { Category } from '@/interfaces/category';
@@ -14,7 +14,7 @@ interface Props {
   typeName?: string;
 }
 
-export default function CategoryList({ products, category, typeId, typeName }: Props) {
+function CategoryListMemo({ products, category, typeId, typeName }: Props) {
   const [sortedProducts, setSortedProducts] = useState<ProductItemPreview[]>(products);
 
   const onSorting = (result: ProductItemPreview[]) => {
@@ -105,3 +105,6 @@ export default function CategoryList({ products, category, typeId, typeName }: P
     </>
   );
 }
+
+const CategoryList = memo(CategoryListMemo);
+export default CategoryList;

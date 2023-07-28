@@ -82,7 +82,7 @@ export default function Reset() {
                 <button className={styles.formBtn} type="submit">
                   Reset password
                 </button>
-                <button className={styles.link} onClick={() => back()}>
+                <button className={styles.link} onClick={back}>
                   Back
                 </button>
               </div>

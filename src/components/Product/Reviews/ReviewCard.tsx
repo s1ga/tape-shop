@@ -3,8 +3,9 @@ import Image from 'next/image';
 import styles from '@/styles/modules/Review.module.scss';
 import Rate from '@/components/Rate';
 import months from '@/constants/months';
+import { memo } from 'react';
 
-export default function ReviewCard({ review }: { review: Review }) {
+function ReviewCard({ review }: { review: Review }) {
   const formatDate = () => {
     const date = new Date(review.date);
     return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
@@ -37,3 +38,6 @@ export default function ReviewCard({ review }: { review: Review }) {
     </div>
   );
 }
+
+const ReviewCardMemo = memo(ReviewCard);
+export default ReviewCardMemo;
