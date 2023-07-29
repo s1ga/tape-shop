@@ -50,7 +50,7 @@ export default async function handler(
 
     const objectId = new Types.ObjectId(id as string);
     const foundCart = CartService.fromServer(
-      await populateCart(Cart.findOne<Record<string, string>>({ userId: objectId })),
+      await populateCart(Cart.findOne<Record<string, string>>({ userId: objectId }).lean()),
     );
     if (!foundCart) {
       res.status(404).json({ error: 'You don\'t have saved cart' });
@@ -66,7 +66,7 @@ export default async function handler(
       }
 
       const products = await Promise.all(
-        savedCart.items.map((i: ServerCartItem) => Product.findById<IProduct>(i.info)),
+        savedCart.items.map((i: ServerCartItem) => Product.findById<IProduct>(i.info).lean()),
       );
       const productsPreview = ProductService.toPreview(
         products.filter(Boolean) as IProduct[],
@@ -84,7 +84,7 @@ export default async function handler(
           items: (merged.items || []).map(CartService.toServerCartItem),
         },
         { new: true },
-      ));
+      ).lean());
       res.status(200).json({ data: CartService.refresh(CartService.fromServer(updated)) });
     } else {
       console.warn(`There is no such handler for HTTP method: ${method}`);

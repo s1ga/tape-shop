@@ -102,7 +102,7 @@ export default async function handler(
         return;
       }
 
-      const existed = await Coupon.findOne({ code: fields.code });
+      const existed = await Coupon.exists({ code: fields.code });
       if (existed) {
         res.status(422).json({ data: 'Coupon with provided code already exists' });
         return;

@@ -41,7 +41,7 @@ export default async function handler(
       }
       newCart.userId = encryptedUserId;
 
-      const foundCart = await Cart.findOne({ userId: encryptedUserId });
+      const foundCart = await Cart.exists({ userId: encryptedUserId }).lean();
       if (foundCart) {
         res.status(400).json({ error: 'Cart has already created for this user' });
         return;

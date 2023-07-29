@@ -49,7 +49,7 @@ export default class TypeService {
   }
 
   public static findAll(): Promise<Type[]> {
-    return TypeModel.find({});
+    return TypeModel.find({}).lean();
   }
 
   public static findById(id: string): Promise<Type> {

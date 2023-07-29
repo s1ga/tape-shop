@@ -33,7 +33,8 @@ export default async function handler(
       const categories = await Category
         .find({})
         .skip(toSkip)
-        .limit(limit);
+        .limit(limit)
+        .lean();
       const total = await Category.count();
 
       res.status(200).json({
@@ -57,7 +58,7 @@ export default async function handler(
         return;
       }
 
-      const existedCategory = await Category.findOne({ name: newName });
+      const existedCategory = await Category.exists({ name: newName });
       if (existedCategory) {
         res.status(400).json({ data: `Product category with name ${newName} is alredy exists` });
         return;

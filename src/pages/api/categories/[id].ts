@@ -28,7 +28,7 @@ export default async function handler(
     await dbConnect();
 
     const objectId = new Types.ObjectId(id as string);
-    const foundType = await Category.findById<Record<string, string>>(objectId);
+    const foundType = await Category.findById<Record<string, string>>(objectId).lean();
 
     if (!foundType) {
       res.status(404).json({ data: `There is no such product category with given ID: ${id}` });
@@ -59,7 +59,7 @@ export default async function handler(
         return;
       }
 
-      const existedCategory = await Category.findOne({ name: newName });
+      const existedCategory = await Category.exists({ name: newName });
       if (existedCategory) {
         res.status(400).json({ data: `Product category with name ${newName} is alredy exists` });
         return;

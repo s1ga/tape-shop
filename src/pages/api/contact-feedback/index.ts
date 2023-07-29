@@ -75,6 +75,7 @@ export default async function handler(
       }
 
       const feedbacks = await query
+        .lean()
         .skip(toSkip)
         .limit(limit)
         .exec();

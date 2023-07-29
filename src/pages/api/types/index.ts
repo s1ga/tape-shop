@@ -59,7 +59,7 @@ export default async function handler(
         return;
       }
 
-      const existedType = await Type.findOne({ id: generateId });
+      const existedType = await Type.exists({ id: generateId });
       if (existedType) {
         res.status(400).json({ data: `Product type with name ${name} is alredy exists` });
         return;

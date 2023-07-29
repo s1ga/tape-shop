@@ -61,7 +61,7 @@ export default async function handler(
         return;
       }
 
-      const candidate = await User.findOne({ email });
+      const candidate = await User.exists({ email });
       if (candidate) {
         res.status(422).json({ data: 'User already exists' });
         return;
