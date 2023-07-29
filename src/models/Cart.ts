@@ -11,12 +11,12 @@ const destinationSchema = new Schema<ShippingDestination>({
   country_code: { type: String, required: true },
   suburb: String,
   state: String,
-});
+}, { _id: false });
 
 const itemSchema = new Schema({
   total: { type: Number, required: true },
   info: { type: Schema.Types.ObjectId, ref: Product, required: true },
-});
+}, { _id: false });
 
 const CartSchema = new Schema<NewServerCart>({
   totalAmount: { type: Number, default: 0 },

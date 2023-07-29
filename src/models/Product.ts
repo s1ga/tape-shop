@@ -31,6 +31,7 @@ const ProductSchema = new Schema<ProductItem>({
   additionalInformation: [{
     caption: String,
     value: String,
+    _id: false,
   }],
 });
 

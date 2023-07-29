@@ -6,5 +6,5 @@ export interface ProductItemAdditional {
 }
 
 export function isProductItemAdditional(obj: any): obj is ProductItemAdditional {
-  return isValidString(obj.caption) && isValidString(obj.caption);
+  return isValidString(obj.caption) && isValidString(obj.value);
 }
