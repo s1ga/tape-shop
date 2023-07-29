@@ -21,6 +21,7 @@ import Backdrop from '@mui/material/Backdrop';
 import Loader from '@/components/Loader';
 import { ShippingDestination, ShippingRate, ShippingRatesResponse } from '@/interfaces/shippingRates';
 import EncryptionService from '@/services/encryption.service';
+import deepEqual from '@/utils/deepEqual';
 
 const COUPON_APPLY_CONTEXT_ERROR = 'coupon-context-error';
 const ADD_ITEMS_TOAST = 'add-items';
@@ -185,16 +186,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           rates = [...data.rates];
         }
 
-        const cartRes = await cartRequest(UserService.getSession(), httpMethods.patch, {
-          action: cartActions.Shipping,
-          shippingDestination: destination,
-        });
-        const cartData = await cartRes.json();
-        if (cartData.data) {
-          setCart(cartData.data);
-        }
-        if (!cartRes.ok) {
-          throw new Error(cartData.error);
+        if (!deepEqual(destination, cart.shippingDestination)) {
+          const cartRes = await cartRequest(UserService.getSession(), httpMethods.patch, {
+            action: cartActions.Shipping,
+            shippingDestination: destination,
+          });
+          const cartData = await cartRes.json();
+          if (cartData.data) {
+            setCart(cartData.data);
+          }
+          if (!cartRes.ok) {
+            throw new Error(cartData.error);
+          }
         }
       } catch (err: any) {
         console.error(err);
@@ -204,7 +207,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       }
       return rates;
     },
-    [],
+    [cart.shippingDestination],
   );
 
   const saveCartToMerge = useCallback(() => {
