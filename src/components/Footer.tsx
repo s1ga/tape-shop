@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from '@/styles/modules/Footer.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPhone, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faFacebookF, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { ReactNode, useEffect, useState } from 'react';
 import ScreenUtils from '@/utils/screen';
@@ -41,10 +41,10 @@ export default function Footer() {
           </Link>
 
           <section className={styles.section}>
-            <h3 className={styles.sectionTitle}>Availability:</h3>
+            {/* <h3 className={styles.sectionTitle}>Availability:</h3>
             <p className={styles.sectionText}>We are available on weekdays as follows:</p>
             <p className={styles.sectionText}>Monday – Thursday: 8.30 am – 5.00 pm</p>
-            <p className={styles.sectionText}>Friday: 8.30 am – 3.00 am</p>
+            <p className={styles.sectionText}>Friday: 8.30 am – 3.00 am</p> */}
             <ul className={styles.socialLinks}>
               <li>
                 <Link className={styles.socialLink}
@@ -77,9 +77,6 @@ export default function Footer() {
               <h3 className={styles.sectionTitle}>Usefull pages</h3>
               <ul className={styles.sectionList}>
                 <li>
-                  <Link className={styles.sectionLink} href="/usage">Usage</Link>
-                </li>
-                <li>
                   <Link className={styles.sectionLink} href="/advises">Painting tips</Link>
                 </li>
                 <li>
@@ -97,19 +94,11 @@ export default function Footer() {
               <h3 className={styles.sectionTitle}>Contact</h3>
               <ul className={styles.sectionList}>
                 <li>
-                  <a className={[styles.contactLink, styles.sectionLink].join(' ')}
-                    href="tel:+31 6 52088599">
-                    <FontAwesomeIcon className={styles.contactIcon}
-                      icon={faPhone} />
-                    <span>+31 6 52088599</span>
-                  </a>
-                </li>
-                <li>
-                  <a className={[styles.contactLink, styles.sectionLink].join(' ')}
-                    href="mailto:info@quiptaping.com">
+                  <a className={`${styles.contactLink} ${styles.sectionLink}`}
+                    href="mailto:quipnzau@gmail.com">
                     <FontAwesomeIcon className={styles.contactIcon}
                       icon={faEnvelope} />
-                    <span>info@quiptaping.com</span>
+                    <span>quipnzau@gmail.com</span>
                   </a>
                 </li>
               </ul>

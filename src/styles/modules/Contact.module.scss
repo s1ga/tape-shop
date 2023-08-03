@@ -1,50 +1,12 @@
 @import "../variables/colors";
 @import "../variables/base";
 
-.contact {
-  display: flex;
-  justify-content: space-between;
-}
-
 .contactForm {
-  width: 56%;
-}
-
-.contactInfo {
-  width: 35%;
-  justify-self: flex-end;
-}
-
-.contactText {
-  margin-bottom: $base-space-size-middle-plus;
+  width: 70%;
 }
 
 .form {
-  width: 80%;
-  margin-top: $base-space-size-medium;
-}
-
-.infoItem {
-  display: flex;
-  column-gap: $base-space-size-medium;
-  margin-top: $base-space-size-medium;
-}
-
-.infoTitle {
-  font-size: 24px;
-  line-height: 24px;
-  margin-bottom: $base-space-size-small;
-}
-
-.infoIcon {
-  width: $base-avatar-size-large;
-  height: $base-avatar-size-large;
-  border-radius: 50%;
-  background-color: $color-primary;
-  color: $color-white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  margin-top: $base-space-size-large;
 }
 
 .formItem {
@@ -110,31 +72,6 @@
   .form {
     width: 100%;
     text-align: left;
-  }
-
-  .contactInfo {
-    width: 100%;
-    margin-top: $base-space-size-large;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .infoItem {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0 0 $base-space-size-medium;
-    row-gap: $base-space-size-small;
-  }
-
-  .infoTitle {
-    font-size: 20px;
-    line-height: 20px;
-  }
-
-  .infoIcon {
-    width: $base-avatar-size-middle;
-    height: $base-avatar-size-middle;
+    margin-top: 0;
   }
 }

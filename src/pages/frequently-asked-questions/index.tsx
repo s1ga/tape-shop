@@ -99,9 +99,8 @@ export default function FrequentlyAskedQuestions({ isStandalone = true }: { isSt
               What tape widths can be applied with Quip tape dispensers?
             </summary>
             <p className={styles.questionText}>
-              QuiP® has tape dispensers for the appliance of tape up to 38mm,
-              available in one, 11/2 inch and 38mm.
-              In general de length of a tape is up to 50 – 60 meters (55 -65 yards)
+              QuiP® has tape dispensers for the appliance of tape up to 38mm.
+              In general de length of a tape is up to 50 – 60 meters.
             </p>
           </details>
           <details className={styles.question}>

@@ -1,7 +1,5 @@
 import Head from 'next/head';
 import styles from '@/styles/modules/Webshop.module.scss';
-import { useState } from 'react';
-import Sorting from '@/components/ProductsSorting/ProductsSorting';
 import ProductsList from '@/components/ProductsList/ProductsList';
 import ProductService from '@/services/product.service';
 import { Product, ProductItemPreview } from '@/interfaces/product/product';
@@ -23,11 +21,11 @@ export const getServerSideProps = async () => {
 };
 
 export default function Webshop({ products }: { products: ProductItemPreview[] }) {
-  const [sortedProducts, setSortedProducts] = useState<ProductItemPreview[]>(products);
+  // const [sortedProducts, setSortedProducts] = useState<ProductItemPreview[]>(products);
 
-  const onSorting = (result: Product[]) => {
-    setSortedProducts([...result]);
-  };
+  // const onSorting = (result: Product[]) => {
+  //   setSortedProducts([...result]);
+  // };
 
   return (
     <>
@@ -67,12 +65,12 @@ export default function Webshop({ products }: { products: ProductItemPreview[] }
       </Head>
       <section className="container">
         <h2 className={`${styles.productsTitle} title centered`}>Our products</h2>
-        {sortedProducts.length > 1
+        {/* {sortedProducts.length > 1
           && <div className={styles.productsSorting}>
             <Sorting value={sortedProducts} onChange={onSorting} />
           </div>
-        }
-        <ProductsList products={sortedProducts} />
+        } */}
+        <ProductsList products={products} />
       </section>
     </>
   );

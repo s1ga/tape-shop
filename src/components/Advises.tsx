@@ -74,7 +74,7 @@ export default function PaintingTips() {
           </p>
           <p>
             The ideal season for beginning a painting job is spring and summer.
-            And, the best temperature to start your work is at least 50°F.
+            And, the best temperature to start your work is at least 10°C.
           </p>
         </section>
         <section className={styles.advisesSection}>

@@ -221,8 +221,7 @@ export default function Disclaimer() {
             <p>
               You can change your mind about allowing us to use your information anytime by
               either sending us an E-mail to&nbsp;
-              <a className={styles.link} href="mailto:info@quiptaping.com">info@quiptaping.com</a>,
-              or by calling us at <a className={styles.link} href="tel:+310235443566">+31(0)235443566</a>.
+              <a className={styles.link} href="mailto:quipnzau@gmail.com">quipnzau@gmail.com</a>.
             </p>
             <p>For more information, go to the pages where the data was recorded.</p>
           </div>
@@ -232,8 +231,7 @@ export default function Disclaimer() {
             <p>
               You are authorized at any time to request the personal information
               we have about you free of cost. You can send us such a request by E-mail to&nbsp;
-              <a className={styles.link} href="mailto:info@quiptaping.com">info@quiptaping.com</a>,
-              or call us at <a className={styles.link} href="tel:+310235443566">+31(0)23 5443566</a>.
+              <a className={styles.link} href="mailto:quipnzau@gmail.com">quipnzau@gmail.com</a>.
             </p>
           </div>
 
@@ -246,14 +244,6 @@ export default function Disclaimer() {
             <p>
               In spite of all our efforts to maintain data integrity,
               if any information is false, we will correct it on your request.
-            </p>
-          </div>
-
-          <div className={styles.policyBlock}>
-            <h3 className={styles.policyBlockTitle}>External references</h3>
-            <p>
-              MYPRO web pages can contain links to web pages of other suppliers;
-              this data protection declaration does not extend to such web pages.
             </p>
           </div>
         </section>

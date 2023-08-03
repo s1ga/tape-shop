@@ -32,7 +32,7 @@ $card-width-mobile: 250px;
 
 .productsTitle {
   font-size: 34px;
-  margin-bottom: $base-space-size-large;
+  margin-bottom: $base-space-size-huge;
 }
 
 .product {
@@ -102,6 +102,7 @@ $card-width-mobile: 250px;
 @media screen and (max-width: 800px) {
   .productsTitle {
     font-size: 30px;
+    margin-bottom: $base-space-size-large;
   }
 
   .products {

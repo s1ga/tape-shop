@@ -1,13 +1,11 @@
-/* eslint-disable no-unused-vars */
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from '@/styles/modules/Header.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faChevronDown, faCheck, faChevronUp, faBars, faRectangleXmark,
+  faChevronDown, faChevronUp, faBars, faRectangleXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { MouseEvent, ReactNode, useEffect, useState } from 'react';
-import useElementOnScreen from '@/hooks/elementOnScreen';
 import { useRouter } from 'next/router';
 import { ProductTypeCard } from '@/interfaces/productTypeCard';
 import ConditionalWrapper from './ConditionalWrapper';
@@ -15,16 +13,15 @@ import CartItem from './CartItem';
 
 type ProductsDropdownProps = {
   isOpened: boolean;
-  isNotesVisible: boolean;
   types: ProductTypeCard[];
 }
 
 type BaseNavListProps = {
   isMobile?: boolean;
   isMobileMenuOpened?: boolean;
+  // eslint-disable-next-line no-unused-vars
   productsClickHandler: (e: MouseEvent) => void;
   isProductsOpened: boolean;
-  isNotesVisible: boolean;
   types: ProductTypeCard[];
 }
 
@@ -32,7 +29,6 @@ export default function Header({ types = [] }: { types: ProductTypeCard[] }) {
   const [isProductsOpened, setIsProductsOpened] = useState(false);
   const [isMobileProductsOpened, setIsMobileProductsOpened] = useState(false);
   const [isMobileMenuOpened, setIsMobileMenuOpened] = useState(false);
-  const [containerRef, isNotesVisible] = useElementOnScreen<HTMLDivElement>();
   const router = useRouter();
 
   const openProducts = (e: MouseEvent) => {
@@ -60,24 +56,6 @@ export default function Header({ types = [] }: { types: ProductTypeCard[] }) {
 
   return (
     <>
-      <div ref={containerRef} className={`${styles.notes} container`}>
-        <ul className={styles.notesList}>
-          <li className={styles.notesItem}>
-            <FontAwesomeIcon icon={faCheck} className={styles.notesIcon} />
-            <span className={styles.notesText} title="Ordered before 3 p.m., shipped the same day">
-              Ordered before 3 p.m., shipped the same day
-            </span>
-          </li>
-
-          <li className={styles.notesItem}>
-            <FontAwesomeIcon icon={faCheck} className={styles.notesIcon} />
-            <span className={styles.notesText} title="Global delivery">
-              Global delivery
-            </span>
-          </li>
-        </ul>
-      </div>
-
       <header className={`${styles.header} container`}>
         <Link className={styles.headerLogo} href="/">
           <Image
@@ -103,7 +81,6 @@ export default function Header({ types = [] }: { types: ProductTypeCard[] }) {
               productsClickHandler={openProducts}
               isProductsOpened={isProductsOpened}
               types={types}
-              isNotesVisible={isNotesVisible}
             />
             <li>
               <CartItem />
@@ -112,7 +89,7 @@ export default function Header({ types = [] }: { types: ProductTypeCard[] }) {
         </nav>
       </header>
 
-      <ProductsDropdown types={types} isNotesVisible={isNotesVisible} isOpened={isProductsOpened} />
+      <ProductsDropdown types={types} isOpened={isProductsOpened} />
 
       <BaseNavList
         isMobile={true}
@@ -120,22 +97,20 @@ export default function Header({ types = [] }: { types: ProductTypeCard[] }) {
         productsClickHandler={openMobileProducts}
         isProductsOpened={isMobileProductsOpened}
         types={types}
-        isNotesVisible={isNotesVisible}
       />
     </>
   );
 }
 
 function BaseNavList(
-  { isMobile = false, productsClickHandler, isProductsOpened, types, isNotesVisible, isMobileMenuOpened }
+  { isMobile = false, productsClickHandler, isProductsOpened, types, isMobileMenuOpened }
     : BaseNavListProps,
 ) {
   const listItemClassName = isMobile ? `${styles.navMobileItem} container bold` : styles.navItem;
   const wrapper = (children: ReactNode) => (
     <ul className={`
-      ${styles.navMobileList} 
+      ${styles.navMobileList}
       ${isMobileMenuOpened && styles.navMobileListOpen}
-      ${!isNotesVisible && styles.navMobileListFixed}
     `}>
       {children}
     </ul>
@@ -157,7 +132,6 @@ function BaseNavList(
         {
           isMobile && <ProductsDropdown
             types={types}
-            isNotesVisible={isNotesVisible}
             isOpened={isProductsOpened}
           />
         }
@@ -169,13 +143,12 @@ function BaseNavList(
   );
 }
 
-function ProductsDropdown({ isOpened, isNotesVisible, types }: ProductsDropdownProps) {
+function ProductsDropdown({ isOpened, types }: ProductsDropdownProps) {
   const cardClassName = types.length > 2 ? 'typeCardGrid3' : `typeCardGrid${types.length}`;
 
   return (
     <div className={`
       ${styles.headerProducts} 
-      ${!isNotesVisible && styles.headerProductsFixed}
       ${isOpened && styles.headerProductsOpen} container
     `}>
       <section className={styles.typeLinks}>

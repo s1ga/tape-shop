@@ -14,7 +14,7 @@ $copyright-text-color: #adadad;
 
 .footerContainer {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   column-gap: 20%;
 }
 
@@ -28,7 +28,7 @@ $copyright-text-color: #adadad;
 }
 
 .socialLinks {
-  margin-top: 40px;
+  // margin-top: 40px;
   display: flex;
   column-gap: $base-space-size-middle-plus;
 }
@@ -115,16 +115,16 @@ $copyright-text-color: #adadad;
     justify-content: center;
   }
 
-  .footerLogo {
-    margin-bottom: 16px;
-  }
+  // .footerLogo {
+  //   margin-bottom: 16px;
+  // }
 
   .sectionTitle {
     margin-bottom: 8px;
   }
 
   .socialLinks {
-    margin-top: 16px;
+    // margin-top: 16px;
     justify-content: center;
     margin-bottom: 40px;
   }
@@ -140,7 +140,7 @@ $copyright-text-color: #adadad;
   }
 
   .socialLinks {
-    margin-bottom: 24px;
+    // margin-bottom: 24px;
   }
 
   .contact {
