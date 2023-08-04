@@ -32,6 +32,7 @@ export default class UserService {
       name: body.name,
       email: body.email,
       password: body.password,
+      // orders: [],
     });
   }
 
@@ -41,6 +42,7 @@ export default class UserService {
       email,
       password,
       hash,
+      // orders: [],
     });
   }
 
@@ -52,6 +54,7 @@ export default class UserService {
       name: user.name,
       confirmed: user.confirmed,
       isAdmin: user.isAdmin,
+      orders: user.orders || [],
     });
   }
 }

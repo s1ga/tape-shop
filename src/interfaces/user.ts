@@ -5,6 +5,7 @@ export interface User {
   id: string;
   confirmed: boolean;
   isAdmin: boolean;
+  orders: string[];
 }
 
 export type FullUser = User & {
@@ -18,6 +19,6 @@ export type FullUser = User & {
 };
 
 export type NewUser = Omit<
-  FullUser, '_id' | 'id' | 'hash' | 'hashExp' | 'confirmed' | 'isAdmin' | 'appliedCoupons'
+  FullUser, '_id' | 'id' | 'hash' | 'hashExp' | 'confirmed' | 'isAdmin' | 'appliedCoupons' | 'orders'
 >
   & { hash?: string };

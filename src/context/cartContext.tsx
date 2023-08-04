@@ -240,7 +240,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const saveCartToMerge = useCallback(() => {
-    setSavedCart(cart);
+    if (!deepEqual(cart, CartService.initialCartState)) {
+      setSavedCart(cart);
+    }
   }, [cart]);
   const resetCart = useCallback(() => {
     const session = UserService.getSession() || '';
@@ -316,6 +318,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       const res = await cartRequest(session);
       const data = await res.json();
       if (res.status === statusCodes.NotFound) {
+        setSavedCart(null);
         createCartInDb(cart, session);
         return;
       }
@@ -361,11 +364,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const getSessionCart = (toCreate?: boolean) => {
+  const getSessionCart = async (toCreate?: boolean) => {
     if (toCreate || !UserService.getSession()) {
-      createCartInDb(CartService.initialCartState);
+      await createCartInDb(CartService.initialCartState);
     } else {
-      initCartFromDb();
+      await initCartFromDb();
     }
   };
 

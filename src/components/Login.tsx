@@ -22,7 +22,7 @@ export default function Login({ onLogin }: { onLogin: CallableFunction }) {
 
   useEffect(() => {
     const { hash } = router.query;
-    if (!hash) {
+    if (!hash || !router.isReady) {
       return;
     }
 
@@ -47,7 +47,7 @@ export default function Login({ onLogin }: { onLogin: CallableFunction }) {
         setLoading(false);
         router.replace(router.pathname, undefined, { shallow: true });
       });
-  }, []);
+  }, [router.isReady]);
 
   const removeSession = async () => {
     saveCartToMerge();

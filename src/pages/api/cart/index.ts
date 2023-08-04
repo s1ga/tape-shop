@@ -42,13 +42,22 @@ export default async function handler(
       }
       newCart.userId = encryptedUserId;
 
-      const foundCart = await Cart.exists({ userId: encryptedUserId }).lean();
+      const foundCart = await Cart.exists({ userId: encryptedUserId });
       if (foundCart) {
         res.status(400).json({ error: 'Cart has already created for this user' });
         return;
       }
 
-      const createdCart = await Cart.create(newCart);
+      await Cart.create(CartService.toServer(newCart));
+      const createdCart = await Cart
+        .findOne({ userId: encryptedUserId })
+        .populate({
+          path: 'items.info',
+          populate: {
+            path: 'categories',
+          },
+        })
+        .exec();
       res.status(201).json({ data: CartService.fromServer(createdCart) });
     } else {
       console.warn(`There is no such handler for HTTP method: ${method}`);
