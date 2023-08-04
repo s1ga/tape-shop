@@ -10,8 +10,12 @@ export default function AccountPage() {
   const [hasToken, setHasToken] = useState<boolean>(false);
 
   useEffect(() => {
-    const handler = (e: StorageEvent) => {
-      if (e.key === storageKeys.Auth) {
+    const handler = (e: StorageEvent | CustomEvent) => {
+      if (e instanceof CustomEvent) {
+        if (e.detail.key !== storageKeys.Auth) return;
+        setHasToken(false);
+      } else if (e instanceof StorageEvent) {
+        if (e.key !== storageKeys.Auth) return;
         const stringifiedValue = e.newValue || JSON.stringify('');
         setHasToken(!!JSON.parse(stringifiedValue));
       }

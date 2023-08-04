@@ -66,6 +66,11 @@ const cartRequest = (session: string, method: string = httpMethods.get, body: an
   return fetch(LinkService.apiCartLink(session), requestInit);
 };
 
+const resetAuthToken = () => {
+  const event = new CustomEvent('storage', { detail: { key: storageKeys.Auth } });
+  window.dispatchEvent(event);
+};
+
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<Cart>(defaultCartContext.cart);
   const [savedCart, setSavedCart] = useState<Cart | null>(null);
@@ -90,6 +95,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         if (res.status === statusCodes.Unauthorized) {
           UserService.deleteUserToken();
           UserService.deleteSession();
+          resetAuthToken();
           await createCartInDb(CartService.initialCartState);
         }
         if (!res.ok) {
@@ -124,6 +130,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         if (res.status === statusCodes.Unauthorized) {
           UserService.deleteUserToken();
           UserService.deleteSession();
+          resetAuthToken();
           await createCartInDb(CartService.initialCartState);
         }
         if (!res.ok) {
@@ -160,6 +167,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         if (res.status === statusCodes.Unauthorized) {
           UserService.deleteUserToken();
           UserService.deleteSession();
+          resetAuthToken();
           await createCartInDb(CartService.initialCartState);
         }
         if (!res.ok) {
@@ -213,6 +221,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           if (cartRes.status === statusCodes.Unauthorized) {
             UserService.deleteUserToken();
             UserService.deleteSession();
+            resetAuthToken();
             await createCartInDb(CartService.initialCartState);
           }
           if (!cartRes.ok) {
@@ -313,7 +322,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       if (res.status === statusCodes.Unauthorized) {
         UserService.deleteUserToken();
         UserService.deleteSession();
-        createCartInDb(CartService.initialCartState);
+        resetAuthToken();
+        await createCartInDb(CartService.initialCartState);
         setIsLoading(false);
         return;
       }
