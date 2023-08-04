@@ -43,7 +43,7 @@ export default async function handler(
     if (token) {
       const verify = await HashHandlerService.verifyToken(token);
       if (!verify) {
-        res.status(401).json({ error: 'Invalid access token' });
+        res.status(401).json({ error: 'Your token has expired, you were logged out' });
         return;
       }
     }
@@ -59,8 +59,9 @@ export default async function handler(
 
     if (method === httpMethods.patch) {
       const { savedCart }: { savedCart: NewServerCart } = req.body;
-      // TODO: validate cart
-      if (!savedCart) {
+
+      const validate = CartService.validate(savedCart);
+      if (typeof validate === 'string') {
         res.status(400).json({ data: foundCart, error: 'Provide valid cart to merge' });
         return;
       }

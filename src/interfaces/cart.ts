@@ -17,7 +17,7 @@ export interface CartContextProps {
   ) => Promise<ShippingRate[] | null>;
   getSessionCart: (toCreate?: boolean) => void;
   resetCart: () => void;
-  deleteCartFromDb: (session: string) => void;
+  deleteCartFromDb: (session: string) => Promise<void>;
   saveCartToMerge: () => void;
 }
 

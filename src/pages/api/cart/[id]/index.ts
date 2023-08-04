@@ -11,6 +11,7 @@ import ProductService from '@/services/product.service';
 import { Product as IProduct, ProductItemPreview } from '@/interfaces/product/product';
 import CouponValidator from '@/validation/coupon.validator';
 import HashHandlerService from '@/services/hash.service';
+import { isShippingDestination } from '@/interfaces/shippingRates';
 
 type Response = {
   data?: ICart;
@@ -45,7 +46,7 @@ export default async function handler(
     if (token) {
       const verify = await HashHandlerService.verifyToken(token);
       if (!verify) {
-        res.status(401).json({ error: 'Invalid access token' });
+        res.status(401).json({ error: 'Your token has expired, you were logged out' });
         return;
       }
     }
@@ -121,8 +122,11 @@ export default async function handler(
           break;
         }
         case cartActions.Shipping: {
-          // TODO: validate destination
-          newCart.shippingDestination = shippingDestination || null;
+          if (isShippingDestination(shippingDestination)) {
+            newCart.shippingDestination = shippingDestination || null;
+          } else {
+            res.status(400).json({ data: newCart, error: 'Provide valid shipping destination' });
+          }
           break;
         }
         default:

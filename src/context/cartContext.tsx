@@ -41,7 +41,7 @@ const defaultCartContext: CartContextProps = {
   applyShipping: () => Promise.resolve(null),
   getSessionCart: () => { },
   resetCart: () => { },
-  deleteCartFromDb: () => { },
+  deleteCartFromDb: () => Promise.resolve(),
   saveCartToMerge: () => { },
 };
 
@@ -87,6 +87,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           result = true;
           setCart(data.data);
         }
+        if (res.status === statusCodes.Unauthorized) {
+          UserService.deleteUserToken();
+          UserService.deleteSession();
+          await createCartInDb(CartService.initialCartState);
+        }
         if (!res.ok) {
           throw new Error(data.error);
         }
@@ -115,6 +120,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         if (data.data) {
           result = true;
           setCart(data.data);
+        }
+        if (res.status === statusCodes.Unauthorized) {
+          UserService.deleteUserToken();
+          UserService.deleteSession();
+          await createCartInDb(CartService.initialCartState);
         }
         if (!res.ok) {
           throw new Error(data.error);
@@ -146,6 +156,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         const data = await res.json();
         if (data.data) {
           setCart(data.data);
+        }
+        if (res.status === statusCodes.Unauthorized) {
+          UserService.deleteUserToken();
+          UserService.deleteSession();
+          await createCartInDb(CartService.initialCartState);
         }
         if (!res.ok) {
           throw new Error(data.error);
@@ -194,6 +209,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           const cartData = await cartRes.json();
           if (cartData.data) {
             setCart(cartData.data);
+          }
+          if (cartRes.status === statusCodes.Unauthorized) {
+            UserService.deleteUserToken();
+            UserService.deleteSession();
+            await createCartInDb(CartService.initialCartState);
           }
           if (!cartRes.ok) {
             throw new Error(cartData.error);
@@ -288,7 +308,16 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       const data = await res.json();
       if (res.status === statusCodes.NotFound) {
         createCartInDb(cart, session);
-      } else if (!res.ok) {
+        return;
+      }
+      if (res.status === statusCodes.Unauthorized) {
+        UserService.deleteUserToken();
+        UserService.deleteSession();
+        createCartInDb(CartService.initialCartState);
+        setIsLoading(false);
+        return;
+      }
+      if (!res.ok) {
         throw new Error(data.error);
       }
       let mergedCart: Cart = { ...data.data };

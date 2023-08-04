@@ -6,8 +6,9 @@ import { Product, ProductItemPreview } from '@/interfaces/product/product';
 import { formatPrice, roundPrice } from '@/utils/helpers';
 import { AppliedCoupon } from '@/interfaces/coupon';
 import couponType from '@/constants/coupon';
-import { isValidNumber, isValidString } from '@/utils/validTypes';
+import { isValidNumber } from '@/utils/validTypes';
 import { isShippingDestination } from '@/interfaces/shippingRates';
+import CouponValidator from '@/validation/coupon.validator';
 import ShippingService from './shipping.service';
 
 export default class CartService {
@@ -67,9 +68,6 @@ export default class CartService {
   }
 
   public static validate(fields: NewServerCart): boolean | string {
-    // if (fields.coupon && !isValidString(fields.coupon)) {
-    //   return 'Provide valid id of coupon';
-    // }
     if (!isValidNumber(fields.totalAmount) || fields.totalAmount < 0) {
       return 'Provide non-negative number for total amount';
     }
@@ -79,6 +77,12 @@ export default class CartService {
     if (fields.appliedCouponPrice
       && (!isValidNumber(fields.appliedCouponPrice) || fields.appliedCouponPrice < 0)) {
       return 'Provide non-negative number for coupon sale';
+    }
+    if (fields.coupon) {
+      const couponValidator = new CouponValidator(fields.coupon);
+      if (!couponValidator.isAllValid()) {
+        return 'Provide valid coupon information';
+      }
     }
     if (!Array.isArray(fields.items) || (fields.items.length && !fields.items.every(isServerCartItem))) {
       return 'Provide valid cart items';

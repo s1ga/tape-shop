@@ -27,9 +27,10 @@ export default async function handler(
         res.status(400).json({ error: 'Provide information about session' });
         return;
       }
-      // TODO: validate cart
+
       let newCart: Partial<ICart> = cart;
-      if (!cart) {
+      const validation = CartService.validate(cart);
+      if (!cart || typeof validation === 'string') {
         newCart = CartService.initialCartState;
       }
 
@@ -51,7 +52,7 @@ export default async function handler(
       res.status(201).json({ data: CartService.fromServer(createdCart) });
     } else {
       console.warn(`There is no such handler for HTTP method: ${method}`);
-      res.setHeader('Allow', [httpMethods.get, httpMethods.patch, httpMethods.delete]);
+      res.setHeader('Allow', [httpMethods.post]);
       res.status(405).json({ error: 'Method not allowed' });
     }
   } catch (error) {

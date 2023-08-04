@@ -49,9 +49,9 @@ export default function Login({ onLogin }: { onLogin: CallableFunction }) {
       });
   }, []);
 
-  const removeSession = () => {
+  const removeSession = async () => {
     saveCartToMerge();
-    deleteCartFromDb(UserService.getSession());
+    await deleteCartFromDb(UserService.getSession());
     UserService.deleteSession();
   };
 
@@ -75,7 +75,7 @@ export default function Login({ onLogin }: { onLogin: CallableFunction }) {
         throw new Error(data as string);
       }
 
-      removeSession();
+      await removeSession();
       UserService.setUserToken(data);
       onLogin();
     } catch (error: any) {
