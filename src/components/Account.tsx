@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { useEffect, useRef, useState } from 'react';
 import ToastService from '@/services/toast.service';
 import { User } from '@/interfaces/user';
 import { ServerData } from '@/interfaces/serverData';
@@ -8,13 +9,18 @@ import statusCodes from '@/constants/statusCodes';
 import UserService from '@/services/user.service';
 import ShippingService from '@/services/shipping.service';
 import { useCartContext } from '@/context/cartContext';
+import { Order } from '@/interfaces/order';
+import Loader from './Loader';
 
-const USER_URL = LinkService.apiUserLink();
+const OrdersList = dynamic(() => import('@/components/OrdersList'), { ssr: false });
+
 const ERROR_TOAST_ID = 'fetch-user-error';
 
 export default function Account({ onLogout }: { onLogout: CallableFunction }) {
-  const { getSessionCart, resetCart, setLoading } = useCartContext();
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const { getSessionCart, resetCart } = useCartContext();
   const [user, setUser] = useState<User>();
+  const userOrdersRef = useRef<Order[]>([]);
 
   const resetState = () => {
     resetCart();
@@ -36,30 +42,48 @@ export default function Account({ onLogout }: { onLogout: CallableFunction }) {
   };
 
   useEffect(() => {
-    setLoading(true);
-    fetch(USER_URL, {
-      headers: {
-        Authorization: UserService.getUserToken(),
-      },
-    })
-      .then(async (res: Response) => {
-        const { data }: ServerData<User | string> = await res.json();
-        if (res.status === statusCodes.Unauthorized) {
+    const fetchData = async () => {
+      const fetchUser = () => fetch(LinkService.apiUserLink(), {
+        headers: { Authorization: UserService.getUserToken() },
+      });
+      const fetchOrders = () => fetch(LinkService.apiOrders(), {
+        headers: { Authorization: UserService.getUserToken() },
+      });
+
+      try {
+        const [userRes, ordersRes] = await Promise.all([fetchUser(), fetchOrders()]);
+        const [userData, ordersData]:
+          [ServerData<User | string>, ServerData<Order[] | string>] = await Promise.all(
+            [userRes.json(), ordersRes.json()],
+          );
+        if ([userRes.status, ordersRes.status].includes(statusCodes.Unauthorized)) {
           logout();
         }
-        if (!res.ok) {
-          throw new Error(data as string);
+        if (!userRes.ok) {
+          throw new Error(userData.data as string);
+        } else if (!ordersRes.ok) {
+          throw new Error(ordersData.data as string);
         }
-        login(data as User);
-      })
-      .catch((error: any) => {
-        setLoading(false);
+
+        userOrdersRef.current = ordersData.data as Order[];
+        login(userData.data as User);
+      } catch (error: any) {
         console.error(error);
         ToastService.error(error.message as string, {
           toastId: ERROR_TOAST_ID,
         });
-      });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    setLoading(true);
+    fetchData();
   }, []);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <section>
@@ -67,9 +91,7 @@ export default function Account({ onLogout }: { onLogout: CallableFunction }) {
         Hello, {user?.name}
       </h2>
 
-      <div>
-        Content here
-      </div>
+      <OrdersList orders={userOrdersRef.current} />
 
       <button className={styles.formBtn} onClick={logout}>
         Log out

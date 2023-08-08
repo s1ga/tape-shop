@@ -58,6 +58,14 @@ export default class LinkService {
     return this.generateLink('orders/rates', true);
   }
 
+  public static apiOrders(): string {
+    return this.generateLink('orders', true);
+  }
+
+  public static apiOrderDetails(id: string): string {
+    return this.generateLink(`/orders/${id}/details`, true);
+  }
+
   public static apiApplyCouponLink(): string {
     return this.generateLink('coupons/apply', true);
   }
@@ -172,5 +180,9 @@ export default class LinkService {
 
   public static shippingRatesLink(): string {
     return this.generateLink('rates', true, this.shippingBaseUrl);
+  }
+
+  public static shippingOrdersLink(): string {
+    return this.generateLink('orders', true, this.shippingBaseUrl);
   }
 }

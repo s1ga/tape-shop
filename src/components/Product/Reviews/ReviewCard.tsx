@@ -2,15 +2,10 @@ import { Review } from '@/interfaces/review';
 import Image from 'next/image';
 import styles from '@/styles/modules/Review.module.scss';
 import Rate from '@/components/Rate';
-import months from '@/constants/months';
+import { formatDate } from '@/utils/helpers';
 import { memo } from 'react';
 
 function ReviewCard({ review }: { review: Review }) {
-  const formatDate = () => {
-    const date = new Date(review.date);
-    return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
-  };
-
   return (
     <div className={styles.reviewCard}>
       <Image
@@ -27,7 +22,9 @@ function ReviewCard({ review }: { review: Review }) {
           {review.isChecked
             && <>
               <span className={`${styles.reviewCardName} bold`}>{review.name}</span>
-              <time className={styles.reviewCardDate} dateTime={review.date}>{formatDate()}</time>
+              <time className={styles.reviewCardDate} dateTime={review.date}>
+                {formatDate(review.date)}
+              </time>
             </>
           }
           {!review.isChecked && <span>Your review is awaiting approval</span>}

@@ -35,7 +35,6 @@ const UserSchema = new Schema<FullUser>({
     id: String,
     amount: Number,
   }],
-  orders: [{ type: String, default: [] }],
 });
 
 const User = models.User || model('User', UserSchema);

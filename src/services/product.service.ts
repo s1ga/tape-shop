@@ -246,6 +246,15 @@ export default class ProductService {
     return mapObject(products);
   }
 
+  public static toPartialPreview(product: IProduct): Partial<ProductItemPreview> {
+    return ({
+      _id: product._id.toString(),
+      id: product._id.toString(),
+      name: product.name,
+      price: product.price,
+    });
+  }
+
   public static getByTypeCategories(typeId: string, categoryId: string) {
     return Product
       .find({

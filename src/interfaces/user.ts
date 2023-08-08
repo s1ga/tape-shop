@@ -5,7 +5,6 @@ export interface User {
   id: string;
   confirmed: boolean;
   isAdmin: boolean;
-  orders: string[];
 }
 
 export type FullUser = User & {

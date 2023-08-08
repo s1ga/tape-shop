@@ -1,3 +1,4 @@
+import months from '@/constants/months';
 import { ONLY_SPACES, PRICE_FORMATTER } from '@/constants/regex';
 import { Types } from 'mongoose';
 
@@ -15,6 +16,11 @@ export function formatPrice(num: number): string {
   const parts = num.toFixed(FRACTION_DIGITS).split('.');
   parts[0] = parts[0].replace(PRICE_FORMATTER, ' ');
   return parts.join('.');
+}
+
+export function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
 }
 
 export function equalsPrimitiveArrays(firstArray: any[], secondArray: any[]): boolean {
