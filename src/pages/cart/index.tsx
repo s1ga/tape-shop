@@ -34,6 +34,8 @@ import UserService from '@/services/user.service';
 import couponType from '@/constants/coupon';
 import styles from '@/styles/modules/Cart.module.scss';
 import deepEqual from '@/utils/deepEqual';
+import { useRouter } from 'next/router';
+import LoginRequiredModal from '@/components/LoginRequired';
 
 type CartTableProps = {
   isTablet: boolean;
@@ -54,6 +56,7 @@ type CartTotalProps = {
   defaultAddress: ShippingDestination | null;
   fetchShipping: (form: FormData) => void;
   onSelect: (rate: ShippingRate) => void;
+  handleCheckout: () => void;
   onReset: CallableFunction;
   couponText: string;
 }
@@ -71,7 +74,9 @@ export default function Cart() {
   const [selectedRate, setSelectedRate] = useState<ShippingRate>();
   const [addressForm, setAddressForm] = useState<ShippingDestination | null>();
   const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const initialAddress = useRef<ShippingDestination | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     setIsTablet(ScreenUtils.isTablet());
@@ -242,6 +247,18 @@ export default function Cart() {
     return text;
   }, [cart.items, cart.appliedCouponPrice, appliedCoupon]);
 
+  const handleCheckout = () => {
+    if (UserService.getUserToken()) {
+      router.push('/checkout');
+    } else {
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <>
       <Head>
@@ -281,9 +298,12 @@ export default function Cart() {
             onSelect={setSelectedRate}
             onReset={reset}
             couponText={couponText}
+            handleCheckout={handleCheckout}
           />
         }
       </section>
+
+      <LoginRequiredModal isOpen={isModalOpen} onClose={handleModalClose} />
     </>
   );
 }
@@ -492,7 +512,7 @@ function CartTable(
 }
 
 function CartTotal({ appliedCouponPrice, totalPrice, fetchShipping, onSelect, selectedRate,
-  shippingRates, defaultAddress, isTablet, onReset, couponText }: CartTotalProps) {
+  shippingRates, defaultAddress, isTablet, onReset, couponText, handleCheckout }: CartTotalProps) {
   const [currentAddress, setCurrentAddress] = useState<string>('');
 
   useEffect(() => {
@@ -714,7 +734,7 @@ function CartTotal({ appliedCouponPrice, totalPrice, fetchShipping, onSelect, se
           </tr>
           <tr>
             <td colSpan={2}>
-              <button className={styles.cartTableBtn}>
+              <button onClick={handleCheckout} className={styles.cartTableBtn}>
                 Proceed to checkout
               </button>
             </td>

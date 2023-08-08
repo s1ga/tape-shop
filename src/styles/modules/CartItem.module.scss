@@ -116,6 +116,7 @@ $border-color: #69727d;
   transition: opacity .3s ease-out;
 
   &:hover {
+    cursor: pointer;
     opacity: .85;
   }
 }

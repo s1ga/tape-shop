@@ -8,17 +8,21 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { formatPrice, roundPrice } from '@/utils/helpers';
+import UserService from '@/services/user.service';
 import Drawer from './Drawer';
 import AmountHandler from './AmountHandler';
+import LoginRequiredModal from './LoginRequired';
 
 type CartDrawerProps = {
   cart: Cart;
   removeItems: CallableFunction;
   addItems: CallableFunction;
+  handleCheckout: () => void;
 }
 
 function CartItemMemo() {
   const [isDrawerOpened, setIsDrawerOpened] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { cart, addItems, removeItems } = useCartContext();
   const router = useRouter();
 
@@ -32,6 +36,18 @@ function CartItemMemo() {
       router.events.off('routeChangeComplete', handleRouteChange);
     };
   }, [router]);
+
+  const handleCheckout = () => {
+    if (UserService.getUserToken()) {
+      router.push('/checkout');
+    } else {
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <>
@@ -48,8 +64,11 @@ function CartItemMemo() {
           cart={cart}
           addItems={addItems}
           removeItems={removeItems}
+          handleCheckout={handleCheckout}
         />
       </Drawer>
+
+      <LoginRequiredModal isOpen={isModalOpen} onClose={handleModalClose} />
     </>
   );
 }
@@ -57,7 +76,7 @@ function CartItemMemo() {
 const CartItem = memo(CartItemMemo);
 export default CartItem;
 
-function DrawerCart({ cart, removeItems, addItems }: CartDrawerProps) {
+function DrawerCart({ cart, removeItems, addItems, handleCheckout }: CartDrawerProps) {
   const changeProductAmount = (item: ICartItem, amount: number, isDelete?: boolean): Promise<boolean> => {
     const func = (isDelete || amount === 0) ? removeItems : addItems;
     return func(item.info);
@@ -113,9 +132,9 @@ function DrawerCart({ cart, removeItems, addItems }: CartDrawerProps) {
         <Link href="/cart" className={styles.cardDrawerBtn}>
           View cart
         </Link>
-        <Link href="/checkout" className={styles.cardDrawerBtn}>
+        <button onClick={handleCheckout} className={styles.cardDrawerBtn}>
           Checkout
-        </Link>
+        </button>
       </div>
     </div>
   );
