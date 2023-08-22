@@ -2,11 +2,15 @@ import { memo, useRef, useState } from 'react';
 import { Order, OrderItem } from '@/interfaces/order';
 import { formatDate, formatPrice } from '@/utils/helpers';
 import styles from '@/styles/modules/Order.module.scss';
+import trackingStatuses from '@/constants/trackingStatuses';
 import OrderDetailsModal from './OrderDetailsModal';
+import OrderReturnModal from './OrderReturnModal';
 
 function OrdersListComponent({ orders }: { orders: Order[] }) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isReturnModalOpen, setIsReturnModalOpen] = useState<boolean>(false);
   const modalOrderRef = useRef<Order>();
+  const modalReturnOrderRef = useRef<string>();
 
   if (!orders?.length) {
     return <div>You have no active or shipped orders</div>;
@@ -19,6 +23,19 @@ function OrdersListComponent({ orders }: { orders: Order[] }) {
   const onModalOpen = (order: Order) => {
     modalOrderRef.current = order;
     setIsModalOpen(true);
+  };
+
+  const onReturnModalClose = () => {
+    setIsReturnModalOpen(false);
+  };
+
+  const onReturnModalOpen = () => {
+    setIsReturnModalOpen(true);
+  };
+
+  const createReturn = (orderId: string) => {
+    modalReturnOrderRef.current = orderId;
+    onReturnModalOpen();
   };
 
   return (
@@ -58,6 +75,13 @@ function OrdersListComponent({ orders }: { orders: Order[] }) {
                     </a>
                   </div>
                 }
+                {order.status === trackingStatuses.Delivered
+                  && <div className={styles.orderItemBlock}>
+                    <button className={styles.link} onClick={() => createReturn(order.orderId)}>
+                      Make a return
+                    </button>
+                  </div>
+                }
               </div>
               <div className={styles.orderItemBlock}>
                 <span className="bold">Items</span>
@@ -84,6 +108,12 @@ function OrdersListComponent({ orders }: { orders: Order[] }) {
         onClose={onModalClose}
         orderId={modalOrderRef.current?.orderId || ''}
         orderTotal={modalOrderRef.current?.total || 0}
+      />
+
+      <OrderReturnModal
+        isOpen={isReturnModalOpen}
+        onClose={onReturnModalClose}
+        orderId={modalReturnOrderRef.current || ''}
       />
     </>
   );

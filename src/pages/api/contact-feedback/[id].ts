@@ -51,7 +51,7 @@ export default async function handler(
       }
 
       const updated = await ContactFeedback.findByIdAndUpdate(objectId, { reviewed }, { new: true });
-      res.status(201).json({ data: ContactFeedbackService.fromServer(updated) as IContactFeedback });
+      res.status(200).json({ data: ContactFeedbackService.fromServer(updated) as IContactFeedback });
     } else if (method === httpMethods.delete) {
       await ContactFeedback.findByIdAndDelete(objectId);
       res.status(200).json({ data: 'Contact feedback has been sucessfully deleted' });

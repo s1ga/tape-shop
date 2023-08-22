@@ -23,6 +23,12 @@
   }
 }
 
+.formLabelModal {
+  color: $color-text;
+  font-size: calc(100% - 1px);
+  text-align: left;
+}
+
 .formInput {
   background-color: #fff;
   color: $color-text;

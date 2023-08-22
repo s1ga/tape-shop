@@ -66,6 +66,10 @@ export default class LinkService {
     return this.generateLink(`/orders/${id}/details`, true);
   }
 
+  public static apiOrderReturn(id: string): string {
+    return this.generateLink(`/orders/${id}/return`, true);
+  }
+
   public static apiApplyCouponLink(): string {
     return this.generateLink('coupons/apply', true);
   }

@@ -1,7 +1,8 @@
-import { NewOrder, Order, PreparedOrder } from '@/interfaces/order';
+import { NewOrder, Order, PreparedOrder, ReturnedOrder } from '@/interfaces/order';
 import { ShippingOrder } from '@/interfaces/shippingOrders';
 import { Product, ProductItemPreview } from '@/interfaces/product/product';
 import ProductService from './product.service';
+import UserService from './user.service';
 
 export default class OrderService {
   public static fromServer(fields: any, products: Product[]): Order {
@@ -18,6 +19,19 @@ export default class OrderService {
       status: fields.status,
       trackingUrl: fields.trackingUrl,
       trackingNumber: fields.trackingNumber,
+    });
+  }
+
+  public static returnedFromServer(fields: any): ReturnedOrder {
+    return ({
+      _id: fields._id.toString(),
+      id: fields.orderId,
+      orderId: fields.orderId,
+      reason: fields.reason,
+      message: fields.message,
+      status: fields.status,
+      date: fields.date,
+      user: UserService.fromServer(fields.user),
     });
   }
 

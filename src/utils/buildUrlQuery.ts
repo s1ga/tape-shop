@@ -74,6 +74,9 @@ export default function buildUrlQuery(params: GetListParams): string {
   if (params.filter.email) {
     query.set('email', params.filter.email);
   }
+  if (params.filter.status) {
+    query.set('status', params.filter.status);
+  }
   if (params.filter.rating?.length) {
     query.set('rating', JSON.stringify(params.filter.rating));
   }

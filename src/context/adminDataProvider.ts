@@ -1,7 +1,9 @@
 import httpMethods from '@/constants/httpMethods';
 import getDomain from '@/utils/getDomain';
 import ServerError from '@/utils/serverError';
-import { CreateParams, DataProvider, GetOneParams, UpdateManyParams, UpdateParams } from 'react-admin';
+import {
+  CreateParams, DataProvider, GetListParams, GetOneParams, UpdateManyParams, UpdateParams,
+} from 'react-admin';
 import { ServerData } from '@/interfaces/serverData';
 import LocalStorageService from '@/services/storage.service';
 import storageKeys from '@/constants/storageKeys';
@@ -16,6 +18,15 @@ import { User } from '@/interfaces/user';
 
 const BASE_URL = `${getDomain()}/api`;
 
+const buildGetUrl = (resource: string, params: GetListParams) => {
+  if (resource === adminResourceMap.returnedOrders) {
+    return `${BASE_URL}/orders?returned=true&${buildUrlQuery(params)}`;
+  }
+
+  const path: string = resource === adminResourceMap.users ? `${resource}/all` : resource;
+  return `${BASE_URL}/${path}?${buildUrlQuery(params)}`;
+};
+
 const thenFunc = async (res: Response) => {
   const data = await res.json();
   if (!res.ok) {
@@ -25,13 +36,17 @@ const thenFunc = async (res: Response) => {
 };
 
 const updateMutation = async (resource: string, params: UpdateParams<any>) => {
-  console.log(resource, params);
   const token = LocalStorageService.get<string>(storageKeys.AdminAuth) || '';
-  const setRequest = (body: any) => new Request(`${BASE_URL}/${resource}/${params.id}`, {
-    method: httpMethods.patch,
-    body,
-    headers: new Headers({ Authorization: token }),
-  });
+  const setRequest = (body: any) => {
+    const url = resource === adminResourceMap.returnedOrders
+      ? `${BASE_URL}/orders/${params.id}/return`
+      : `${BASE_URL}/${resource}/${params.id}`;
+    return new Request(url, {
+      method: httpMethods.patch,
+      body,
+      headers: new Headers({ Authorization: token }),
+    });
+  };
   switch (resource) {
     case adminResourceMap.categories: {
       const body: Record<string, string> = {};
@@ -119,6 +134,12 @@ const updateMutation = async (resource: string, params: UpdateParams<any>) => {
       request.headers.set('Content-Type', 'Application/json');
       return fetch(request).then(thenFunc);
     }
+    case adminResourceMap.returnedOrders: {
+      const { status } = params.data;
+      const request = setRequest(JSON.stringify({ status }));
+      request.headers.set('Content-Type', 'Application/json');
+      return fetch(request).then(thenFunc);
+    }
     default:
       console.warn(`No handler for resource ${resource}`);
       return Promise.reject();
@@ -126,7 +147,6 @@ const updateMutation = async (resource: string, params: UpdateParams<any>) => {
 };
 
 const updateManyMutation = async (resource: string, params: UpdateManyParams) => {
-  console.log(resource, params);
   const token = LocalStorageService.get<string>(storageKeys.AdminAuth) || '';
   switch (resource) {
     case adminResourceMap.feedback: {
@@ -249,10 +269,17 @@ const createMutation = async (resource: string, params: CreateParams) => {
 
 const getOneMutation = (resource: string, params: GetOneParams<any>) => {
   const headers = new Headers();
-  if ([adminResourceMap.reviews, adminResourceMap.coupons, adminResourceMap.feedback].includes(resource)) {
+  if ([
+    adminResourceMap.reviews, adminResourceMap.coupons,
+    adminResourceMap.feedback, adminResourceMap.returnedOrders,
+  ].includes(resource)) {
     headers.set('Authorization', LocalStorageService.get<string>(storageKeys.AdminAuth) || '');
   }
-  return fetch(`${BASE_URL}/${resource}/${params.id}`, { headers })
+
+  const url = resource === adminResourceMap.returnedOrders
+    ? `${BASE_URL}/orders/${params.id}/return`
+    : `${BASE_URL}/${resource}/${params.id}`;
+  return fetch(url, { headers })
     .then(thenFunc)
     .then((data: ServerData<any>) => {
       const updated = { ...data };
@@ -285,12 +312,13 @@ const dataProvider: DataProvider = {
   getList: (resource, params) => {
     const headers = new Headers();
     if ([
-      adminResourceMap.reviews, adminResourceMap.coupons, adminResourceMap.feedback, adminResourceMap.users,
+      adminResourceMap.reviews, adminResourceMap.coupons, adminResourceMap.feedback,
+      adminResourceMap.users, adminResourceMap.returnedOrders,
     ].includes(resource)) {
       headers.set('Authorization', LocalStorageService.get<string>(storageKeys.AdminAuth) || '');
     }
-    const path = adminResourceMap.users === resource ? `${resource}/all` : resource;
-    return fetch(`${BASE_URL}/${path}?${buildUrlQuery(params)}`, {
+
+    return fetch(buildGetUrl(resource, params), {
       headers,
     }).then(thenFunc);
   },
@@ -302,7 +330,10 @@ const dataProvider: DataProvider = {
   create: createMutation,
   delete: (resource, params) => {
     const token = LocalStorageService.get<string>(storageKeys.AdminAuth) || '';
-    const request = new Request(`${BASE_URL}/${resource}/${params.id}`, {
+    const url = resource === adminResourceMap.returnedOrders
+      ? `${BASE_URL}/orders/${params.id}/return`
+      : `${BASE_URL}/${resource}/${params.id}`;
+    const request = new Request(url, {
       method: httpMethods.delete,
       headers: new Headers({ Authorization: token }),
     });
@@ -310,7 +341,10 @@ const dataProvider: DataProvider = {
   },
   deleteMany: async (resource, params) => {
     const token = LocalStorageService.get<string>(storageKeys.AdminAuth) || '';
-    const request = (id: any) => fetch(new Request(`${BASE_URL}/${resource}/${id}`, {
+    const url = (id: string) => (resource === adminResourceMap.returnedOrders
+      ? `${BASE_URL}/orders/${id}/return`
+      : `${BASE_URL}/${resource}/${id}`);
+    const request = (id: any) => fetch(new Request(url(id), {
       method: httpMethods.delete,
       headers: new Headers({ Authorization: token }),
     })).then(thenFunc).then(({ data }: ServerData<Type>) => data._id);
