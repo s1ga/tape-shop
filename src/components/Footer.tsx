@@ -126,11 +126,10 @@ export default function Footer() {
       <div className={`container ${styles.copyright}`}>
         <div>&copy; All rights reserved</div>
         <div>
-          Created by&nbsp;
           <Link className={styles.copyrightLink}
             target="_blank"
             href="https://www.linkedin.com/in/siarhei-kharlanau">
-            Siarhei Kharlanau
+            Site developing
           </Link>
         </div>
       </div>

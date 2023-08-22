@@ -7,6 +7,7 @@ import styles from '@/styles/modules/Product.module.scss';
 import Link from 'next/link';
 import { FunctionComponent, memo, useRef } from 'react';
 import { CartContextProps } from '@/interfaces/cart';
+import { formatPrice } from '@/utils/helpers';
 import AmountHandler from '../AmountHandler';
 
 interface Props {
@@ -61,7 +62,7 @@ const ProductHeader = withContext(({ product, addItems }: PropsWithContext) => {
               ))}
             </div>
           </div>
-          <div className={`${styles.productHeaderPrice} bold`}>$ {product.price}</div>
+          <div className={`${styles.productHeaderPrice} bold`}>$ {formatPrice(product.price)}</div>
           {(product.availability ?? 0) > 0
             && <div><span className="bold">Availability: </span>{product.availability} in stock</div>}
           {typeof product.availability === 'number' && product.availability === 0
