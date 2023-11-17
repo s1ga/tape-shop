@@ -162,7 +162,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId, orderTotal
                     {!!i.tracking_number
                       && <a href={`${i.tracking_url}${i.tracking_number}`}
                         className={styles.link}
-                        target="_blank">
+                        target="_blank" rel="noopener">
                         Track this package
                       </a>
                     }

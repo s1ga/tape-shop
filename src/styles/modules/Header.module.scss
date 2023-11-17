@@ -40,7 +40,7 @@ $header-mobile-height: 70px;
   color: $color-white;
 }
 
-.navList li:hover,
+.navList li:not(.navIcon):hover,
 .navItem:hover {
   cursor: pointer;
   color: $color-primary;

@@ -2,7 +2,7 @@
 import { NOT_DIGIT } from '@/constants/regex';
 import { Product } from '@/interfaces/product/product';
 import styles from '@/styles/modules/Product.module.scss';
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 
 const enum AmountActions {
   Add = 'add',
@@ -28,11 +28,12 @@ export default function AmountHandler({
   const [amount, setAmount] = useState<number>(1);
   const isDeleteRef = useRef<boolean>();
   const oldAmountValue = useRef<number>(1);
+  const outOfStock = useMemo(() => availability === 0, [availability]);
 
   useEffect(() => {
-    isDeleteRef.current = undefined;
-    setAmount(initialValue);
-  }, [initialValue]);
+    isDeleteRef.current = outOfStock ? true : undefined;
+    setAmount(outOfStock ? 0 : initialValue);
+  }, [initialValue, outOfStock]);
 
   useEffect(() => {
     if (isDeleteRef.current === undefined) {
@@ -94,23 +95,22 @@ export default function AmountHandler({
   return (
     <div className={styles.productHeaderCartActions}>
       <button
-        disabled={amount <= 0}
+        disabled={outOfStock || amount <= 0}
         onClick={() => amountClick(AmountActions.Remove)}
         className={`${styles.productHeaderActionBtn} ${miniView && styles.productHeaderActionBtnMini}`}>
         -
       </button>
       <input
         type="text"
-        readOnly={readonly}
+        readOnly={readonly || outOfStock}
         className={`${styles.productHeaderInput} ${miniView && styles.productHeaderInputMini}`}
         value={amount}
-        max={availability ?? undefined}
         inputMode="numeric"
         name="amount"
         aria-label="Amount"
         onInput={onInput} />
       <button
-        disabled={!!availability && amount >= availability}
+        disabled={outOfStock || (!!availability && amount >= availability)}
         onClick={() => amountClick(AmountActions.Add)}
         className={`${styles.productHeaderActionBtn} ${miniView && styles.productHeaderActionBtnMini}`}>
         +

@@ -71,12 +71,14 @@ export default function Header({ types = [] }: { types: ProductTypeCard[] }) {
 
         <nav className={styles.nav}>
           <ul className={styles.navList}>
-            <FontAwesomeIcon
-              className={`${styles.navIcon} ${styles.navBurgerIcon}`}
-              icon={isMobileMenuOpened ? faRectangleXmark : faBars}
-              onClick={() => setIsMobileMenuOpened((state: boolean) => !state)}
-              size="xl"
-            />
+            <li className={`${styles.navIcon} ${styles.navBurgerIcon}`}>
+              <FontAwesomeIcon
+                className={`${styles.navIcon} ${styles.navBurgerIcon}`}
+                icon={isMobileMenuOpened ? faRectangleXmark : faBars}
+                onClick={() => setIsMobileMenuOpened((state: boolean) => !state)}
+                size="xl"
+              />
+            </li>
             <BaseNavList
               productsClickHandler={openProducts}
               isProductsOpened={isProductsOpened}

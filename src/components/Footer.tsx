@@ -40,7 +40,7 @@ export default function Footer() {
             />
           </Link>
 
-          <section className={styles.section}>
+          <div className={styles.section}>
             {/* <h3 className={styles.sectionTitle}>Availability:</h3>
             <p className={styles.sectionText}>We are available on weekdays as follows:</p>
             <p className={styles.sectionText}>Monday – Thursday: 8.30 am – 5.00 pm</p>
@@ -48,14 +48,14 @@ export default function Footer() {
             <ul className={styles.socialLinks}>
               <li>
                 <Link className={styles.socialLink}
-                  target="_blank"
+                  target="_blank" rel="noopener"
                   href="https://www.facebook.com/Quiptaping">
                   <FontAwesomeIcon icon={faFacebookF} size="xl" />
                 </Link>
               </li>
               <li>
                 <Link className={styles.socialLink}
-                  target="_blank"
+                  target="_blank" rel="noopener"
                   href="https://www.youtube.com/channel/UCkbb-oAlw9vax9_1w7l3-2Q">
                   <FontAwesomeIcon icon={faYoutube} size="xl" />
                 </Link>
@@ -63,12 +63,12 @@ export default function Footer() {
               <li>
                 <Link className={styles.socialLink}
                   href="https://www.instagram.com/quiptaping"
-                  target='_blank'>
+                  target='_blank' rel="noopener">
                   <FontAwesomeIcon icon={faInstagram} size="xl" />
                 </Link>
               </li>
             </ul>
-          </section>
+          </div>
         </div>
 
         <ConditionalWrapper condition={isTablet} wrapper={wrapperFunction}>
@@ -127,7 +127,7 @@ export default function Footer() {
         <div>&copy; All rights reserved</div>
         <div>
           <Link className={styles.copyrightLink}
-            target="_blank"
+            target="_blank" rel="noopener"
             href="https://www.linkedin.com/in/siarhei-kharlanau">
             Site developing
           </Link>

@@ -8,6 +8,7 @@ module.exports = withBundleAnalyzer({
   experimental: {
     largePageDataBytes: 128 * 1000 * 5,
   },
+  compress: true,
   images: {
     remotePatterns: [
       {

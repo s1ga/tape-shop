@@ -68,7 +68,7 @@ function OrdersListComponent({ orders }: { orders: Order[] }) {
                 {!!order.trackingNumber
                   && <div className={styles.orderItemBlock}>
                     <a className={styles.link}
-                      target="_blank"
+                      target="_blank" rel="noopener"
                       href={`${order.trackingUrl}${order.trackingNumber}`}
                     >
                       Track your package

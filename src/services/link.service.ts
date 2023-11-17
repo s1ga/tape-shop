@@ -139,7 +139,7 @@ export default class LinkService {
   }
 
   public static productLink(id: string): string {
-    return this.generateLink(`product/${id}`);
+    return this.generateLink(`products/${id}`);
   }
 
   public static returnPolicyLink(): string {
