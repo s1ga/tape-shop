@@ -2,6 +2,7 @@ import TapeInsctructions from '@/components/TapeInstructions';
 import FrequentlyAskedQuestions from '@/pages/frequently-asked-questions';
 import LinkService from '@/services/link.service';
 import styles from '@/styles/modules/UserInstructions.module.scss';
+import { userInstructionsJsonLd } from '@/utils/jsonLd';
 import Head from 'next/head';
 
 export default function UserInstructions() {
@@ -64,6 +65,7 @@ export default function UserInstructions() {
           name="twitter:image"
           content={`${process.env.NEXT_PUBLIC_DOMAIN}/images/instructions/step1.jpg`}
         />
+        <script type="application/ld+json" dangerouslySetInnerHTML={userInstructionsJsonLd()} />
       </Head>
       <div className={styles.instructions}>
         <div className={`container ${styles.instructionsBlock}`}>

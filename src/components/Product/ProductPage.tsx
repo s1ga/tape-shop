@@ -11,6 +11,7 @@ import LinkService from '@/services/link.service';
 import { useCallback, useMemo } from 'react';
 import ProductHeader from '@/components/Product/ProductHeader';
 import Reviews from '@/components/Product/Reviews/Reviews';
+import { productJsonLs } from '@/utils/jsonLd';
 
 export default function ProductPage(
   { product, relatedProducts, reviews }:
@@ -73,6 +74,7 @@ export default function ProductPage(
           property="twitter:image"
           content={product.images[0]}
         />
+        <script type="application/ld+json" dangerouslySetInnerHTML={productJsonLs(product)} />
       </Head>
 
       <div className={`${styles.productContainer} container`}>

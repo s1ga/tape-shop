@@ -1,5 +1,6 @@
 import LinkService from '@/services/link.service';
 import styles from '@/styles/modules/UserInstructions.module.scss';
+import { faqJsonLd } from '@/utils/jsonLd';
 import Head from 'next/head';
 
 // TODO: Create accordion item instead of details tag
@@ -58,6 +59,7 @@ export default function FrequentlyAskedQuestions({ isStandalone = true }: { isSt
             time without glue residue. Very nice if you have spent many hours masking and preparing.
             Good tape pays for itself quickly."
           />
+          <script type="application/ld+json" dangerouslySetInnerHTML={faqJsonLd()} />
         </Head>
       }
       <article className={containerClassName}>
