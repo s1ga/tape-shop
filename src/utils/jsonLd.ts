@@ -22,10 +22,10 @@ export function faqJsonLd() {
             "name": "Things to know when applying tape?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": <p>Depending on what Quip tape dispenser you are using also smaller bandwidth of tapes cab
+              "text": "<p>Depending on what Quip tape dispenser you are using also smaller bandwidth of tapes cab
               be applies and when required you can determine the distance from appliance yourself.
               Importnat are tapewidth, surface, adhesion strength and durability.
-              QuiP taping has put these in a quadrant. so that you can select the best suitable tape.</p>
+              QuiP taping has put these in a quadrant. so that you can select the best suitable tape.</p>"
             }
           },
           {
@@ -33,8 +33,8 @@ export function faqJsonLd() {
             "name": "What tape widths can be applied with Quip tape dispensers?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": <p>QuiP® has tape dispensers for the appliance of tape up to 38mm.
-              In general de length of a tape is up to 50 – 60 meters.</p>
+              "text": "<p>QuiP® has tape dispensers for the appliance of tape up to 38mm.
+              In general de length of a tape is up to 50 – 60 meters.</p>"
             }
           },
           {
@@ -42,10 +42,10 @@ export function faqJsonLd() {
             "name": "What brand of tape is be advised?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": <p>In principle every tape can be used.
+              "text": "<p>In principle every tape can be used.
               However the quality of the tape finally determines the result of your painting job.
               QuiPtaping has masking tapes of superior quality that gives you that result.
-              Different tapes for different surfaces. No leaking, sharp and clean edges.</p>
+              Different tapes for different surfaces. No leaking, sharp and clean edges.</p>"
             }
           },
           {
@@ -53,11 +53,11 @@ export function faqJsonLd() {
             "name": "Can the knife be replaced?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": <p>The knife can not be replaced.
+              "text": "<p>The knife can not be replaced.
               The knife of the QuiP tape dispenser is produced of the right hardness that in case
               the knife hits the surface it will not be damaged and the knife will keep its function.
               But in case of incorrect usage the knife will finally damaged too much and loses its function.
-              We therefor advise you to read the instructions carefully.</p>
+              We therefor advise you to read the instructions carefully.</p>"
             }
           },
           {
@@ -66,10 +66,10 @@ export function faqJsonLd() {
             Why does the tape slip?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": <p>
+              "text": "<p>
               At the start it is import without rolling off the tape you press the tape against the surface.
               Do not us too much tension when applying the tape further as this makes
-              it a hard job and prevents you to apply the tape in the right way.</p>
+              it a hard job and prevents you to apply the tape in the right way.</p>"
             }
           },
           {
@@ -77,10 +77,10 @@ export function faqJsonLd() {
             "name": "Why the QuiP tape dispenser is designed with a cover?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": <p>Tape “bleeds”; at theside and atrracts dist and dirt.
+              "text": "<p>Tape “bleeds”; at theside and atrracts dist and dirt.
               After applying tape and start to paint you see that grease sits in the way.
               After removing the tape you see the particles coming back in your paint job.
-              The cover of the tape dispenser prevents this.</p>
+              The cover of the tape dispenser prevents this.</p>"
             }
           }
         ]
@@ -152,11 +152,11 @@ export function userInstructionsJsonLd() {
         "name": "Demo and Details of the Quip Tape Dispenser & Systainer - QuiPtaping",
         "description": "When you use QuiPtaping for the first time, it is helpful to use this step-by-step plan. Watch the video following the eight steps.",
         "thumbnailUrl": [
-          "http://i3.ytimg.com/vi/bh2vlymVoyU/hqdefault.jpg",
+          "http://i3.ytimg.com/vi/bh2vlymVoyU/hqdefault.jpg"
         ],
         "uploadDate": "2022-07-25T08:00:00+08:00",
         "duration": "PT1M01S",
-        "contentUrl": "https://www.youtube.com/watch?v=bh2vlymVoyU",
+        "contentUrl": "https://www.youtube.com/watch?v=bh2vlymVoyU"
       }
     }`,
   };
@@ -181,7 +181,7 @@ export function productJsonLs(product: Product) {
         "@type": "Offer",
         "url": "${process.env.NEXT_PUBLIC_DOMAIN}/products/${product._id}",
         "priceCurrency": "USD",
-        "price": "${product.price.toString()}",
+        "price": "${product.price.toString()}"
       }
     }`,
   };
