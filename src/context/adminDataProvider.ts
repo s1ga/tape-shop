@@ -109,6 +109,7 @@ const updateMutation = async (resource: string, params: UpdateParams<any>) => {
       body.productType = [data.productType];
       body.categories = data.categories;
       body.additionalInformation = data.additionalInformation || [];
+      body.options = data.options;
       body.demo = data.demo;
       body.images = await Promise.all(
         data.images.map(async (i: any) => {
@@ -246,6 +247,7 @@ const createMutation = async (resource: string, params: CreateParams) => {
       body.productType = [data.productType];
       body.categories = data.categories;
       body.additionalInformation = data.additionalInformation || [];
+      body.options = data.options;
       body.featureImage = data.featureImage;
       body.images = await Promise.all(
         data.images.map(decodeBaseImage),

@@ -13,6 +13,7 @@ import { Product } from '@/interfaces/product/product';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import adminResourceMap from '@/constants/admin-resources';
+import { numberOfRoles, tapeWidth } from '@/constants/tapeOptions';
 
 const req: any[] = [required()];
 const reqWithMinLength = [...req, minLength(3, 'Should be at least 3 characters')];
@@ -226,6 +227,21 @@ export default function ProductForm({ children }: { children: ReactElement }) {
               </ArrayInput>
             </>
           </Labeled>
+        </TabbedForm.Tab>
+        <TabbedForm.Tab label="Options">
+          <ArrayInput fullWidth source="options" defaultValue={[]}>
+            <SimpleFormIterator fullWidth inline>
+              <SelectInput source="width" choices={tapeWidth} validate={req} />
+              <SelectInput source="role" choices={numberOfRoles} validate={req} />
+              <NumberInput
+                source="price"
+                validate={req.concat(nonZeroValidation)}
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                }}
+              />
+            </SimpleFormIterator>
+          </ArrayInput>
         </TabbedForm.Tab>
       </TabbedForm>
     </RecordContextProvider>

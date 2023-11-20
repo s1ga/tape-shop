@@ -95,6 +95,20 @@
   height: 26px;
 }
 
+.productHeaderOptions {
+  border-bottom: 1px solid $border-color;
+  padding-bottom: $base-space-size-medium;
+}
+
+.productHeaderOption {
+  margin-bottom: $base-space-size-middle-plus;
+
+  & label {
+    display: block;
+    margin-bottom: $base-space-size-tiny;
+  }
+}
+
 .productHeaderBtn {
   padding: $base-space-size-small $base-space-size-medium;
   border-radius: $base-radius-large;
@@ -105,6 +119,11 @@
   &:hover {
     cursor: pointer;
     background-color: $color-primary-dark;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: .7;
   }
 }
 

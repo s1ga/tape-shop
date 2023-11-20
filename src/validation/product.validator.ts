@@ -2,6 +2,7 @@ import { isProductItemAdditional } from '@/interfaces/product/productAdditional'
 import { isProductItemCharacteristics } from '@/interfaces/product/productCharacteristics';
 import { isProductItemDemo } from '@/interfaces/product/productDemo';
 import { isProductItemFeatures } from '@/interfaces/product/productFeatures';
+import { isValidOption } from '@/interfaces/product/productOption';
 import { isValidImage, isValidNumber, isValidString } from '@/utils/validTypes';
 import { isValidObjectId } from 'mongoose';
 
@@ -17,7 +18,7 @@ export default class ProductValidator {
       this.isValidFeatures, this.isValidDemo, this.isValidAdditionalInfo, this.isValidAvailability,
       this.isValidCharacteristics, this.isValidRelatedProducts, this.isValidImages, this.isValidDescription,
       this.isValidSku, this.isValidproductType, this.isValidCategories, this.isValidPrice, this.isValidName,
-      this.isValidWeight,
+      this.isValidWeight, this.isValidOptions,
     ];
     for (let i = 0; i < allValidations.length; i += 1) {
       const result = allValidations[i].call(this);
@@ -109,6 +110,14 @@ export default class ProductValidator {
         || !(additionalInformation || this.body.additionalInformation).every(isProductItemAdditional))
     ) {
       return 'Provide valid additional information';
+    }
+    return true;
+  }
+
+  public isValidOptions(options?: any): boolean | string {
+    const data = options || this.body.options;
+    if (data?.length && (!Array.isArray(data) || !data.every(isValidOption))) {
+      return 'Provide valid options';
     }
     return true;
   }

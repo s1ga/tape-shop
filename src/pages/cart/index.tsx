@@ -36,6 +36,7 @@ import styles from '@/styles/modules/Cart.module.scss';
 import deepEqual from '@/utils/deepEqual';
 import { useRouter } from 'next/router';
 import LoginRequiredModal from '@/components/LoginRequired';
+import { getNumberOfRolesName, getTapeWidthName } from '@/utils/tapeOptionsUtils';
 
 type CartTableProps = {
   isTablet: boolean;
@@ -122,12 +123,15 @@ export default function Cart() {
 
   useEffect(() => {
     if (addressForm === undefined) return; // To prevent changing cart on BE on first render
+    if (addressForm === null) setSelectedRate(undefined);
     applyShipping(cart.items, addressForm).then(setShippingRates);
   }, [addressForm]);
 
   useEffect(() => {
     if (selectedRate) {
       ShippingService.saveShippingRateInStorage(selectedRate);
+    } else {
+      ShippingService.deleteShippingRateFromStorage();
     }
   }, [selectedRate]);
 
@@ -324,7 +328,7 @@ function CartTable(
         <table className={styles.cartTable} cellSpacing={0}>
           <tbody>
             {items.map((c: CartItem) => (
-              <tr key={c.info._id}>
+              <tr key={`${c.info._id}${c.info.selectedOption || ''}`}>
                 <td style={{ justifyContent: 'flex-end' }}>
                   <FontAwesomeIcon
                     className={styles.cartTableIcon}
@@ -347,9 +351,23 @@ function CartTable(
                 </td>
                 <td>
                   <span className="bold">Product:</span>
-                  <Link className={`${styles.cartTableName} bold`} href={`/products/${c.info._id}`}>
-                    {c.info.name}
-                  </Link>
+                  <div>
+                    <Link className={`${styles.cartTableName} bold`} href={`/products/${c.info._id}`}>
+                      {c.info.name}
+                    </Link>
+                    {!!c.info.selectedOption
+                      && <div className={styles.cartTableNameOptions}>
+                        <div>
+                          <span className="bold">Tape width: </span>
+                          {getTapeWidthName(c.info.selectedOption)}
+                        </div>
+                        <div>
+                          <span className="bold">Number of roles: </span>
+                          {getNumberOfRolesName(c.info.selectedOption)}
+                        </div>
+                      </div>
+                    }
+                  </div>
                 </td>
                 <td>
                   <span className="bold">Price:</span>
@@ -427,7 +445,7 @@ function CartTable(
         </thead>
         <tbody>
           {items.map((c: CartItem) => (
-            <tr key={c.info._id}>
+            <tr key={`${c.info._id}${c.info.selectedOption || ''}`}>
               <td>
                 <FontAwesomeIcon
                   className={styles.cartTableIcon}
@@ -452,6 +470,18 @@ function CartTable(
                 <Link className={`${styles.cartTableName} bold`} href={`/products/${c.info._id}`}>
                   {c.info.name}
                 </Link>
+                {!!c.info.selectedOption
+                  && <div className={styles.cartTableNameOptions}>
+                    <div>
+                      <span className="bold">Tape width: </span>
+                      {getTapeWidthName(c.info.selectedOption)}
+                    </div>
+                    <div>
+                      <span className="bold">Number of roles: </span>
+                      {getNumberOfRolesName(c.info.selectedOption)}
+                    </div>
+                  </div>
+                }
               </td>
               <td>
                 $ {c.info.price}
@@ -556,6 +586,7 @@ function CartTotal({ appliedCouponPrice, totalPrice, fetchShipping, onSelect, se
   const calculateTotal = useMemo(() => {
     const shippingRate = selectedRate?.total_price || 0;
     const couponTotal = appliedCouponPrice || 0;
+
     return roundPrice(totalPrice + shippingRate - couponTotal);
   }, [appliedCouponPrice, totalPrice, selectedRate?.total_price]);
 

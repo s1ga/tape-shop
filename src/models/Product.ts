@@ -33,6 +33,12 @@ const ProductSchema = new Schema<ProductItem>({
     value: String,
     _id: false,
   }],
+  options: [{
+    width: String,
+    role: String,
+    price: Number,
+    _id: false,
+  }],
 });
 
 const Product = models.Product || model('Product', ProductSchema);

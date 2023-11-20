@@ -16,6 +16,7 @@ const destinationSchema = new Schema<ShippingDestination>({
 const itemSchema = new Schema({
   total: { type: Number, required: true },
   info: { type: Schema.Types.ObjectId, ref: Product, required: true },
+  selectedOption: String,
 }, { _id: false });
 
 const CartSchema = new Schema<NewServerCart>({

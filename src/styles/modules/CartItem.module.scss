@@ -60,6 +60,11 @@ $border-color: #69727d;
   }
 }
 
+.cartDrawerCardOptions {
+  margin-top: -$base-space-size-tiny;
+  margin-bottom: $base-space-size-middle-plus;
+}
+
 .cartDrawerCardTitle {
   font-size: 18px;
   line-height: 26px;

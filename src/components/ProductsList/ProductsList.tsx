@@ -3,6 +3,7 @@ import { useCartContext } from '@/context/cartContext';
 import { CartContextProps } from '@/interfaces/cart';
 import { ProductItemPreview } from '@/interfaces/product/product';
 import styles from '@/styles/modules/Webshop.module.scss';
+import { useRouter } from 'next/router';
 import { FunctionComponent, memo } from 'react';
 
 interface Props {
@@ -28,8 +29,15 @@ const withContext = (Component: FunctionComponent<PropsWithContext>) => {
 const ProductsList = withContext((
   { products, categoryName, isMiniView, isCentered = true, addItems }: PropsWithContext,
 ) => {
+  const { push } = useRouter();
+
   const addToCart = (e: MouseEvent, product: ProductItemPreview) => {
     e.preventDefault();
+
+    if (product.withOptions) {
+      push(`/products/${product._id}`);
+      return;
+    }
     addItems(product);
   };
 

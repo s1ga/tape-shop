@@ -69,13 +69,22 @@ export default async function handler(
       const products = await Promise.all(
         savedCart.items.map((i: ServerCartItem) => Product.findById<IProduct>(i.info).lean()),
       );
-      const productsPreview = ProductService.toPreview(
-        products.filter(Boolean) as IProduct[],
-      ) as ProductItemPreview[];
+      const productsPreview: ProductItemPreview[] = [];
+      products.forEach((p: unknown, idx: number) => {
+        if (p) {
+          productsPreview.push({
+            ...ProductService.toPreview(p as IProduct) as ProductItemPreview,
+            selectedOption: savedCart.items[idx].selectedOption,
+          });
+        }
+      });
       const newItems: CartItem[] = productsPreview.map((p: ProductItemPreview) => ({
         info: p,
         total: savedCart.items
-          .find((i: ServerCartItem) => i.info.toString() === p._id.toString())?.total || 0,
+          .find(
+            (i: ServerCartItem) => i.info.toString() === p._id.toString()
+              && i.selectedOption === p.selectedOption,
+          )?.total || 0,
       }));
       const merged = CartService.mergeCarts(foundCart, { ...savedCart, items: newItems } as ICart);
       const updated = await populateCart(Cart.findOneAndUpdate(

@@ -6,6 +6,10 @@
   margin: $base-space-size-huge 0;
 }
 
+.ordersEmpty {
+  margin-bottom: $base-space-size-medium;
+}
+
 .orderItem {
   width: 70%;
   display: flex;

@@ -40,6 +40,9 @@ export default class ProductService {
     if (fields.additionalInformation) {
       obj.additionalInformation = fields.additionalInformation;
     }
+    if (fields.options) {
+      obj.options = fields.options;
+    }
     return obj;
   }
 
@@ -138,6 +141,14 @@ export default class ProductService {
       }
       obj.additionalInformation = additionalInformation;
     }
+    if (fields.options) {
+      const { options } = fields;
+      const result = validator.isValidOptions(options);
+      if (typeof result === 'string') {
+        return result;
+      }
+      obj.options = options;
+    }
     if (![null, undefined].includes(fields.availability)) {
       const result = validator.isValidAvailability(+fields.availability);
       if (typeof result === 'string') {
@@ -184,6 +195,7 @@ export default class ProductService {
       availability: o.availability,
       features: o.features,
       demo: o.demo,
+      options: o.options,
       weight: o.weight,
       additionalInformation: o.additionalInformation,
       categories: o.categories.map((id: Types.ObjectId) => id.toString()),
@@ -215,6 +227,7 @@ export default class ProductService {
       demo: o.demo,
       weight: o.weight,
       additionalInformation: o.additionalInformation,
+      options: o.options,
       categories: o.categories.map(CategoryService.fromServer),
       productType: o.productType.map(TypeService.fromServer),
       related: (o.related || []).map((id: Types.ObjectId) => id.toString()),
@@ -238,6 +251,7 @@ export default class ProductService {
       dateAdded: o.dateAdded,
       availability: o.availability,
       weight: o.weight,
+      withOptions: !!o.options?.length,
     });
 
     if (Array.isArray(products)) {

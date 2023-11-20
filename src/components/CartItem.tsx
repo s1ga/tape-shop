@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { formatPrice, roundPrice } from '@/utils/helpers';
 import UserService from '@/services/user.service';
+import { getNumberOfRolesName, getTapeWidthName } from '@/utils/tapeOptionsUtils';
 import Drawer from './Drawer';
 import AmountHandler from './AmountHandler';
 import LoginRequiredModal from './LoginRequired';
@@ -90,7 +91,7 @@ function DrawerCart({ cart, removeItems, addItems, handleCheckout }: CartDrawerP
     <div className={styles.cartDrawer}>
       <div className={styles.cartDrawerList}>
         {cart.items.map((i: ICartItem) => (
-          <section key={i.info._id} className={styles.cartDrawerCard}>
+          <section key={`${i.info._id}${i.info.selectedOption || ''}`} className={styles.cartDrawerCard}>
             <Link href={`/products/${i.info._id}`}>
               <Image
                 className={styles.cartDrawerCardImg}
@@ -103,6 +104,16 @@ function DrawerCart({ cart, removeItems, addItems, handleCheckout }: CartDrawerP
               />
               <h3 className={`${styles.cartDrawerCardTitle} title`}>{i.info.name}</h3>
             </Link>
+            {!!i.info.selectedOption
+              && <div className={styles.cartDrawerCardOptions}>
+                <div>
+                  <span className="bold">Tape width: </span>{getTapeWidthName(i.info.selectedOption)}
+                </div>
+                <div>
+                  <span className="bold">Number of roles: </span>{getNumberOfRolesName(i.info.selectedOption)}
+                </div>
+              </div>
+            }
             <div className={styles.cartDrawerCardActions}>
               <AmountHandler
                 availability={i.info.availability}

@@ -12,6 +12,7 @@ import { Product as IProduct, ProductItemPreview } from '@/interfaces/product/pr
 import CouponValidator from '@/validation/coupon.validator';
 import HashHandlerService from '@/services/hash.service';
 import { isShippingDestination } from '@/interfaces/shippingRates';
+import { getOptionPrice } from '@/interfaces/product/productOption';
 
 type Response = {
   data?: ICart;
@@ -85,6 +86,13 @@ export default async function handler(
             info: ProductService.toPreview(product) as ProductItemPreview,
             total: item.total,
           };
+          if (newItem.info.withOptions && item.selectedOption) {
+            const optionPrice = getOptionPrice(product.options!, item.selectedOption);
+            if (optionPrice) {
+              newItem.info.selectedOption = item.selectedOption;
+              newItem.info.price = optionPrice;
+            }
+          }
           if (!CartService.checkAvailability(newItem, newCart)) {
             res.status(400).json({
               data: newCart,
@@ -101,7 +109,7 @@ export default async function handler(
             res.status(400).json({ data: newCart, error: 'Provide item to delete' });
             return;
           }
-          newCart = CartService.removeItem(item.info, newCart);
+          newCart = CartService.removeItem(item, newCart);
           break;
         }
         case cartActions.RemoveAll: {
@@ -109,7 +117,7 @@ export default async function handler(
             res.status(400).json({ data: newCart, error: 'Provide item to delete' });
             return;
           }
-          newCart = CartService.removeAllItem(item.info, newCart);
+          newCart = CartService.removeAllItem(item, newCart);
           break;
         }
         case cartActions.Coupon: {
@@ -122,7 +130,7 @@ export default async function handler(
           break;
         }
         case cartActions.Shipping: {
-          if (isShippingDestination(shippingDestination)) {
+          if (shippingDestination === null || isShippingDestination(shippingDestination)) {
             newCart.shippingDestination = shippingDestination || null;
           } else {
             res.status(400).json({ data: newCart, error: 'Provide valid shipping destination' });
@@ -147,7 +155,10 @@ export default async function handler(
         newCart.appliedCouponPrice = 0;
       }
 
-      await Cart.findOneAndUpdate({ userId: objectId }, newCart);
+      await Cart.findOneAndUpdate({ userId: objectId }, {
+        ...newCart,
+        items: newCart.items.map(CartService.toServerCartItem),
+      });
       res.status(200).json({ data: newCart });
     } else {
       console.warn(`There is no such handler for HTTP method: ${method}`);

@@ -41,6 +41,7 @@ export interface CartItem {
 export interface ServerCartItem {
   info: string;
   total: number;
+  selectedOption?: string;
 }
 
 export interface CartActionRequest {

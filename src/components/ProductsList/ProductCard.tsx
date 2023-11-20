@@ -27,7 +27,7 @@ export default function ProductCard(
         <button
           className={styles.productBtn}
           onClick={(e: MouseEvent) => onAddToCart(e, product)}>
-          Add to cart
+          {product.withOptions ? 'Select options' : 'Add to cart'}
         </button>
       </div>
     </Link>

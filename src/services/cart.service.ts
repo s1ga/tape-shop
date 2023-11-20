@@ -9,6 +9,7 @@ import couponType from '@/constants/coupon';
 import { isValidNumber } from '@/utils/validTypes';
 import { isShippingDestination } from '@/interfaces/shippingRates';
 import CouponValidator from '@/validation/coupon.validator';
+import { ProductOption, getOptionPrice } from '@/interfaces/product/productOption';
 import ShippingService from './shipping.service';
 
 export default class CartService {
@@ -29,7 +30,7 @@ export default class CartService {
         name: o.info.name,
         rate: Math.round(o.info.rate || 0),
         images: o.info.images,
-        price: o.info.price,
+        price: o.selectedOption ? getOptionPrice(o.info.options, o.selectedOption) : o.info.price,
         categories: (o.info.categories || []).map((o: any) => ({
           _id: o._id.toString(),
           id: o._id.toString(),
@@ -38,6 +39,7 @@ export default class CartService {
         })),
         dateAdded: o.info.dateAdded,
         availability: o.info.availability,
+        selectedOption: o.selectedOption,
         weight: o.info.weight,
       },
     });
@@ -132,29 +134,36 @@ export default class CartService {
     };
   }
 
-  public static removeItem(id: string, currentState: Cart): Cart {
-    const item = currentState.items.find((i: CartItem) => i.info._id === id);
-    if (!item) return currentState;
+  public static removeItem(item: ServerCartItem, currentState: Cart): Cart {
+    const itm = currentState.items.find(
+      (i: CartItem) => (item.selectedOption ? i.info.selectedOption === item.selectedOption : true)
+        && i.info._id === item.info,
+    );
+    if (!itm) return currentState;
     return {
       ...currentState,
       totalAmount: currentState.totalAmount - 1,
-      totalPrice: roundPrice(currentState.totalPrice - item.info.price),
-      items: this.removeFromCart(id, currentState.items),
+      totalPrice: roundPrice(currentState.totalPrice - itm.info.price),
+      items: this.removeFromCart(item, currentState.items),
     };
   }
 
-  public static removeAllItem(id: string, currentState: Cart): Cart {
-    const itm = currentState.items.find((i: CartItem) => i.info._id === id);
-    if (!itm) return currentState;
+  public static removeAllItem(item: ServerCartItem, currentState: Cart): Cart {
+    const idx = currentState.items.findIndex(
+      (i: CartItem) => (item.selectedOption ? item.selectedOption === i.info.selectedOption : true)
+        && i.info._id === item.info,
+    );
+    if (idx === -1) return currentState;
+    const itm = currentState.items[idx];
     return {
       ...currentState,
       totalAmount: currentState.totalAmount - itm.total,
       totalPrice: roundPrice(currentState.totalPrice - roundPrice(itm.total * itm.info.price)),
-      items: currentState.items.filter((i: CartItem) => i.info._id !== id),
+      items: currentState.items.filter((_, i: number) => i !== idx),
     };
   }
 
-  public static prepareItem(product: Product, amount: number): CartItem {
+  public static prepareItem(product: Product, amount: number, option?: ProductOption): CartItem {
     const info: ProductItemPreview = {
       _id: product._id,
       id: product.id,
@@ -166,7 +175,11 @@ export default class CartService {
       dateAdded: product.dateAdded,
       availability: product.availability,
       weight: product.weight,
+      withOptions: !!product.options?.length,
     };
+    if (option) {
+      info.selectedOption = `${option.width};${option.role}`;
+    }
     return {
       total: amount,
       info,
@@ -279,12 +292,16 @@ export default class CartService {
     return {
       total: item.total,
       info: item.info._id,
+      selectedOption: item.info.selectedOption,
     };
   }
 
-  private static removeFromCart(id: string, array: CartItem[]): CartItem[] {
+  private static removeFromCart(item: ServerCartItem, array: CartItem[]): CartItem[] {
     const cart = [...array];
-    const idx = cart.findIndex((i: CartItem) => i.info._id.toString() === id.toString());
+    const idx = cart.findIndex(
+      (i: CartItem) => (item.selectedOption ? item.selectedOption === i.info.selectedOption : true)
+        && i.info._id.toString() === item.info.toString(),
+    );
     if (idx < 0) {
       console.error('Provided item are not presented on cart');
       return cart;
@@ -305,7 +322,10 @@ export default class CartService {
 
   private static addToCart(item: CartItem, array: CartItem[]): CartItem[] {
     const cart = [...array];
-    const idx = cart.findIndex((c: CartItem) => c.info._id.toString() === item.info._id.toString());
+    const idx = cart.findIndex(
+      (c: CartItem) => (item.info.selectedOption ? item.info.selectedOption === c.info.selectedOption : true)
+        && c.info._id.toString() === item.info._id.toString(),
+    );
 
     if (idx >= 0) {
       cart[idx] = {

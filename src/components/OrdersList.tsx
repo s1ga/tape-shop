@@ -13,7 +13,7 @@ function OrdersListComponent({ orders }: { orders: Order[] }) {
   const modalReturnOrderRef = useRef<string>();
 
   if (!orders?.length) {
-    return <div>You have no active or shipped orders</div>;
+    return <div className={styles.ordersEmpty}>You have no active or shipped orders</div>;
   }
 
   const onModalClose = () => {

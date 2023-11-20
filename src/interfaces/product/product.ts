@@ -5,6 +5,7 @@ import { ProductItemDemo } from './productDemo';
 import { ProductItemFeatures } from './productFeatures';
 import { Category } from '../category';
 import { Type } from '../type';
+import { ProductOption } from './productOption';
 
 export interface ProductItem {
   _id: string;
@@ -25,6 +26,7 @@ export interface ProductItem {
   features?: ProductItemFeatures;
   demo?: ProductItemDemo;
   additionalInformation?: ProductItemAdditional[];
+  options?: ProductOption[];
 }
 
 export type Product = Omit<
@@ -42,4 +44,4 @@ export type PreparedProductItem = Omit<ProductItem, '_id' | 'id' | 'rate' | 'dat
 export type ProductItemPreview = Pick<
   Product,
   '_id' | 'id' | 'name' | 'rate' | 'price' | 'images' | 'categories' | 'dateAdded' | 'availability' | 'weight'
->;
+> & { withOptions: boolean, selectedOption?: string };
