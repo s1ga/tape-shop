@@ -14,6 +14,29 @@ import { useRouter } from 'next/router';
 import ToastService from '@/services/toast.service';
 import LinkService from '@/services/link.service';
 import Backdrop from '@mui/material/Backdrop';
+import local from 'next/font/local';
+
+const roboto = local({
+  src: [
+    {
+      path: '../../public/fonts/roboto-regular.ttf',
+      weight: '400',
+    },
+    {
+      path: '../../public/fonts/roboto-medium.ttf',
+      weight: '500',
+    },
+    {
+      path: '../../public/fonts/roboto-bold.ttf',
+      weight: '700',
+    },
+  ],
+  style: 'normal',
+  adjustFontFallback: false,
+  preload: true,
+  display: 'swap',
+  variable: '--main-font',
+});
 
 const HIDE_MENU_PATHS = ['/admin'];
 
@@ -81,7 +104,7 @@ export default function App({ Component, pageProps }: AppProps) {
         }
       </Head>
       <CartProvider>
-        <div className="content">
+        <div className={`content ${roboto.className}`}>
           {!HIDE_MENU_PATHS.includes(pathname) && <Header types={productTypes.current} />}
           <main className="main">
             <Component {...pageProps} />
