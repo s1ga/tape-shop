@@ -22,6 +22,8 @@ import Loader from '@/components/Loader';
 import { ShippingDestination, ShippingRate, ShippingRatesResponse } from '@/interfaces/shippingRates';
 import EncryptionService from '@/services/encryption.service';
 import deepEqual from '@/utils/deepEqual';
+import fetchCsrfToken from '@/utils/fetchCsrfToken';
+import { csrfHeader } from '@/constants/csrf';
 
 const COUPON_APPLY_CONTEXT_ERROR = 'coupon-context-error';
 const ADD_ITEMS_TOAST = 'add-items';
@@ -49,8 +51,12 @@ export const CartContext = createContext<CartContextProps>(defaultCartContext);
 
 export const useCartContext = () => useContext(CartContext);
 
-const cartRequest = (session: string, method: string = httpMethods.get, body: any = {}) => {
-  const headers = new Headers({ 'Content-Type': 'Application/json' });
+const cartRequest = async (session: string, method: string = httpMethods.get, body: any = {}) => {
+  const csrf = await fetchCsrfToken();
+  const headers = new Headers({
+    'Content-Type': 'Application/json',
+    [csrfHeader]: csrf,
+  });
   const token = UserService.getUserToken();
   if (token) {
     headers.set('Authorization', token);
@@ -286,10 +292,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     };
     setIsLoading(true);
     try {
+      const csrf = await fetchCsrfToken();
       const res = await fetch(LinkService.apiCreateCartLink(), {
         method: httpMethods.post,
         body: JSON.stringify(body),
-        headers: { 'Content-Type': 'Application/json' },
+        headers: {
+          'Content-Type': 'Application/json',
+          [csrfHeader]: csrf,
+        },
       });
       const data = await res.json();
       if (data.data) {
@@ -335,6 +345,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       }
       let mergedCart: Cart = { ...data.data };
       if (savedCart) {
+        const csrf = await fetchCsrfToken();
         const body = {
           savedCart: {
             ...savedCart,
@@ -344,7 +355,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         const patchRes = await fetch(LinkService.apiMergeCartLink(session), {
           method: httpMethods.patch,
           body: JSON.stringify(body),
-          headers: { 'Content-Type': 'Application/json' },
+          headers: {
+            'Content-Type': 'Application/json',
+            [csrfHeader]: csrf,
+          },
         });
         const data = await patchRes.json();
         if (data.data) {

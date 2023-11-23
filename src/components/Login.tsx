@@ -9,6 +9,8 @@ import { useRouter } from 'next/router';
 import LinkService from '@/services/link.service';
 import UserService from '@/services/user.service';
 import { useCartContext } from '@/context/cartContext';
+import fetchCsrfToken from '@/utils/fetchCsrfToken';
+import { csrfHeader } from '@/constants/csrf';
 import Loader from './Loader';
 
 const LOGIN_URL = LinkService.apiUserLoginLink();
@@ -60,10 +62,14 @@ export default function Login({ onLogin }: { onLogin: CallableFunction }) {
     setLoading(true);
 
     try {
+      const token = await fetchCsrfToken();
       const form = new FormData(e.target as HTMLFormElement);
       const res = await fetch(LOGIN_URL, {
         method: httpMethods.post,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          [csrfHeader]: token,
+        },
         body: JSON.stringify({
           email: form.get('email')?.toString() || '',
           password: form.get('password')?.toString() || '',

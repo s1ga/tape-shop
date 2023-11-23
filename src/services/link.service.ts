@@ -86,6 +86,10 @@ export default class LinkService {
     return this.generateLink('cart', true);
   }
 
+  public static apiCsrfToken(): string {
+    return this.generateLink('csrf', true);
+  }
+
   public static aboutLink(): string {
     return this.generateLink('about');
   }

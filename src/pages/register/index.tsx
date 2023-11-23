@@ -11,6 +11,8 @@ import { ServerData } from '@/interfaces/serverData';
 import { User } from '@/interfaces/user';
 import { CONFIRM_PASSWORD_MESSAGE, PASSWORD_MESSAGE } from '@/constants/messages';
 import LinkService from '@/services/link.service';
+import fetchCsrfToken from '@/utils/fetchCsrfToken';
+import { csrfHeader } from '@/constants/csrf';
 
 const REGISTER_URL = LinkService.apiUserLink();
 const REGISTER_TOAST_ERROR = 'register-error';
@@ -73,9 +75,13 @@ function CreateAccount(
 
     try {
       setLoading(true);
+      const token = await fetchCsrfToken();
       const res = await fetch(REGISTER_URL, {
         method: httpMethods.post,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          [csrfHeader]: token,
+        },
         body: JSON.stringify(UserService.newUser(body)),
       });
 

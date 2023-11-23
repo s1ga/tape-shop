@@ -9,6 +9,8 @@ import { ServerData } from '@/interfaces/serverData';
 import { PASSWORD_REGEX } from '@/constants/regex';
 import { CONFIRM_PASSWORD_MESSAGE, PASSWORD_MESSAGE } from '@/constants/messages';
 import LinkService from '@/services/link.service';
+import { csrfHeader } from '@/constants/csrf';
+import fetchCsrfToken from '@/utils/fetchCsrfToken';
 
 const RESET_URL = LinkService.apiUserResetLink();
 const PASSWORD_URL = LinkService.apiUserPasswordLink();
@@ -77,9 +79,13 @@ export default function PasswordCreate() {
 
     try {
       setLoading(true);
+      const token = await fetchCsrfToken();
       const res = await fetch(PASSWORD_URL, {
         method: httpMethods.post,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          [csrfHeader]: token,
+        },
         body: JSON.stringify({
           hash: hashRef.current,
           password: body.password,

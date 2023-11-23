@@ -7,6 +7,8 @@ import ToastService from '@/services/toast.service';
 import Loader from '@/components/Loader';
 import { useRouter } from 'next/router';
 import LinkService from '@/services/link.service';
+import fetchCsrfToken from '@/utils/fetchCsrfToken';
+import { csrfHeader } from '@/constants/csrf';
 
 const RESET_URL = LinkService.apiUserResetLink();
 const RESET_TOAST_SUCCESS = 'reset-success';
@@ -23,10 +25,14 @@ export default function Reset() {
     const email = form.get('email')?.toString() || '';
     try {
       setLoading(true);
+      const token = await fetchCsrfToken();
       const res = await fetch(RESET_URL, {
         method: httpMethods.post,
         body: JSON.stringify({ email }),
-        headers: { 'Content-type': 'Application/json' },
+        headers: {
+          'Content-type': 'Application/json',
+          [csrfHeader]: token,
+        },
       });
       const { data }: ServerData<string> = await res.json();
 

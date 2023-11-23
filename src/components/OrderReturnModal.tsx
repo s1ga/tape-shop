@@ -6,6 +6,8 @@ import UserService from '@/services/user.service';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { FormEvent, useState } from 'react';
 import styles from '@/styles/modules/Contact.module.scss';
+import fetchCsrfToken from '@/utils/fetchCsrfToken';
+import { csrfHeader } from '@/constants/csrf';
 import Loader from './Loader';
 
 type Props = {
@@ -27,9 +29,11 @@ export default function OrderReturnModal({ isOpen, onClose, orderId }: Props) {
 
     try {
       setIsLoading(true);
+      const token = await fetchCsrfToken();
       const res = await fetch(LinkService.apiOrderReturn(orderId), {
         headers: {
           Authorization: UserService.getUserToken(),
+          [csrfHeader]: token,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(body),
