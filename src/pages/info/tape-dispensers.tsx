@@ -1,3 +1,4 @@
+import { GetServerSidePropsContext } from 'next';
 import ProductsList from '@/components/ProductsList/ProductsList';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -11,7 +12,8 @@ import dbConnect from '@/utils/db';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 import LinkService from '@/services/link.service';
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async ({ res }: GetServerSidePropsContext) => {
+  res.setHeader('Cache-Control', 's-maxage=3600, must-revalidate');
   await dbConnect();
 
   const type = await TypeService.findById(productTypes.TapeDispensers);

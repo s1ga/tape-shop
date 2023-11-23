@@ -1,3 +1,4 @@
+import { GetServerSidePropsContext } from 'next';
 import ProductsList from '@/components/ProductsList/ProductsList';
 import productTypes from '@/constants/productTypes';
 import { Product, ProductItemPreview } from '@/interfaces/product/product';
@@ -10,7 +11,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import LinkService from '@/services/link.service';
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async ({ res }: GetServerSidePropsContext) => {
+  res.setHeader('Cache-Control', 's-maxage=3600, must-revalidate');
   await dbConnect();
 
   const type = await TypeService.findById(productTypes.Systainer);

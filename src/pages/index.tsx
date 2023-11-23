@@ -9,8 +9,10 @@ import { Type } from '@/interfaces/type';
 import dbConnect from '@/utils/db';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 import { useEffect } from 'react';
+import { GetServerSidePropsContext } from 'next';
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ res }: GetServerSidePropsContext) {
+  res.setHeader('Cache-Control', 's-maxage=3600, must-revalidate');
   await dbConnect();
   return {
     props: {

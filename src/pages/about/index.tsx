@@ -6,8 +6,10 @@ import TypeService from '@/services/type.service';
 import { Type } from '@/interfaces/type';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 import LinkService from '@/services/link.service';
+import { GetServerSidePropsContext } from 'next';
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ res }: GetServerSidePropsContext) {
+  res.setHeader('Cache-Control', 's-maxage=3600, must-revalidate');
   await dbConnect();
   return {
     props: {

@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { GetServerSidePropsContext } from 'next';
 import styles from '@/styles/modules/Webshop.module.scss';
 import ProductsList from '@/components/ProductsList/ProductsList';
 import ProductService from '@/services/product.service';
@@ -6,7 +7,8 @@ import { Product, ProductItemPreview } from '@/interfaces/product/product';
 import dbConnect from '@/utils/db';
 import LinkService from '@/services/link.service';
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async ({ res }: GetServerSidePropsContext) => {
+  res.setHeader('Cache-Control', 's-maxage=3600, must-revalidate');
   await dbConnect();
 
   const products = ProductService.toPreview(

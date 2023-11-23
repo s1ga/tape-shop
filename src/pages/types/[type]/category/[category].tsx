@@ -1,3 +1,4 @@
+import { GetServerSidePropsContext } from 'next';
 import ProductService from '@/services/product.service';
 import TypeService from '@/services/type.service';
 import { Category as ICategory } from '@/interfaces/category';
@@ -5,13 +6,14 @@ import CategoryList from '@/components/Category';
 import dbConnect from '@/utils/db';
 
 type Params = {
-  params: {
-    type: string;
-    category: string;
-  }
+  type: string;
+  category: string;
 }
 
-export const getServerSideProps = async ({ params }: Params) => {
+export const getServerSideProps = async (
+  { params, res }: {params: Params, res: GetServerSidePropsContext['res']},
+) => {
+  res.setHeader('Cache-Control', 's-maxage=3600, must-revalidate');
   await dbConnect();
 
   const type = await TypeService.findById(params.type);

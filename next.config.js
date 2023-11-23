@@ -25,9 +25,17 @@ const genHeaders = (env) => [
     key: 'Strict-Transport-Security',
     value: 'max-age=15768000; includeSubDomains; preload',
   },
-  { // TODO: check
+  {
     key: 'Access-Control-Allow-Origin',
-    value: '*',
+    value: `${process.env.NEXT_PUBLIC_DOMAIN}`,
+  },
+  {
+    key: 'Access-Control-Allow-Headers',
+    value: 'CSRF-Token, Content-Type, Authorization',
+  },
+  {
+    key: 'Access-Control-Allow-Credentials',
+    value: 'true',
   },
   {
     key: 'X-XSS-Protection',

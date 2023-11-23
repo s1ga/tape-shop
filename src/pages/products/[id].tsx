@@ -1,10 +1,14 @@
 import dynamic from 'next/dynamic';
+import { GetServerSidePropsContext } from 'next';
 import ProductService from '@/services/product.service';
 import dbConnect from '@/utils/db';
 import ReviewService from '@/services/review.service';
 import { isValidObjectId } from 'mongoose';
 
-export const getServerSideProps = async ({ params }: { params: { id: string } }) => {
+export const getServerSideProps = async (
+  { params, res }: { params: { id: string }, res: GetServerSidePropsContext['res'] },
+) => {
+  res.setHeader('Cache-Control', 's-maxage=3600, must-revalidate');
   await dbConnect();
 
   if (!isValidObjectId(params.id)) {
