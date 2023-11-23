@@ -1,7 +1,8 @@
 {
   "extends": [
     "next/core-web-vitals",
-    "airbnb-base"
+    "airbnb-base",
+    "plugin:security/recommended"
   ],
   "rules": {
     "object-curly-newline": "off",
@@ -18,7 +19,10 @@
       {
         "code": 110
       }
-    ]
+    ],
+    "security/detect-object-injection": "off",
+    "security/detect-non-literal-regexp": "off",
+    "security/detect-unsafe-regex": "off"
   },
   "ignorePatterns": [
     ".env*.local"
