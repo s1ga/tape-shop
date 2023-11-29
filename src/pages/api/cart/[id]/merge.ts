@@ -58,7 +58,7 @@ export default async function handler(
     }
 
     if (method === httpMethods.patch) {
-      const { savedCart }: { savedCart: NewServerCart } = req.body;
+      const { savedCart }: { savedCart: NewServerCart & ICart } = req.body;
 
       const validate = CartService.validate(savedCart);
       if (typeof validate === 'string') {
@@ -86,7 +86,7 @@ export default async function handler(
               && i.selectedOption === p.selectedOption,
           )?.total || 0,
       }));
-      // TODO: fix
+
       const merged = CartService.mergeCarts(foundCart, { ...savedCart, items: newItems } as ICart);
       const updated = await populateCart(Cart.findOneAndUpdate(
         { userId: objectId },
