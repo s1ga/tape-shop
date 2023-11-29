@@ -14,7 +14,7 @@ export default class MailService {
           user: process.env.EMAIL,
           pass: process.env.EMAIL_PASS,
         },
-      });
+      } as any);
     }
 
     return this.transport;
