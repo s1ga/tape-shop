@@ -158,6 +158,7 @@ export default async function handler(
       await Cart.findOneAndUpdate({ userId: objectId }, {
         ...newCart,
         items: newCart.items.map(CartService.toServerCartItem),
+        lastUpdated: new Date(),
       });
       res.status(200).json({ data: newCart });
     } else {

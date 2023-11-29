@@ -54,6 +54,7 @@ export default class CartService {
       totalPrice: obj.totalPrice,
       items: (obj.items || []).map(mapItems),
       appliedCouponPrice: obj.appliedCouponPrice || 0,
+      lastUpdated: obj.lastUpdated,
     });
   }
 
@@ -66,6 +67,8 @@ export default class CartService {
       totalPrice: obj.totalPrice,
       items: obj.items || [],
       appliedCouponPrice: obj.appliedCouponPrice || 0,
+      lastUpdated: obj.lastUpdated,
+      expiryDate: obj.expiryDate,
     });
   }
 

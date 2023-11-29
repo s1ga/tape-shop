@@ -27,6 +27,8 @@ const CartSchema = new Schema<NewServerCart>({
   userId: { type: String, required: true },
   coupon: { type: CouponSchema, default: null },
   shippingDestination: { type: destinationSchema, default: null },
+  lastUpdated: Date,
+  expiryDate: { type: Date, expires: 0 },
 });
 
 const Cart = models.Cart || model('Cart', CartSchema);

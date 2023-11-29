@@ -31,6 +31,7 @@ export interface Cart {
   totalAmount: number;
   totalPrice: number;
   items: CartItem[];
+  lastUpdated?: Date;
 }
 
 export interface CartItem {
@@ -53,6 +54,7 @@ export interface CartActionRequest {
 
 export type NewServerCart = Omit<Cart, '_id' | 'id' | 'items'> & {
   items: ServerCartItem[];
+  expiryDate: Date;
 };
 
 export function isCartItem(item: any): item is CartItem {

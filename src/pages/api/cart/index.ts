@@ -6,6 +6,7 @@ import CartService from '@/services/cart.service';
 import EncryptionService from '@/services/encryption.service';
 import { Cart as ICart } from '@/interfaces/cart';
 import { isValidObjectId } from 'mongoose';
+import User from '@/models/User';
 
 type Response = {
   data?: ICart;
@@ -41,6 +42,7 @@ export default async function handler(
         return;
       }
       newCart.userId = encryptedUserId;
+      newCart.lastUpdated = new Date();
 
       const foundCart = await Cart.exists({ userId: encryptedUserId });
       if (foundCart) {
@@ -48,7 +50,17 @@ export default async function handler(
         return;
       }
 
-      await Cart.create(CartService.toServer(newCart));
+      const monthsToKeep = 4;
+      const date = new Date();
+      date.setMonth(date.getMonth() + monthsToKeep);
+
+      const cartToCreate = { ...CartService.toServer(newCart) };
+      const foundUser = await User.exists({ _id: newCart.userId });
+      if (!foundUser) {
+        cartToCreate.expiryDate = date;
+      }
+      await Cart.create(cartToCreate);
+
       const createdCart = await Cart
         .findOne({ userId: encryptedUserId })
         .populate({

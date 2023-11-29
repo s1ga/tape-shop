@@ -7,8 +7,8 @@ export default class MailService {
   private static getTransport(): Transporter {
     if (!this.transport) {
       this.transport = createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
+        host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+        port: process.env.EMAIL_PORT || 465,
         secure: true,
         auth: {
           user: process.env.EMAIL,

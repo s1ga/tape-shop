@@ -86,12 +86,14 @@ export default async function handler(
               && i.selectedOption === p.selectedOption,
           )?.total || 0,
       }));
+      // TODO: fix
       const merged = CartService.mergeCarts(foundCart, { ...savedCart, items: newItems } as ICart);
       const updated = await populateCart(Cart.findOneAndUpdate(
         { userId: objectId },
         {
           ...merged,
           items: (merged.items || []).map(CartService.toServerCartItem),
+          lastUpdated: new Date(),
         },
         { new: true },
       ).lean());
