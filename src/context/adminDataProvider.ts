@@ -358,7 +358,7 @@ const dataProvider: DataProvider = {
     return fetch(request).then(thenFunc);
   },
   deleteMany: async (resource, params) => {
-  const csrf = await fetchCsrfToken();
+    const csrf = await fetchCsrfToken();
     const token = LocalStorageService.get<string>(storageKeys.AdminAuth) || '';
     const url = (id: string) => (resource === adminResourceMap.returnedOrders
       ? `${BASE_URL}/orders/${id}/return`
