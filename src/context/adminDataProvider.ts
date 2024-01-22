@@ -15,6 +15,8 @@ import buildUrlQuery from '@/utils/buildUrlQuery';
 import decodeBaseImage from '@/utils/getBaseImage';
 import CouponsService from '@/services/coupons.service';
 import { User } from '@/interfaces/user';
+import fetchCsrfToken from '@/utils/fetchCsrfToken';
+import { csrfHeader } from '@/constants/csrf';
 
 const BASE_URL = `${getDomain()}/api`;
 
@@ -36,6 +38,7 @@ const thenFunc = async (res: Response) => {
 };
 
 const updateMutation = async (resource: string, params: UpdateParams<any>) => {
+  const csrf = await fetchCsrfToken();
   const token = LocalStorageService.get<string>(storageKeys.AdminAuth) || '';
   const setRequest = (body: any) => {
     const url = resource === adminResourceMap.returnedOrders
@@ -44,7 +47,10 @@ const updateMutation = async (resource: string, params: UpdateParams<any>) => {
     return new Request(url, {
       method: httpMethods.patch,
       body,
-      headers: new Headers({ Authorization: token }),
+      headers: new Headers({
+        Authorization: token,
+        [csrfHeader]: csrf,
+      }),
     });
   };
   switch (resource) {
@@ -148,6 +154,7 @@ const updateMutation = async (resource: string, params: UpdateParams<any>) => {
 };
 
 const updateManyMutation = async (resource: string, params: UpdateManyParams) => {
+  const csrf = await fetchCsrfToken();
   const token = LocalStorageService.get<string>(storageKeys.AdminAuth) || '';
   switch (resource) {
     case adminResourceMap.feedback: {
@@ -156,6 +163,7 @@ const updateManyMutation = async (resource: string, params: UpdateManyParams) =>
         body: JSON.stringify({ reviewed: params.data.reviewed }),
         headers: new Headers({
           Authorization: token,
+          [csrfHeader]: csrf,
           'Content-Type': 'Application/json',
         }),
       });
@@ -202,11 +210,15 @@ const updateManyMutation = async (resource: string, params: UpdateManyParams) =>
 };
 
 const createMutation = async (resource: string, params: CreateParams) => {
+  const csrf = await fetchCsrfToken();
   const token = LocalStorageService.get<string>(storageKeys.AdminAuth) || '';
   const setRequest = (body: any) => new Request(`${BASE_URL}/${resource}`, {
     method: httpMethods.post,
     body,
-    headers: new Headers({ Authorization: token }),
+    headers: new Headers({
+      Authorization: token,
+      [csrfHeader]: csrf,
+    }),
   });
   switch (resource) {
     case adminResourceMap.categories: {
@@ -330,25 +342,33 @@ const dataProvider: DataProvider = {
   update: updateMutation,
   updateMany: updateManyMutation,
   create: createMutation,
-  delete: (resource, params) => {
+  delete: async (resource, params) => {
+    const csrf = await fetchCsrfToken();
     const token = LocalStorageService.get<string>(storageKeys.AdminAuth) || '';
     const url = resource === adminResourceMap.returnedOrders
       ? `${BASE_URL}/orders/${params.id}/return`
       : `${BASE_URL}/${resource}/${params.id}`;
     const request = new Request(url, {
       method: httpMethods.delete,
-      headers: new Headers({ Authorization: token }),
+      headers: new Headers({
+        Authorization: token,
+        [csrfHeader]: csrf,
+      }),
     });
     return fetch(request).then(thenFunc);
   },
   deleteMany: async (resource, params) => {
+  const csrf = await fetchCsrfToken();
     const token = LocalStorageService.get<string>(storageKeys.AdminAuth) || '';
     const url = (id: string) => (resource === adminResourceMap.returnedOrders
       ? `${BASE_URL}/orders/${id}/return`
       : `${BASE_URL}/${resource}/${id}`);
     const request = (id: any) => fetch(new Request(url(id), {
       method: httpMethods.delete,
-      headers: new Headers({ Authorization: token }),
+      headers: new Headers({
+        Authorization: token,
+        [csrfHeader]: csrf,
+      }),
     })).then(thenFunc).then(({ data }: ServerData<Type>) => data._id);
 
     return Promise.resolve({ data: await Promise.all(params.ids.map(request)) });

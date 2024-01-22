@@ -1,14 +1,20 @@
+import { csrfHeader } from '@/constants/csrf';
 import httpMethods from '@/constants/httpMethods';
 import storageKeys from '@/constants/storageKeys';
 import LinkService from '@/services/link.service';
 import LocalStorageService from '@/services/storage.service';
+import fetchCsrfToken from '@/utils/fetchCsrfToken';
 import { AuthProvider } from 'react-admin';
 
 const authProvider: AuthProvider = {
-  login: ({ username, password }) => {
+  login: async ({ username, password }) => {
+    const token = await fetchCsrfToken();
     const request = new Request(LinkService.apiUserLoginLink(), {
       method: httpMethods.post,
-      headers: new Headers({ 'Content-Type': 'application/json' }),
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        [csrfHeader]: token,
+      }),
       body: JSON.stringify({ email: username, password }),
     });
 

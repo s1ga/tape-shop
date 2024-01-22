@@ -10,7 +10,7 @@ export default class HashHandlerService {
     return hash(password, salt);
   }
 
-  public static async compareHash(data: string, hashData: string): Promise<boolean> {
+  public static compareHash(data: string, hashData: string): Promise<boolean> {
     return compare(data, hashData);
   }
 
